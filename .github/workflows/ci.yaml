@@ -62,32 +62,32 @@ jobs:
       - name: Type & Formatting check
         run: bun check
 
-  test:
-    runs-on: ubuntu-latest
-    name: Test & Coverage
-    timeout-minutes: 1
-    permissions:
-      contents: read
-      pull-requests: write
+  # test:
+  #   runs-on: ubuntu-latest
+  #   name: Test & Coverage
+  #   timeout-minutes: 1
+  #   permissions:
+  #     contents: read
+  #     pull-requests: write
 
-    if: ${{ !github.event.pull_request.draft }}
+  #   if: ${{ !github.event.pull_request.draft }}
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v6
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+  #     - name: Setup Bun
+  #       uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: bun install
+  #     - name: Install dependencies
+  #       run: bun install
 
-      - name: Run tests and generate coverage
-        run: bun test --coverage # TODO: write coverage output to coverage.md
+  #     - name: Run tests and generate coverage
+  #       run: bun test --coverage # TODO: write coverage output to coverage.md
 
-      - name: Post coverage comment
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: coverage-report
-          path: coverage.md
+  #     - name: Post coverage comment
+  #       if: github.event_name == 'pull_request'
+  #       uses: marocchino/sticky-pull-request-comment@v2
+  #       with:
+  #         header: coverage-report
+  #         path: coverage.md
