@@ -36,7 +36,7 @@ jobs:
         run: bun install
 
       - name: Build
-        run: bun build
+        run: bun run build
 
   lint:
     runs-on: ubuntu-latest
@@ -56,13 +56,10 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Check formatting
-        run: bun format:check
-
       - name: Lint
         run: bun lint
 
-      - name: Type check
+      - name: Type & Formatting check
         run: bun check
 
   test:
