@@ -1,0 +1,22 @@
+node_modules
+
+# Editor config
+.vscode
+.idea
+.zed
+
+# Build output
+/dist
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
