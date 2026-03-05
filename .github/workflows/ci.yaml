@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - reopened
+      - synchronize
+
+jobs:
+  # spellcheck: # TODO: Add codebook here, there's no cli yet hence we can't use it in CI for now
+  #   runs-on: ubuntu-latest
+  #   name: Spellcheck
+  #   timeout-minutes: 5
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v6
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    timeout-minutes: 1
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Lint & Formatting check
+        run: bun lint
+
+      - name: Type check
+        run: bun check
+
+  # test:
+  #   runs-on: ubuntu-latest
+  #   name: Test & Coverage
+  #   timeout-minutes: 1
+  #   permissions:
+  #     contents: read
+  #     pull-requests: write
+
+  #   if: ${{ !github.event.pull_request.draft }}
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v6
+
+  #     - name: Setup Bun
+  #       uses: oven-sh/setup-bun@v2
+
+  #     - name: Install dependencies
+  #       run: bun install
+
+  #     - name: Run tests and generate coverage
+  #       run: bun test --coverage # TODO: write coverage output to coverage.md
+
+  #     - name: Post coverage comment
+  #       if: github.event_name == 'pull_request'
+  #       uses: marocchino/sticky-pull-request-comment@v2
+  #       with:
+  #         header: coverage-report
+  #         path: coverage.md
