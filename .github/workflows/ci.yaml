@@ -56,10 +56,10 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Lint
+      - name: Lint & Formatting check
         run: bun lint
 
-      - name: Type & Formatting check
+      - name: Type check
         run: bun check
 
   # test:
