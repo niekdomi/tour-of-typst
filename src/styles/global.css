@@ -1,0 +1,15 @@
+:root {
+  --color-bg: #fff;
+  --color-text: #000;
+  --color-surface: #f0f0f0;
+  --color-accent: #007acc;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  --font-mono: "Fira Mono", ui-monospace, monospace;
+}
+
+[data-theme="dark"] {
+  --color-bg: #fff;
+  --color-text: #000;
+  --color-surface: #f0f0f0;
+  --color-accent: #007acc;
+}
