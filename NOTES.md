@@ -1,4 +1,6 @@
-# Architecture
+# Tour of Typst — Implementation Plan & Architecture
+
+## Folder Structure
 
 ```
 tour-of-typst/
@@ -14,47 +16,79 @@ tour-of-typst/
 │   ├── en/
 │   └── fr/
 │
+├── public/                         # static assets served as-is (fonts, images, wasm)
+│   ├── ost-logo.svg
+│   └── fonts/
+│
 ├── src/
-│   ├── editor/                     # everything related to the editor/preview experience
-│   │   ├── Editor.svelte           # code input
-│   │   ├── Preview.svelte          # renders the compiled Typst output
-│   │   ├── Workspace.svelte        # orchestrates Editor + Preview + resizing
-│   │   └── index.ts                # public API of this module
-│   │
-│   ├── components/                 # generic, reusable UI components
+│   ├── components/                 # generic reusable UI components
+│   │   ├── Header.svelte
+│   │   ├── Dropdown.svelte
 │   │   ├── TableOfContents.svelte
-│   │   ├── ResizeHandle.svelte
-│   │   └── index.ts
+│   │   └── ResizeHandle.svelte
+│   │
+│   ├── editor/                     # editor/preview experience
+│   │   ├── Editor.svelte
+│   │   ├── Preview.svelte
+│   │   └── Workspace.svelte
 │   │
 │   ├── content/                    # code that loads/parses the content/ folder
-│   │   ├── loader.ts               # reads tour.ts + markdown files at build time
-│   │   ├── types.ts                # Chapter, Lesson, Locale etc.
+│   │   ├── loader.ts
+│   │   ├── types.ts
 │   │   └── index.ts
 │   │
 │   ├── i18n/                       # locale detection, language switching
 │   │   └── index.ts
 │   │
-│   ├── App.svelte                  # root component, wires everything together
-│   └── main.ts                     # entry point, mounts App
+│   ├── styles/
+│   │   └── global.css
+│   │
+│   ├── App.svelte
+│   └── main.ts
 │
-├── static/                         # copied as-is to dist/ (favicon, fonts, etc.)
 ├── index.html
 ├── package.json
 └── tsconfig.json
 ```
 
-- **`src/editor/index.ts`** — each feature folder exports a public API. Other parts of the app
-  import from `./editor` not from `./editor/Editor.svelte` directly. This lets you refactor
-  internals freely.
+## Component Tree
 
-- **`src/content/`** vs **`content/`** — the raw content lives in `content/`, but the code that
-  knows how to load and parse it lives in `src/content/`. Translators never need to open `src/`.
+```
+App
+├── Header
+│   ├── Dropdown (theme)
+│   └── Dropdown (language)
+├── TableOfContents (floating panel, conditionally shown)
+└── layout
+    ├── left panel (lesson markdown content)
+    └── Workspace
+        ├── Editor
+        ├── ResizeHandle
+        └── Preview
+```
 
-- **`tour.ts` per locale** — good call keeping this per language, since chapter order or
-  availability might differ between translations.
+## Layout
 
-- **`Workspace.svelte`** — I'd separate the layout/resize logic from the individual editor and
-  preview panes. Makes each piece independently testable.
+- Top header bar, full width, fixed height (`3rem`)
+- Two-column grid below: left = lesson content, right = editor + preview
+- Editor and preview stacked vertically in right column, each taking 50% height
+- ResizeHandle between left/right panels and between editor/preview for draggable resizing
 
-- **`static/`** — Vite (or Bun once ready) copies this folder verbatim to `dist/`, good for assets
-  that shouldn't be hashed.
+## Header
+
+- **Left**: TOC button, "Tour of Typst" title
+- **Right**: language dropdown, theme dropdown, OST logo (links to ost.ch)
+
+## Table of Contents
+
+- Triggered by TOC button in header
+  - Shows ordered chapter list with active chapter highlighted
+- Closes on `Escape` or click outside
+
+## Theme System
+
+- Three modes: `auto`, `light`, `dark`
+- `auto` reads `prefers-color-scheme` from the OS via `window.matchMedia`
+- Manual override stored in `localStorage`
+- Applied via `data-theme` attribute on `document.documentElement`
+- CSS variables defined in `global.css` under `:root` (light) and `[data-theme="dark"]`
