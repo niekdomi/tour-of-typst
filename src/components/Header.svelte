@@ -76,7 +76,7 @@
 <a
         href="https://www.ost.ch"
         target="_blank"
-        aria-label="Ost - Ostschweizer Fachhochschule"
+        aria-label="OST - Ostschweizer Fachhochschule"
     >
       <img src="../../public/ost-logo.svg" alt="OST Logo" />
     </a>
