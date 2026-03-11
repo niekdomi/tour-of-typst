@@ -1,0 +1,8 @@
+dictionaries = ["en_us", "de_ch"]
+words = []
+ignore_paths = [
+    "**/*.yaml",
+    ".git/**/*",
+]
+use_global = false
+min_word_length = 0
