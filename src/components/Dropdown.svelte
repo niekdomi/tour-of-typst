@@ -13,63 +13,16 @@
   let { options, value = $bindable(), label }: Props = $props();
 
   let open = $state(false);
-  let buttonEl = $state<HTMLButtonElement | null>(null);
-  let menuEl = $state<HTMLUListElement | null>(null);
-
   const selectedOption = $derived(options.find((o) => o.value === value));
 
   function select(val: string) {
     value = val;
     open = false;
-    buttonEl?.focus();
   }
-
-  function onKeydown(e: KeyboardEvent) {
-    if (!open) {
-      return;
-    }
-
-    if (e.key === "Escape") {
-      open = false;
-      buttonEl?.focus();
-      e.stopPropagation();
-    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      const items = menuEl?.querySelectorAll<HTMLElement>("[role='menuitem']") ?? [];
-      const idx = Array.from(items).indexOf(document.activeElement as HTMLElement);
-      const next = e.key === "ArrowDown" ? idx + 1 : idx - 1;
-      items[Math.max(0, Math.min(next, items.length - 1))]?.focus();
-    }
-  }
-
-  function onClickOutside(e: MouseEvent) {
-    const target = e.target as Node;
-    const outsideButton = !buttonEl?.contains(target);
-    const outsideMenu = !menuEl?.contains(target);
-    if (outsideButton && outsideMenu) {
-      open = false;
-    }
-  }
-
-  $effect(() => {
-    if (open) {
-      document.addEventListener("click", onClickOutside);
-      document.addEventListener("keydown", onKeydown);
-    } else {
-      document.removeEventListener("click", onClickOutside);
-      document.removeEventListener("keydown", onKeydown);
-    }
-
-    return () => {
-      document.removeEventListener("click", onClickOutside);
-      document.removeEventListener("keydown", onKeydown);
-    };
-  });
 </script>
 
 <div class="dropdown">
   <button
-    bind:this={buttonEl}
     type="button"
     class="trigger"
     aria-haspopup="true"
@@ -82,7 +35,8 @@
   </button>
 
   {#if open}
-    <ul bind:this={menuEl} class="menu" role="menu" aria-label={label}>
+    <button class="overlay" onclick={() => (open = false)} aria-label="Close menu"></button>
+    <ul class="menu" role="menu">
       {#each options as option (option.value)}
         <li role="none">
           <button
@@ -106,18 +60,6 @@
     display: inline-block;
   }
 
-  .trigger,
-  .menu-item {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 0.875rem;
-    color: var(--color-text);
-    font-family: inherit;
-    text-align: left;
-    white-space: nowrap;
-  }
-
   .trigger {
     display: flex;
     align-items: center;
@@ -125,6 +67,10 @@
     padding: 0.25rem 0.6rem;
     border: 1px solid var(--color-border);
     border-radius: 4px;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 0.875rem;
     transition: background 0.15s;
   }
 
@@ -137,12 +83,21 @@
     opacity: 0.6;
   }
 
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    background: transparent;
+    border: none;
+    cursor: default;
+  }
+
   .menu {
     position: absolute;
     right: 0;
     top: calc(100% + 4px);
     min-width: 100%;
-    background: var(--color-surface);
+    background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
@@ -156,12 +111,17 @@
     display: block;
     width: 100%;
     padding: 0.35rem 0.75rem;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.875rem;
+    white-space: nowrap;
   }
 
-  .menu-item:hover,
-  .menu-item:focus {
+  .menu-item:hover {
     background: var(--color-surface-hover);
-    outline: none;
   }
 
   .menu-item.selected {
