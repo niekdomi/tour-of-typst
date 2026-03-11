@@ -35,5 +35,8 @@
     "plugins": [
       "prettier-plugin-svelte"
     ]
+  },
+  "dependencies": {
+    "marked": "^17.0.4"
   }
 }

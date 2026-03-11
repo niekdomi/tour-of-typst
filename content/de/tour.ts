@@ -5,5 +5,8 @@ export const meta = {
 
 export const chapters = [
   { key: "welcome", title: "Willkommen" },
-  { key: "basics", title: "Grundlagen" },
+  { key: "hello-world", title: "Hallo, Welt!" },
+  { key: "text-formatting", title: "Textformatierung" },
+  { key: "headings", title: "Überschriften & Struktur" },
+  { key: "lists", title: "Listen" },
 ];
