@@ -5,26 +5,42 @@
 }
 
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-text-muted: #6b7280;
-  --color-surface: #f5f5f5;
-  --color-surface-hover: #e8e8e8;
-  --color-border: #d1d5db;
-  --color-accent: #0078d4;
+  /* Typst light palette */
+  --color-bg: #fdfdfd;
+  --color-text: #19181f;
+  --color-text-muted: #565565;
+  --color-surface: #eff0f3;
+  --color-surface-hover: #e4e5ea;
+  --color-border: #bdbfcc;
+  --color-accent: #239dad;
 
   --font-sans: system-ui, -apple-system, sans-serif;
   --font-mono: "Fira Mono", ui-monospace, monospace;
+
+  /* Brand text color */
+  --brand-color: #239dad;
+
+  /* Shared interactive button fill */
+  --btn-fill: #7ecfdb;
+  --btn-fill-hover: #63c4d2;
+  --btn-text: #19181f;
 }
 
 [data-theme="dark"] {
-  --color-bg: #1a1a1a;
-  --color-text: #e5e7eb;
-  --color-text-muted: #9ca3af;
-  --color-surface: #2a2a2a;
-  --color-surface-hover: #3a3a3a;
-  --color-border: #3f3f46;
-  --color-accent: #3b9edd;
+  /* Derived dark palette — same Typst brand feel, deep purple-tinted darks */
+  --color-bg: #13121a;
+  --color-text: #f0eff5;
+  --color-text-muted: #8887a0;
+  --color-surface: #1e1d28;
+  --color-surface-hover: #272634;
+  --color-border: #302f42;
+  --color-accent: #1ba8d1;
+
+  --brand-color: #5bcfde;
+
+  --btn-fill: #1fa8bf;
+  --btn-fill-hover: #1597ac;
+  --btn-text: #f0eff5;
 }
 
 html,

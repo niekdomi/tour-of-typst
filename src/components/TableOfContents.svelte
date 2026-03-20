@@ -36,6 +36,7 @@
 <style>
   .toc {
     position: relative;
+    flex: 1;
     min-width: 0;
   }
 
@@ -50,15 +51,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 250px;
+    width: 100%;
     display: block;
-    transition: background 0.15s;
     font-size: 1rem;
     font-family: inherit;
+    text-align: left;
   }
 
   .trigger:hover {
-    background: var(--color-surface-hover);
+    background: transparent;
   }
 
   .overlay {
@@ -68,8 +69,6 @@
     background: transparent;
     border: none;
     cursor: default;
-    width: 100vw;
-    height: 100vh;
   }
 
   .menu {
@@ -79,7 +78,7 @@
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    padding: 0.5rem 0;
+    padding: 0.375rem 0;
     list-style: none;
     margin: 0;
     z-index: 100;
@@ -87,28 +86,51 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     max-height: 70vh;
     overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .menu li {
+    position: relative;
+  }
+
+  .menu li::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-border);
+    transition: background 0.15s;
+  }
+
+  .menu li.active::before {
+    background: var(--color-accent);
   }
 
   .menu li button {
     width: 100%;
     text-align: left;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem 0.5rem 1.5rem;
     border: none;
     background: transparent;
     color: var(--color-text-muted);
     cursor: pointer;
     font-family: inherit;
     font-size: 0.875rem;
-    transition: background 0.1s;
+    transition: color 0.1s;
   }
 
   .menu li.active button {
-    color: var(--color-text);
+    color: var(--color-accent);
     font-weight: 600;
   }
 
+  .menu li:not(.active):hover::before {
+    background: var(--color-text-muted);
+  }
+
   .menu li:hover button {
-    background: var(--color-surface-hover);
     color: var(--color-text);
   }
 </style>

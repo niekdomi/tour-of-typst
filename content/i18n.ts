@@ -30,8 +30,3 @@ export function getTranslations(locale: Locale): Translations {
 }
 
 export const defaultLocale: Locale = "en";
-
-export const localeLabels: Record<Locale, string> = {
-  en: "English",
-  de: "Deutsch",
-};
