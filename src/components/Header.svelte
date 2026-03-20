@@ -4,12 +4,13 @@
   import { getTranslations, defaultLocale } from "../../content/i18n";
   import type { Locale } from "../../content/i18n";
   import { availableLocales } from "../content";
-  import type { Chapter } from "../content/types";
+  import type { Chapter, Part } from "../content/types";
 
   type Theme = "auto" | "light" | "dark";
 
   interface Props {
     locale: Locale;
+    parts?: Part[];
     chapters?: Chapter[];
     currentIndex?: number;
     contentFraction?: number;
@@ -19,6 +20,7 @@
 
   let {
     locale = $bindable(defaultLocale),
+    parts = [],
     chapters = [],
     currentIndex = 0,
     contentFraction = 0.5,
@@ -78,9 +80,9 @@
         >
       </span>
 
-      {#if chapters.length > 0}
+      {#if parts.length > 0}
         <div class="divider"></div>
-        <TableOfContents {chapters} {currentIndex} bind:open={tocDropdownOpen} {onnavigate} />
+        <TableOfContents {parts} {chapters} {currentIndex} bind:open={tocDropdownOpen} {onnavigate} />
 
         <div class="nav-arrows" aria-label="Chapter navigation">
           <button
@@ -126,6 +128,7 @@
     align-items: center;
     gap: 1rem;
     min-width: 0;
+    position: relative;
   }
 
   .right {

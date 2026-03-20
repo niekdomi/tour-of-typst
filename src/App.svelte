@@ -2,20 +2,25 @@
   import Header from "./components/Header.svelte";
   import ResizeHandle from "./components/ResizeHandle.svelte";
   import Workspace from "./editor/Workspace.svelte";
-  import { getTourForLocale } from "./content";
+  import { getTourForLocale, flattenChapters } from "./content";
   import LessonContent from "./components/LessonContent.svelte";
   import { defaultLocale } from "../content/i18n";
   import type { Locale } from "../content/i18n";
-  import type { Chapter } from "./content/types";
 
   let locale = $state<Locale>((localStorage.getItem("locale") as Locale) ?? defaultLocale);
 
-  const chapters: Chapter[] = $derived(getTourForLocale(locale)?.chapters ?? []);
+  const tour = $derived(getTourForLocale(locale));
+  const parts = $derived(tour?.parts ?? []);
+  const chapters = $derived(tour ? flattenChapters(tour) : []);
 
-  let currentIndex = $state(0);
+  // Key is the stable identity — survives locale switches
+  let currentKey = $state(chapters[0]?.key ?? "");
+
+  // Index is derived: find key in current locale's chapters, fall back to 0
+  const currentIndex = $derived(Math.max(0, chapters.findIndex((c) => c.key === currentKey)));
 
   function navigate(index: number) {
-    currentIndex = index;
+    currentKey = chapters[index]?.key ?? "";
   }
 
   let contentFraction = $state(0.5);
@@ -25,6 +30,7 @@
 <div class="app">
   <Header
     bind:locale
+    {parts}
     {chapters}
     {currentIndex}
     {contentFraction}

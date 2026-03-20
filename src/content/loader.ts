@@ -1,4 +1,4 @@
-import type { TourModule, LocaleMeta } from "./types";
+import type { TourModule, LocaleMeta, Chapter } from "./types";
 
 const tourModules = import.meta.glob<TourModule>("../../content/*/tour.ts", { eager: true });
 const markdownFiles = import.meta.glob<string>("../../content/*/*/index.md", {
@@ -13,6 +13,10 @@ export const availableLocales: LocaleMeta[] = allModules.map((m) => m.meta);
 
 export function getTourForLocale(locale: string): TourModule | undefined {
   return allModules.find((m) => m.meta.locale === locale);
+}
+
+export function flattenChapters(tour: TourModule): Chapter[] {
+  return tour.parts.flatMap((p) => p.chapters);
 }
 
 /**

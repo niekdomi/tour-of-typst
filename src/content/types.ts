@@ -8,7 +8,12 @@ export interface Chapter {
   title: string;
 }
 
+export interface Part {
+  title: string;
+  chapters: Chapter[];
+}
+
 export interface TourModule {
   meta: LocaleMeta;
-  chapters: Chapter[];
+  parts: Part[];
 }
