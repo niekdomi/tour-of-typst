@@ -65,17 +65,17 @@
     align-items: center;
     gap: 0.4rem;
     padding: 0.25rem 0.6rem;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--color-text);
+    border: none;
+    border-radius: 6px;
+    background: var(--btn-fill);
+    color: var(--btn-text);
     cursor: pointer;
     font-size: 0.875rem;
     transition: background 0.15s;
   }
 
   .trigger:hover {
-    background: var(--color-surface-hover);
+    background: var(--btn-fill-hover);
   }
 
   .arrow {

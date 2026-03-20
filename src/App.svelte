@@ -4,8 +4,8 @@
   import Workspace from "./editor/Workspace.svelte";
   import { getTourForLocale } from "./content";
   import LessonContent from "./components/LessonContent.svelte";
-  import { defaultLocale } from "./lib/i18n";
-  import type { Locale } from "./lib/i18n";
+  import { defaultLocale } from "../content/i18n";
+  import type { Locale } from "../content/i18n";
   import type { Chapter } from "./content/types";
 
   let locale = $state<Locale>((localStorage.getItem("locale") as Locale) ?? defaultLocale);
