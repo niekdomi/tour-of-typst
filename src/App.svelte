@@ -17,7 +17,12 @@
   let currentKey = $state(chapters[0]?.key ?? "");
 
   // Index is derived: find key in current locale's chapters, fall back to 0
-  const currentIndex = $derived(Math.max(0, chapters.findIndex((c) => c.key === currentKey)));
+  const currentIndex = $derived(
+    Math.max(
+      0,
+      chapters.findIndex((c) => c.key === currentKey)
+    )
+  );
 
   function navigate(index: number) {
     currentKey = chapters[index]?.key ?? "";

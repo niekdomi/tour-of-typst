@@ -82,7 +82,13 @@
 
       {#if parts.length > 0}
         <div class="divider"></div>
-        <TableOfContents {parts} {chapters} {currentIndex} bind:open={tocDropdownOpen} {onnavigate} />
+        <TableOfContents
+          {parts}
+          {chapters}
+          {currentIndex}
+          bind:open={tocDropdownOpen}
+          {onnavigate}
+        />
 
         <div class="nav-arrows" aria-label="Chapter navigation">
           <button

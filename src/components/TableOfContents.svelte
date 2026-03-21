@@ -112,7 +112,7 @@
   .menu li:not(.part-header)::before {
     content: "";
     position: absolute;
-    left: 7px;
+    left: 1rem;
     top: 0;
     bottom: 0;
     width: 2px;
@@ -128,7 +128,7 @@
 
   /* Part header rows */
   .menu .part-header {
-    padding: 0.5rem 1rem 0.25rem 1.5rem;
+    padding: 0.5rem 1rem 0.7rem;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -137,7 +137,7 @@
   }
 
   .menu .part-header:not(:first-child) {
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     padding-top: 0.75rem;
   }
 
@@ -145,7 +145,7 @@
   .menu li:not(.part-header) button {
     width: 100%;
     text-align: left;
-    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    padding: 0.5rem 1rem 0.5rem 2rem;
     border: none;
     background: transparent;
     color: var(--color-text-muted);

@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "marked": "^17.0.4",
+    "marked-alert": "^2.1.2",
     "shiki": "^4.0.2"
   }
 }
