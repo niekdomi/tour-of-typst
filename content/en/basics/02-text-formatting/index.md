@@ -4,7 +4,8 @@ Typst gives you several ways to emphasize and style inline text.
 
 ## Emphasis and strong
 
-Wrap text in `_underscores_` to *emphasize* it (rendered as italic), and in `*asterisks*` to make it **strong** (rendered as bold):
+Wrap text in `_underscores_` to _emphasize_ it (rendered as italic), and in `*asterisks*` to make it
+**strong** (rendered as bold):
 
 ```typst
 This is _emphasized_ text.
@@ -12,7 +13,8 @@ This is *strong* text.
 You can _combine *both* together_.
 ```
 
-> **Note:** Unlike Markdown, doubling the characters (`**bold**`) does not work in Typst. Use a single `*` for strong and a single `_` for emphasis.
+> [!NOTE] Unlike Markdown, doubling the characters (`**bold**`) does not work in Typst. Use a single
+> `*` for strong and a single `_` for emphasis.
 
 ## Inline code
 

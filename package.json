@@ -37,8 +37,14 @@
     ]
   },
   "dependencies": {
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.40.0",
+    "@vedivad/codemirror-typst": "^0.5.2",
+    "@vedivad/typst-web-service": "^0.4.3",
+    "codemirror": "^6.0.2",
     "marked": "^17.0.4",
     "marked-alert": "^2.1.2",
-    "shiki": "^4.0.2"
+    "shiki": "^4.0.2",
+    "vite-plugin-wasm": "^3.6.0"
   }
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { marked, Renderer } from "marked";
+  import { Marked, Renderer } from "marked";
+  import markedAlert from "marked-alert";
   import { getChapterMarkdown } from "../content";
   import type { Chapter } from "../content/types";
   import { highlighterReady } from "../lib/highlighter";
@@ -22,10 +23,11 @@
 
     const renderer = new Renderer();
 
-    if (highlighter) {
+    const hl = highlighter;
+    if (hl) {
       renderer.code = ({ text, lang }) => {
-        const l = lang && highlighter.getLoadedLanguages().includes(lang) ? lang : "text";
-        return highlighter.codeToHtml(text, {
+        const l = lang && hl.getLoadedLanguages().includes(lang) ? lang : "text";
+        return hl.codeToHtml(text, {
           lang: l,
           themes: { light: "github-light", dark: "github-dark-dimmed" },
           defaultColor: false,
@@ -33,7 +35,7 @@
       };
     }
 
-    return marked.parse(raw, { renderer }) as string;
+    return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
   });
 </script>
 
@@ -150,6 +152,66 @@
   .lesson :global(th) {
     background: var(--color-surface);
     font-weight: 600;
+  }
+
+  /* Alerts (marked-alert) */
+  .lesson :global(.markdown-alert) {
+    border-left: 4px solid var(--color-border);
+    background: var(--color-surface);
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .lesson :global(.markdown-alert-title) {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .lesson :global(.markdown-alert-title svg) {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  .lesson :global(.markdown-alert-note) {
+    border-left-color: #239dad;
+  }
+  .lesson :global(.markdown-alert-note .markdown-alert-title) {
+    color: #239dad;
+  }
+
+  .lesson :global(.markdown-alert-tip) {
+    border-left-color: #3fb950;
+  }
+  .lesson :global(.markdown-alert-tip .markdown-alert-title) {
+    color: #3fb950;
+  }
+
+  .lesson :global(.markdown-alert-important) {
+    border-left-color: #ab7df8;
+  }
+  .lesson :global(.markdown-alert-important .markdown-alert-title) {
+    color: #ab7df8;
+  }
+
+  .lesson :global(.markdown-alert-warning) {
+    border-left-color: #d29922;
+  }
+  .lesson :global(.markdown-alert-warning .markdown-alert-title) {
+    color: #d29922;
+  }
+
+  .lesson :global(.markdown-alert-caution) {
+    border-left-color: #f85149;
+  }
+  .lesson :global(.markdown-alert-caution .markdown-alert-title) {
+    color: #f85149;
   }
 
   .placeholder {

@@ -2,13 +2,31 @@
   import Editor from "./Editor.svelte";
   import Preview from "./Preview.svelte";
   import ResizeHandle from "../components/ResizeHandle.svelte";
+  import { getChapterTemplate, getChapterSolution } from "../content";
+
+  interface Props {
+    locale: string;
+    chapterKey: string;
+  }
+
+  let { locale, chapterKey }: Props = $props();
 
   let editorFraction = $state(0.5);
+  let svg = $state<string | undefined>();
+
+  const template = $derived(getChapterTemplate(locale, chapterKey));
+  const solution = $derived(getChapterSolution(locale, chapterKey));
+
+  // Clear preview when chapter changes
+  $effect(() => {
+    chapterKey;
+    svg = undefined;
+  });
 </script>
 
 <div class="workspace">
   <div class="pane" style="flex: {editorFraction}">
-    <Editor />
+    <Editor {template} {solution} oncompile={(s) => (svg = s)} />
   </div>
 
   <ResizeHandle
@@ -18,7 +36,7 @@
   />
 
   <div class="pane" style="flex: {1 - editorFraction}">
-    <Preview />
+    <Preview {svg} />
   </div>
 </div>
 

@@ -1,6 +1,7 @@
 # Headings & Structure
 
-Headings divide your document into sections. In Typst, you create them with `=` signs — one for each level:
+Headings divide your document into sections. In Typst, you create them with `=` signs — one for each
+level:
 
 ```typst
 = Top-level heading
@@ -12,7 +13,8 @@ Headings divide your document into sections. In Typst, you create them with `=` 
 ==== Fourth level
 ```
 
-The number of `=` signs determines the heading level, equivalent to `<h1>` through `<h4>` in HTML or `\section` through `\subsubsubsection` in LaTeX.
+The number of `=` signs determines the heading level, equivalent to `<h1>` through `<h4>` in HTML or
+`\section` through `\subsubsubsection` in LaTeX.
 
 ## Heading levels in practice
 
@@ -53,7 +55,7 @@ You can add automatic numbering to all headings with a single set rule:
 = Methodology
 ```
 
-This produces: *1. Introduction*, *1.1 Background*, *1.2 Motivation*, *2. Methodology*.
+This produces: _1. Introduction_, _1.1 Background_, _1.2 Motivation_, _2. Methodology_.
 
 You can change the numbering style:
 
@@ -71,7 +73,8 @@ Adding a table of contents is one line:
 #outline()
 ```
 
-Typst automatically collects all headings and generates the outline. You can place it anywhere in the document — typically after the title, before the first section.
+Typst automatically collects all headings and generates the outline. You can place it anywhere in
+the document — typically after the title, before the first section.
 
 ## Try it
 

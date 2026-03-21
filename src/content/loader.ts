@@ -7,6 +7,18 @@ const markdownFiles = import.meta.glob<string>("../../content/*/*/*/index.md", {
   import: "default",
 });
 
+const templateFiles = import.meta.glob<string>("../../content/*/*/*/template.typ", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+
+const solutionFiles = import.meta.glob<string>("../../content/*/*/*/solution.typ", {
+  eager: true,
+  query: "?raw",
+  import: "default",
+});
+
 const allModules: TourModule[] = Object.values(tourModules);
 
 export const availableLocales: LocaleMeta[] = allModules.map((m) => m.meta);
@@ -34,4 +46,24 @@ export function getChapterMarkdown(locale: string, key: string): string | undefi
   });
 
   return entry?.[1];
+}
+
+function findTypFile(
+  files: Record<string, string>,
+  locale: string,
+  key: string,
+): string | undefined {
+  const entry = Object.entries(files).find(([path]) => {
+    const pattern = new RegExp(`/content/${locale}/[^/]+/[^/]+-${key}/`);
+    return pattern.test(path);
+  });
+  return entry?.[1];
+}
+
+export function getChapterTemplate(locale: string, key: string): string | undefined {
+  return findTypFile(templateFiles, locale, key);
+}
+
+export function getChapterSolution(locale: string, key: string): string | undefined {
+  return findTypFile(solutionFiles, locale, key);
 }

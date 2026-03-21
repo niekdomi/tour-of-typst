@@ -1,6 +1,7 @@
 # Hello, World!
 
-Let's write your first Typst document. Unlike LaTeX, there's no boilerplate — you just start writing:
+Let's write your first Typst document. Unlike LaTeX, there's no boilerplate — you just start
+writing:
 
 ```typst
 Hello, world!
@@ -28,7 +29,8 @@ Line two, still the same paragraph.
 
 ## Comments
 
-Comments start with `//` and are ignored by the compiler. They're useful for leaving notes to yourself:
+Comments start with `//` and are ignored by the compiler. They're useful for leaving notes to
+yourself:
 
 ```typst
 // This won't appear in the output.
@@ -45,7 +47,8 @@ Hello again!
 
 ## Escaping special characters
 
-Some characters have special meaning in Typst (`*`, `_`, `=`, etc.). To use them literally, prefix them with a backslash:
+Some characters have special meaning in Typst (`*`, `_`, `=`, etc.). To use them literally, prefix
+them with a backslash:
 
 ```typst
 I want to write \*this\* without making it bold.

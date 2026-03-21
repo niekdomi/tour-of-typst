@@ -57,7 +57,7 @@
     />
 
     <div class="workspace-side" style="flex: {1 - contentFraction}">
-      <Workspace />
+      <Workspace {locale} chapterKey={currentKey} />
     </div>
   </div>
 </div>
