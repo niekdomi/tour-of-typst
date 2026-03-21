@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { marked } from "marked";
+  import { marked, Renderer } from "marked";
   import { getChapterMarkdown } from "../content";
   import type { Chapter } from "../content/types";
+  import { highlighterReady } from "../lib/highlighter";
+  import type { Highlighter } from "shiki";
 
   interface Props {
     chapter: Chapter;
@@ -11,12 +13,27 @@
 
   let { chapter, index, locale }: Props = $props();
 
+  let highlighter = $state<Highlighter | null>(null);
+  highlighterReady.then((h) => (highlighter = h));
+
   const html = $derived.by(() => {
     const raw = getChapterMarkdown(locale, chapter.key);
-    if (!raw) {
-      return null;
+    if (!raw) return null;
+
+    const renderer = new Renderer();
+
+    if (highlighter) {
+      renderer.code = ({ text, lang }) => {
+        const l = lang && highlighter.getLoadedLanguages().includes(lang) ? lang : "text";
+        return highlighter.codeToHtml(text, {
+          lang: l,
+          themes: { light: "github-light", dark: "github-dark-dimmed" },
+          defaultColor: false,
+        });
+      };
     }
-    return marked.parse(raw) as string;
+
+    return marked.parse(raw, { renderer }) as string;
   });
 </script>
 
@@ -82,12 +99,16 @@
   }
 
   .lesson :global(pre) {
-    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1rem;
     overflow-x: auto;
     margin: 1rem 0;
+  }
+
+  /* Shiki-highlighted blocks override background via inline styles — keep structure only */
+  .lesson :global(pre.shiki) {
+    background: transparent;
   }
 
   .lesson :global(pre code) {
