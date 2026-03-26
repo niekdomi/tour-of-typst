@@ -16,21 +16,22 @@
     open = false;
   }
 
-  // Map each chapter key to its flat index for navigation
-  function flatIndex(partIndex: number, chapterIndex: number): number {
-    let idx = 0;
-    for (let p = 0; p < partIndex; p++) {
-      idx += parts[p].chapters.length;
-    }
-    return idx + chapterIndex;
+  function flatIndex(pi: number, ci: number): number {
+    return parts.slice(0, pi).reduce((sum, p) => sum + p.chapters.length, 0) + ci;
   }
 </script>
 
 <div class="toc">
   <button class="trigger" onclick={() => (open = !open)}>
     <span class="trigger-label">{chapters[currentIndex]?.title ?? ""}</span>
-    <svg class="chevron" class:open aria-hidden="true" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg class="chevron" class:open aria-hidden="true" viewBox="0 0 10 6" fill="none">
+      <path
+        d="M1 1l4 4 4-4"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     </svg>
   </button>
 
@@ -72,10 +73,6 @@
     font-size: 1.05rem;
     font-family: inherit;
     text-align: left;
-  }
-
-  .trigger:hover {
-    background: transparent;
   }
 
   .trigger-label {

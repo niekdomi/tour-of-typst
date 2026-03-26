@@ -17,29 +17,40 @@
   let highlighter = $state<Highlighter | null>(null);
   highlighterReady.then((h) => (highlighter = h));
 
+  function handleClick(e: MouseEvent) {
+    const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
+    if (!btn) return;
+    const code = decodeURIComponent(btn.dataset.code ?? "");
+    navigator.clipboard.writeText(code).then(() => {
+      const prev = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => (btn.textContent = prev), 1500);
+    });
+  }
+
   const html = $derived.by(() => {
     const raw = getChapterMarkdown(locale, chapter.key);
     if (!raw) return null;
 
     const renderer = new Renderer();
-
-    const hl = highlighter;
-    if (hl) {
-      renderer.code = ({ text, lang }) => {
-        const l = lang && hl.getLoadedLanguages().includes(lang) ? lang : "text";
-        return hl.codeToHtml(text, {
-          lang: l,
-          themes: { light: "github-light", dark: "github-dark-dimmed" },
-          defaultColor: false,
-        });
-      };
-    }
+    renderer.code = ({ text, lang }) => {
+      const highlighted = highlighter
+        ? highlighter.codeToHtml(text, {
+            lang: lang && highlighter.getLoadedLanguages().includes(lang) ? lang : "text",
+            themes: { light: "github-light", dark: "github-dark-dimmed" },
+            defaultColor: false,
+          })
+        : `<pre><code>${text}</code></pre>`;
+      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">Copy</button></div>`;
+    };
 
     return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
   });
 </script>
 
-<article class="lesson">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<article class="lesson" onclick={handleClick}>
   <div class="chapter-label">Chapter {index + 1}</div>
 
   {#if html}
@@ -90,8 +101,8 @@
     text-decoration: underline;
   }
 
-  /* Code */
-  .lesson :global(code) {
+  /* Code — inline only; pre code inherits nothing from this rule */
+  .lesson :global(:not(pre) > code) {
     font-family: var(--font-mono);
     font-size: 0.85em;
     background: var(--color-surface);
@@ -108,15 +119,33 @@
     margin: 1rem 0;
   }
 
-  /* Shiki-highlighted blocks override background via inline styles — keep structure only */
   .lesson :global(pre.shiki) {
     background: transparent;
   }
 
-  .lesson :global(pre code) {
-    background: none;
-    border: none;
-    padding: 0;
+  /* Copy button */
+  .lesson :global(.code-block) {
+    position: relative;
+  }
+
+  .lesson :global(.copy-btn) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.72rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .lesson :global(.code-block:hover .copy-btn) {
+    opacity: 1;
   }
 
   /* Misc Elements */

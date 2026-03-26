@@ -7,26 +7,38 @@
   interface Props {
     locale: string;
     chapterKey: string;
+    theme: "light" | "dark";
   }
 
-  let { locale, chapterKey }: Props = $props();
+  let { locale, chapterKey, theme }: Props = $props();
 
   let editorFraction = $state(0.5);
   let svg = $state<string | undefined>();
 
-  const template = $derived(getChapterTemplate(locale, chapterKey));
+  // Plain Map intentionally — SvelteMap would make doc reactive on every keystroke
+  // eslint-disable-next-line svelte/prefer-svelte-reactivity
+  const editsMap = new Map<string, string>();
+  const editsKey = (loc: string, key: string) => `${loc}:${key}`;
+
   const solution = $derived(getChapterSolution(locale, chapterKey));
 
-  // Clear preview when chapter changes
+  // Persist user edits per locale+chapter; restores them on navigation
+  let doc = $state("");
+
   $effect(() => {
-    chapterKey;
+    doc =
+      editsMap.get(editsKey(locale, chapterKey)) ?? getChapterTemplate(locale, chapterKey) ?? "";
     svg = undefined;
   });
+
+  function handleChange(content: string) {
+    editsMap.set(editsKey(locale, chapterKey), content);
+  }
 </script>
 
 <div class="workspace">
   <div class="pane" style="flex: {editorFraction}">
-    <Editor {template} {solution} oncompile={(s) => (svg = s)} />
+    <Editor {doc} {solution} {theme} onchange={handleChange} oncompile={(s) => (svg = s)} />
   </div>
 
   <ResizeHandle

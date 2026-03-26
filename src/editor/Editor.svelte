@@ -1,188 +1,134 @@
 <script lang="ts">
   import { EditorView, basicSetup } from "codemirror";
-  import { EditorState, Compartment } from "@codemirror/state";
+  import { EditorState, Compartment, Transaction } from "@codemirror/state";
+  import { cmBaseTheme } from "./theme";
   import {
     createTypstExtensions,
     createTypstShikiHighlighting,
     TypstCompiler,
     TypstRenderer,
+    TypstFormatter,
   } from "@vedivad/codemirror-typst";
   import type { TypstShikiHighlighting } from "@vedivad/codemirror-typst";
   import type { CompileResult } from "@vedivad/typst-web-service";
 
   interface Props {
-    template?: string;
+    doc?: string;
     solution?: string;
+    theme?: "light" | "dark";
+    onchange?: (content: string) => void;
     oncompile?: (svg: string) => void;
   }
 
-  let { template = "", solution, oncompile }: Props = $props();
+  let { doc = "", solution, theme = "light", onchange, oncompile }: Props = $props();
 
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
   let showingSolution = $state(false);
-  let savedCode: string | undefined = $state();
+  let savedCode: string | undefined;
 
   const compiler = new TypstCompiler();
   const renderer = new TypstRenderer();
-
+  const formatter = new TypstFormatter();
   const highlightCompartment = new Compartment();
 
-  function getResolvedTheme(): "light" | "dark" {
-    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-  }
-
-  // Base CM theme that uses CSS variables for all chrome
-  const cmBaseTheme = EditorView.theme({
-    "&": {
-      backgroundColor: "var(--color-bg)",
-      color: "var(--color-text)",
-    },
-    ".cm-gutters": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text-muted)",
-      borderRight: "1px solid var(--color-border)",
-    },
-    ".cm-activeLineGutter": {
-      backgroundColor: "var(--color-surface-hover)",
-    },
-    ".cm-activeLine": {
-      backgroundColor: "var(--color-surface)",
-    },
-    ".cm-cursor, .cm-dropCursor": {
-      borderLeftColor: "var(--color-text)",
-    },
-    "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": {
-      backgroundColor: "var(--color-surface-hover) !important",
-    },
-    ".cm-content": {
-      caretColor: "var(--color-text)",
-    },
-    // Diagnostics tooltip
-    ".cm-tooltip": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text)",
-      border: "1px solid var(--color-border)",
-    },
-    ".cm-tooltip-lint": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text)",
-    },
-    ".cm-diagnostic": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text)",
-    },
-    ".cm-panel": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text)",
-    },
-    ".cm-tooltip-autocomplete": {
-      backgroundColor: "var(--color-surface)",
-      color: "var(--color-text)",
-      border: "1px solid var(--color-border)",
-    },
-  });
-
   let shikiHighlighting: TypstShikiHighlighting | undefined;
-  // Extensions from createTypstExtensions minus the built-in shiki (index 0)
+  // index 0 of createTypstExtensions is the built-in shiki — we replace it with our compartment
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
 
   async function init() {
-    // Create highlighting with both themes available
     shikiHighlighting = await createTypstShikiHighlighting({
       themes: { light: "github-light", dark: "github-dark-dimmed" },
-      defaultColor: getResolvedTheme(),
+      defaultColor: theme,
     });
-
-    // createTypstExtensions returns [shiki.extension, lintGutter, ...compiler/linter plugins]
-    // We skip index 0 (the built-in shiki) and use our own via compartment
-    const allExtensions = await createTypstExtensions({
+    const all = await createTypstExtensions({
       compiler: {
         instance: compiler,
         delay: 300,
         onCompile: async (result: CompileResult) => {
-          if (result.vector) {
-            const svg = await renderer.renderSvg(result.vector);
-            oncompile?.(svg);
-          }
+          if (result.vector) oncompile?.(await renderer.renderSvg(result.vector));
         },
       },
       highlighting: { theme: "light" },
     });
-    compilerExtensions = allExtensions.slice(1);
+    compilerExtensions = all.slice(1);
   }
 
   const ready = init();
 
-  function createView(doc: string) {
+  function createView(initialDoc: string) {
     view?.destroy();
     if (!shikiHighlighting || !compilerExtensions || !editorContainer) return;
 
-    const theme = getResolvedTheme();
     view = new EditorView({
       parent: editorContainer,
       state: EditorState.create({
-        doc,
+        doc: initialDoc,
         extensions: [
           basicSetup,
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
+          EditorView.updateListener.of((u) => {
+            if (u.docChanged) onchange?.(u.state.doc.toString());
+          }),
           ...compilerExtensions,
         ],
       }),
     });
+
+    // Trigger initial compile — replace doc with itself so compiler sees docChanged
+    if (initialDoc.length > 0) {
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: initialDoc },
+        annotations: Transaction.addToHistory.of(false),
+      });
+    }
   }
 
-  function getEditorContent(): string {
-    return view?.state.doc.toString() ?? template ?? "";
-  }
-
-  // React to template changes (chapter navigation)
   $effect(() => {
     ready.then(() => {
-      const doc = template ?? "";
       showingSolution = false;
       savedCode = undefined;
       createView(doc);
     });
-
     return () => view?.destroy();
   });
 
-  // Watch for theme changes on <html> data-theme attribute
   $effect(() => {
-    if (!editorContainer) return;
-
-    const observer = new MutationObserver(() => {
-      if (view && shikiHighlighting) {
-        const theme = getResolvedTheme();
-        view.dispatch({
-          effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
-        });
-      }
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    return () => observer.disconnect();
+    if (view && shikiHighlighting) {
+      // Reconfigure compartment + force docChanged so Shiki re-decorates existing tokens
+      view.dispatch({
+        effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
+        changes: { from: 0, to: view.state.doc.length, insert: view.state.doc.toString() },
+        annotations: Transaction.addToHistory.of(false),
+      });
+    }
   });
 
   function reset() {
     showingSolution = false;
     savedCode = undefined;
-    createView(template ?? "");
+    createView(doc);
+  }
+
+  async function format() {
+    if (!view) return;
+    const source = view.state.doc.toString();
+    const formatted = await formatter.format(source);
+    if (formatted !== source) {
+      view.dispatch({
+        changes: { from: 0, to: view.state.doc.length, insert: formatted },
+      });
+    }
   }
 
   function toggleSolution() {
     if (showingSolution) {
       showingSolution = false;
-      createView(savedCode ?? template ?? "");
+      createView(savedCode ?? doc);
       savedCode = undefined;
     } else if (solution) {
-      savedCode = getEditorContent();
+      savedCode = view?.state.doc.toString() ?? doc;
       showingSolution = true;
       createView(solution);
     }
@@ -193,10 +139,15 @@
   <div class="toolbar">
     <button class="toolbar-btn" onclick={reset} title="Reset to template">Reset</button>
     {#if solution}
-      <button class="toolbar-btn" onclick={toggleSolution} title={showingSolution ? "Back to your code" : "Show solution"}>
+      <button
+        class="toolbar-btn"
+        onclick={toggleSolution}
+        title={showingSolution ? "Back to your code" : "Show solution"}
+      >
         {showingSolution ? "Hide Solution" : "Show Solution"}
       </button>
     {/if}
+    <button class="toolbar-btn toolbar-btn--right" onclick={format} title="Format document">Format</button>
   </div>
   <div class="editor-container" bind:this={editorContainer}></div>
 </div>
@@ -216,6 +167,10 @@
     background: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     flex-shrink: 0;
+  }
+
+  .toolbar-btn--right {
+    margin-left: auto;
   }
 
   .toolbar-btn {

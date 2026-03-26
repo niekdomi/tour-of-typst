@@ -12,21 +12,21 @@
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.2",
+    "@eslint/compat": "^2.0.3",
     "@eslint/js": "^10.0.1",
-    "@sveltejs/vite-plugin-svelte": "^6.2.4",
-    "@types/node": "^25.3.3",
-    "eslint": "^10.0.2",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-svelte": "^3.15.0",
+    "eslint-plugin-svelte": "^3.16.0",
     "globals": "^17.4.0",
     "prettier": "^3.8.1",
     "prettier-plugin-svelte": "^3.5.1",
-    "svelte": "^5.53.7",
-    "svelte-check": "^4.4.4",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.1"
+    "svelte": "^5.55.0",
+    "svelte-check": "^4.4.5",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.57.2",
+    "vite": "^8.0.3"
   },
   "prettier": {
     "trailingComma": "es5",
@@ -39,10 +39,10 @@
   "dependencies": {
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.40.0",
-    "@vedivad/codemirror-typst": "^0.5.2",
-    "@vedivad/typst-web-service": "^0.4.3",
+    "@vedivad/codemirror-typst": "^0.6.0",
+    "@vedivad/typst-web-service": "^0.6.0",
     "codemirror": "^6.0.2",
-    "marked": "^17.0.4",
+    "marked": "^17.0.5",
     "marked-alert": "^2.1.2",
     "shiki": "^4.0.2",
     "vite-plugin-wasm": "^3.6.0"
