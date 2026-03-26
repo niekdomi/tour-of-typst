@@ -10,7 +10,7 @@
   let { direction, fraction, min = 0.15, max = 0.85, onchange }: Props = $props();
 
   let dragging = $state(false);
-  let el = $state<HTMLDivElement | null>(null);
+  let el: HTMLDivElement;
 
   function onPointerDown(e: PointerEvent) {
     dragging = true;
@@ -19,14 +19,8 @@
   }
 
   function onPointerMove(e: PointerEvent) {
-    if (!dragging || !el) {
-      return;
-    }
-
-    const parent = el.parentElement;
-    if (!parent) {
-      return;
-    }
+    const parent = el?.parentElement;
+    if (!dragging || !parent) return;
 
     const rect = parent.getBoundingClientRect();
     const raw =

@@ -1,15 +1,14 @@
 <script lang="ts">
   import Dropdown from "./Dropdown.svelte";
   import TableOfContents from "./TableOfContents.svelte";
-  import { getTranslations, defaultLocale } from "../../content/i18n";
-  import type { Locale } from "../../content/i18n";
+  import { getTranslations } from "../../content/i18n";
   import { availableLocales } from "../content";
-  import type { Chapter } from "../content/types";
-
-  type Theme = "auto" | "light" | "dark";
+  import type { Chapter, Part } from "../content/types";
+  import { locale } from "../lib/locale.svelte";
+  import { theme } from "../lib/theme.svelte";
 
   interface Props {
-    locale: Locale;
+    parts?: Part[];
     chapters?: Chapter[];
     currentIndex?: number;
     contentFraction?: number;
@@ -18,7 +17,7 @@
   }
 
   let {
-    locale = $bindable(defaultLocale),
+    parts = [],
     chapters = [],
     currentIndex = 0,
     contentFraction = 0.5,
@@ -26,43 +25,14 @@
     onnavigate,
   }: Props = $props();
 
-  const t = $derived(getTranslations(locale));
-  const localeOptions = availableLocales.map(({ locale, label }) => ({ value: locale, label }));
-
-  // --- Theme ---
-  let theme = $state<Theme>((localStorage.getItem("theme") as Theme) ?? "auto");
+  const t = $derived(getTranslations(locale.value));
+  const localeOptions = availableLocales.map(({ locale: l, label }) => ({ value: l, label }));
 
   const themeOptions = $derived([
     { value: "auto", label: t.themeAuto },
     { value: "light", label: t.themeLight },
     { value: "dark", label: t.themeDark },
   ]);
-
-  function applyTheme(value: Theme) {
-    let resolved: "dark" | "light";
-    if (value === "auto") {
-      resolved = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } else {
-      resolved = value as "dark" | "light";
-    }
-    document.documentElement.setAttribute("data-theme", resolved);
-  }
-
-  $effect(() => {
-    applyTheme(theme);
-    localStorage.setItem("theme", theme);
-
-    if (theme === "auto") {
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      const listener = () => applyTheme("auto");
-      mq.addEventListener("change", listener);
-      return () => mq.removeEventListener("change", listener);
-    }
-  });
-
-  $effect(() => {
-    localStorage.setItem("locale", locale);
-  });
 
   const hasPrev = $derived(currentIndex > 0);
   const hasNext = $derived(currentIndex < chapters.length - 1);
@@ -78,9 +48,15 @@
         >
       </span>
 
-      {#if chapters.length > 0}
+      {#if parts.length > 0}
         <div class="divider"></div>
-        <TableOfContents {chapters} {currentIndex} bind:open={tocDropdownOpen} {onnavigate} />
+        <TableOfContents
+          {parts}
+          {chapters}
+          {currentIndex}
+          bind:open={tocDropdownOpen}
+          {onnavigate}
+        />
 
         <div class="nav-arrows" aria-label="Chapter navigation">
           <button
@@ -98,8 +74,8 @@
     </div>
 
     <div class="right" style="flex: {1 - contentFraction}">
-      <Dropdown options={localeOptions} bind:value={locale} label={t.selectLanguage} />
-      <Dropdown options={themeOptions} bind:value={theme} label={t.selectTheme} />
+      <Dropdown options={localeOptions} bind:value={locale.value} label={t.selectLanguage} />
+      <Dropdown options={themeOptions} bind:value={theme.value} label={t.selectTheme} />
     </div>
   </div>
 </header>
@@ -126,6 +102,7 @@
     align-items: center;
     gap: 1rem;
     min-width: 0;
+    position: relative;
   }
 
   .right {
@@ -165,6 +142,7 @@
     display: flex;
     gap: 0.25rem;
     margin-left: auto;
+    margin-right: 1rem;
     flex-shrink: 0;
   }
 

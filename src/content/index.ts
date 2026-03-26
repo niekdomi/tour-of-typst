@@ -1,2 +1,9 @@
-export { availableLocales, getTourForLocale, getChapterMarkdown } from "./loader";
-export type { LocaleMeta, Chapter, TourModule } from "./types";
+export {
+  availableLocales,
+  getTourForLocale,
+  getChapterMarkdown,
+  getChapterTemplate,
+  getChapterSolution,
+  flattenChapters,
+} from "./loader";
+export type { LocaleMeta, Chapter, Part, TourModule } from "./types";

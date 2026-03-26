@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { marked } from "marked";
+  import { Marked, Renderer } from "marked";
+  import markedAlert from "marked-alert";
   import { getChapterMarkdown } from "../content";
   import type { Chapter } from "../content/types";
+  import { highlighterReady } from "../lib/highlighter";
+  import type { Highlighter } from "shiki";
 
   interface Props {
     chapter: Chapter;
@@ -11,16 +14,43 @@
 
   let { chapter, index, locale }: Props = $props();
 
+  let highlighter = $state<Highlighter | null>(null);
+  highlighterReady.then((h) => (highlighter = h));
+
+  function handleClick(e: MouseEvent) {
+    const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
+    if (!btn) return;
+    const code = decodeURIComponent(btn.dataset.code ?? "");
+    navigator.clipboard.writeText(code).then(() => {
+      const prev = btn.textContent;
+      btn.textContent = "Copied!";
+      setTimeout(() => (btn.textContent = prev), 1500);
+    });
+  }
+
   const html = $derived.by(() => {
     const raw = getChapterMarkdown(locale, chapter.key);
-    if (!raw) {
-      return null;
-    }
-    return marked.parse(raw) as string;
+    if (!raw) return null;
+
+    const renderer = new Renderer();
+    renderer.code = ({ text, lang }) => {
+      const highlighted = highlighter
+        ? highlighter.codeToHtml(text, {
+            lang: lang && highlighter.getLoadedLanguages().includes(lang) ? lang : "text",
+            themes: { light: "github-light", dark: "github-dark-dimmed" },
+            defaultColor: false,
+          })
+        : `<pre><code>${text}</code></pre>`;
+      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">Copy</button></div>`;
+    };
+
+    return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
   });
 </script>
 
-<article class="lesson">
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<article class="lesson" onclick={handleClick}>
   <div class="chapter-label">Chapter {index + 1}</div>
 
   {#if html}
@@ -71,8 +101,8 @@
     text-decoration: underline;
   }
 
-  /* Code */
-  .lesson :global(code) {
+  /* Code — inline only; pre code inherits nothing from this rule */
+  .lesson :global(:not(pre) > code) {
     font-family: var(--font-mono);
     font-size: 0.85em;
     background: var(--color-surface);
@@ -82,7 +112,6 @@
   }
 
   .lesson :global(pre) {
-    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 1rem;
@@ -90,10 +119,33 @@
     margin: 1rem 0;
   }
 
-  .lesson :global(pre code) {
-    background: none;
-    border: none;
-    padding: 0;
+  .lesson :global(pre.shiki) {
+    background: transparent;
+  }
+
+  /* Copy button */
+  .lesson :global(.code-block) {
+    position: relative;
+  }
+
+  .lesson :global(.copy-btn) {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.72rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .lesson :global(.code-block:hover .copy-btn) {
+    opacity: 1;
   }
 
   /* Misc Elements */
@@ -129,6 +181,66 @@
   .lesson :global(th) {
     background: var(--color-surface);
     font-weight: 600;
+  }
+
+  /* Alerts (marked-alert) */
+  .lesson :global(.markdown-alert) {
+    border-left: 4px solid var(--color-border);
+    background: var(--color-surface);
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .lesson :global(.markdown-alert-title) {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .lesson :global(.markdown-alert-title svg) {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  .lesson :global(.markdown-alert-note) {
+    border-left-color: #239dad;
+  }
+  .lesson :global(.markdown-alert-note .markdown-alert-title) {
+    color: #239dad;
+  }
+
+  .lesson :global(.markdown-alert-tip) {
+    border-left-color: #3fb950;
+  }
+  .lesson :global(.markdown-alert-tip .markdown-alert-title) {
+    color: #3fb950;
+  }
+
+  .lesson :global(.markdown-alert-important) {
+    border-left-color: #ab7df8;
+  }
+  .lesson :global(.markdown-alert-important .markdown-alert-title) {
+    color: #ab7df8;
+  }
+
+  .lesson :global(.markdown-alert-warning) {
+    border-left-color: #d29922;
+  }
+  .lesson :global(.markdown-alert-warning .markdown-alert-title) {
+    color: #d29922;
+  }
+
+  .lesson :global(.markdown-alert-caution) {
+    border-left-color: #f85149;
+  }
+  .lesson :global(.markdown-alert-caution .markdown-alert-title) {
+    color: #f85149;
   }
 
   .placeholder {

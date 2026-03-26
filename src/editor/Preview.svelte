@@ -1,32 +1,33 @@
-<div class="placeholder">
-  <span class="label">Preview</span>
-  <p class="note">The preview will be rendered here.</p>
+<script lang="ts">
+  interface Props {
+    svg?: string;
+  }
+
+  let { svg }: Props = $props();
+</script>
+
+<div class="preview">
+  {#if svg}
+    <div class="preview-content">
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html svg}
+    </div>
+  {/if}
 </div>
 
 <style>
-  .placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .preview {
     height: 100%;
-    gap: 0.5rem;
-    background: var(--color-bg);
-    border: 2px dashed var(--color-border);
-    color: var(--color-text-muted);
+    overflow: auto;
+    background: white;
   }
 
-  .label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    opacity: 0.5;
+  .preview-content {
+    padding: 1rem;
   }
 
-  .note {
-    font-size: 0.75rem;
-    opacity: 0.4;
-    margin: 0;
+  .preview-content :global(svg) {
+    width: 100%;
+    height: auto;
   }
 </style>
