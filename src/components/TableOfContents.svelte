@@ -28,7 +28,10 @@
 
 <div class="toc">
   <button class="trigger" onclick={() => (open = !open)}>
-    {chapters[currentIndex]?.title ?? ""}
+    <span class="trigger-label">{chapters[currentIndex]?.title ?? ""}</span>
+    <svg class="chevron" class:open aria-hidden="true" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
   </button>
 
   {#if open}
@@ -62,11 +65,10 @@
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     color: var(--color-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     width: 100%;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
     font-size: 1.05rem;
     font-family: inherit;
     text-align: left;
@@ -74,6 +76,26 @@
 
   .trigger:hover {
     background: transparent;
+  }
+
+  .trigger-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .chevron {
+    flex-shrink: 0;
+    width: 10px;
+    height: 6px;
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .chevron.open {
+    transform: rotate(180deg);
   }
 
   .overlay {

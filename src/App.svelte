@@ -86,6 +86,7 @@
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
+    border-right: 1px solid var(--color-border);
   }
 
   .content-panel {

@@ -137,6 +137,7 @@
     position: relative;
   }
 
+
   .right {
     justify-content: flex-end;
   }
@@ -174,6 +175,7 @@
     display: flex;
     gap: 0.25rem;
     margin-left: auto;
+    margin-right: 1rem;
     flex-shrink: 0;
   }
 
