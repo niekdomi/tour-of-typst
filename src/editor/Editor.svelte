@@ -44,7 +44,7 @@
     const all = await createTypstExtensions({
       compiler: {
         instance: compiler,
-        delay: 300,
+        debounceDelay: 300,
         onCompile: async (result: CompileResult) => {
           if (result.vector) oncompile?.(await renderer.renderSvg(result.vector));
         },
@@ -147,7 +147,9 @@
         {showingSolution ? "Hide Solution" : "Show Solution"}
       </button>
     {/if}
-    <button class="toolbar-btn toolbar-btn--right" onclick={format} title="Format document">Format</button>
+    <button class="toolbar-btn toolbar-btn--right" onclick={format} title="Format document"
+      >Format</button
+    >
   </div>
   <div class="editor-container" bind:this={editorContainer}></div>
 </div>
