@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "bun test"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
@@ -39,8 +40,8 @@
   "dependencies": {
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "^6.40.0",
-    "@vedivad/codemirror-typst": "^0.6.0",
-    "@vedivad/typst-web-service": "^0.6.0",
+    "@vedivad/codemirror-typst": "^0.7.1",
+    "@vedivad/typst-web-service": "^0.7.1",
     "codemirror": "^6.0.2",
     "marked": "^17.0.5",
     "marked-alert": "^2.1.2",

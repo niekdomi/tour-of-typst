@@ -30,3 +30,4 @@ export function getTranslations(locale: Locale): Translations {
 }
 
 export const defaultLocale: Locale = "en";
+export const locales = Object.keys(translations) as Locale[];

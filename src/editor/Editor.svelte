@@ -44,7 +44,7 @@
     const all = await createTypstExtensions({
       compiler: {
         instance: compiler,
-        debounceDelay: 300,
+        throttleDelay: 100,
         onCompile: async (result: CompileResult) => {
           if (result.vector) oncompile?.(await renderer.renderSvg(result.vector));
         },
