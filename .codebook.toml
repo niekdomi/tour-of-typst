@@ -1,21 +1,21 @@
 dictionaries = ["en_us", "de_ch"]
 words = [
-  "onnavigate",
   "bindable",
+  "buenard",
   "haspopup",
   "linecap",
   "linejoin",
-  "Buenard",
-  "shiki",
   "noninteractive",
+  "oncompile",
+  "onnavigate",
+  "onpointerdown",
   "onpointermove",
   "onpointerup",
-  "valuemin",
+  "shiki",
   "valuemax",
+  "valuemin",
   "valuenow",
-  "onpointerdown",
   "vedivad",
-  "oncompile",
 ]
 include_paths = [
   "**/*.md",
