@@ -1,7 +1,7 @@
 import { EditorView } from "codemirror";
 
 /**
- * CodeMirror base theme that delegates all colours to CSS custom properties,
+ * CodeMirror base theme that delegates all colors to CSS custom properties,
  * so the editor automatically follows light/dark mode without JS intervention.
  */
 export const cmBaseTheme = EditorView.theme({

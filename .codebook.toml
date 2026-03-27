@@ -1,8 +1,25 @@
 dictionaries = ["en_us", "de_ch"]
-words = []
-ignore_paths = [
-    "**/*.yaml",
-    ".git/**/*",
+words = [
+  "onnavigate",
+  "bindable",
+  "haspopup",
+  "linecap",
+  "linejoin",
+  "Buenard",
+  "shiki",
+  "noninteractive",
+  "onpointermove",
+  "onpointerup",
+  "valuemin",
+  "valuemax",
+  "valuenow",
+  "onpointerdown",
+  "vedivad",
+  "oncompile",
+]
+include_paths = [
+  "**/*.md",
+  "**/*.svelte",
+  "**/*.ts",
 ]
 use_global = false
-min_word_length = 0

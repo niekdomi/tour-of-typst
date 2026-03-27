@@ -27,16 +27,18 @@
   let showingSolution = $state(false);
   let savedCode: string | undefined;
 
-  const compiler = new TypstCompiler();
-  const renderer = new TypstRenderer();
-  const formatter = new TypstFormatter();
   const highlightCompartment = new Compartment();
 
   let shikiHighlighting: TypstShikiHighlighting | undefined;
   // index 0 of createTypstExtensions is the built-in shiki — we replace it with our compartment
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
+  let formatter: TypstFormatter | undefined;
 
   async function init() {
+    const compiler = await TypstCompiler.create();
+    const renderer = TypstRenderer.create();
+    formatter = TypstFormatter.create();
+
     shikiHighlighting = await createTypstShikiHighlighting({
       themes: { light: "github-light", dark: "github-dark-dimmed" },
       defaultColor: theme,
@@ -112,7 +114,7 @@
   }
 
   async function format() {
-    if (!view) return;
+    if (!view || !formatter) return;
     const source = view.state.doc.toString();
     const formatted = await formatter.format(source);
     if (formatted !== source) {
