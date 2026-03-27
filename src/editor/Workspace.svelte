@@ -21,13 +21,13 @@
   const editsKey = (loc: string, key: string) => `${loc}:${key}`;
 
   const solution = $derived(getChapterSolution(locale, chapterKey));
+  const template = $derived(getChapterTemplate(locale, chapterKey) ?? "");
 
   // Persist user edits per locale+chapter; restores them on navigation
   let doc = $state("");
 
   $effect(() => {
-    doc =
-      editsMap.get(editsKey(locale, chapterKey)) ?? getChapterTemplate(locale, chapterKey) ?? "";
+    doc = editsMap.get(editsKey(locale, chapterKey)) ?? template;
     svg = undefined;
   });
 
@@ -38,7 +38,15 @@
 
 <div class="workspace">
   <div class="pane" style="flex: {editorFraction}">
-    <Editor {doc} {solution} {theme} onchange={handleChange} oncompile={(s) => (svg = s)} />
+    <Editor
+      {doc}
+      {template}
+      {solution}
+      {theme}
+      docKey="{locale}:{chapterKey}"
+      onchange={handleChange}
+      oncompile={(s) => (svg = s)}
+    />
   </div>
 
   <ResizeHandle

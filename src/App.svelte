@@ -12,11 +12,12 @@
 
   let currentKey = $state("");
   const currentIndex = $derived(
-    Math.max(
-      0,
-      chapters.findIndex((c) => c.key === currentKey)
-    )
+    Math.max(0, chapters.findIndex((c) => c.key === currentKey))
   );
+
+  $effect(() => {
+    if (!currentKey && chapters.length > 0) currentKey = chapters[0].key;
+  });
 
   function navigate(index: number) {
     currentKey = chapters[index]?.key ?? "";

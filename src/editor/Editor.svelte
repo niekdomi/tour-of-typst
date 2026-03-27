@@ -14,13 +14,15 @@
 
   interface Props {
     doc?: string;
+    template?: string;
+    docKey?: string;
     solution?: string;
     theme?: "light" | "dark";
     onchange?: (content: string) => void;
     oncompile?: (svg: string) => void;
   }
 
-  let { doc = "", solution, theme = "light", onchange, oncompile }: Props = $props();
+  let { doc = "", template = "", docKey = "", solution, theme = "light", onchange, oncompile }: Props = $props();
 
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
@@ -88,10 +90,13 @@
   }
 
   $effect(() => {
+    // Destructure to read both doc and docKey synchronously — Svelte tracks both.
+    // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
+    const [initialDoc] = [doc, docKey];
     ready.then(() => {
       showingSolution = false;
       savedCode = undefined;
-      createView(doc);
+      createView(initialDoc);
     });
     return () => view?.destroy();
   });
@@ -110,7 +115,8 @@
   function reset() {
     showingSolution = false;
     savedCode = undefined;
-    createView(doc);
+    createView(template);
+    onchange?.(template);
   }
 
   async function format() {
