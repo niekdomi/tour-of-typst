@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["bun-types", "node"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte", "content/**/*.ts"]
 }

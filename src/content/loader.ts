@@ -1,4 +1,7 @@
-import type { TourModule, LocaleMeta, Chapter } from "./types";
+import type { TourModule, LocaleMeta } from "./types";
+import { findFile, flattenChapters, findTourForLocale } from "./utils";
+
+export { findFile, flattenChapters, findTourForLocale };
 
 const tourModules = import.meta.glob<TourModule>("../../content/*/tour.ts", { eager: true });
 
@@ -25,16 +28,7 @@ const allModules: TourModule[] = Object.values(tourModules);
 export const availableLocales: LocaleMeta[] = allModules.map((m) => m.meta);
 
 export function getTourForLocale(locale: string): TourModule | undefined {
-  return allModules.find((m) => m.meta.locale === locale);
-}
-
-export function flattenChapters(tour: TourModule): Chapter[] {
-  return tour.parts.flatMap((p) => p.chapters);
-}
-
-function findFile(files: Record<string, string>, locale: string, key: string): string | undefined {
-  const pattern = new RegExp(`/content/${locale}/[^/]+/[^/]+-${key}/`);
-  return Object.entries(files).find(([p]) => pattern.test(p))?.[1];
+  return findTourForLocale(allModules, locale);
 }
 
 export const getChapterMarkdown = (l: string, k: string) => findFile(markdownFiles, l, k);
