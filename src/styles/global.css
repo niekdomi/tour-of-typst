@@ -27,7 +27,7 @@
 }
 
 [data-theme="dark"] {
-  /* Derived dark palette — same Typst brand feel, deep purple-tinted darks */
+  /* Derived dark palette, same Typst brand feel, deep purple-tinted darks */
   --color-bg: #13121a;
   --color-text: #f0eff5;
   --color-text-muted: #8887a0;

@@ -103,7 +103,7 @@
     text-decoration: underline;
   }
 
-  /* Code — inline only; pre code inherits nothing from this rule */
+  /* Code, inline only; pre code inherits nothing from this rule */
   .lesson :global(:not(pre) > code) {
     font-family: var(--font-mono);
     font-size: 0.85em;

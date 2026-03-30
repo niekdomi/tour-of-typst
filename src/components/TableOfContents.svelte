@@ -127,7 +127,7 @@
     position: relative;
   }
 
-  /* Gutter only on chapter rows — breaks at each part header to visually group */
+  /* Gutter only on chapter rows, breaks at each part header to visually group */
   .menu li:not(.part-header)::before {
     content: "";
     position: absolute;

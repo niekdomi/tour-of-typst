@@ -18,7 +18,7 @@ describe("getTranslations", () => {
   });
 
   it("falls back to English for unknown locale", () => {
-    // cast to bypass type check — simulates a locale loaded at runtime
+    // cast to bypass type check, simulates a locale loaded at runtime
     const t = getTranslations("xx" as "en");
     expect(t).toEqual(getTranslations("en"));
   });
@@ -40,7 +40,7 @@ describe("i18n completeness", () => {
       if (empty.length > 0) {
         console.warn(`[i18n] ${locale} has empty translation keys: ${empty.join(", ")}`);
       }
-      // completeness is a warning, not a hard failure — assert nothing is missing structurally
+      // completeness is a warning, not a hard failure, assert nothing is missing structurally
       expect(Object.keys(t)).toEqual(expect.arrayContaining(baseKeys));
     });
   }

@@ -41,7 +41,7 @@
   const highlightCompartment = new Compartment();
 
   let shikiHighlighting: TypstShikiHighlighting | undefined;
-  // index 0 of createTypstExtensions is the built-in shiki — we replace it with our compartment
+  // index 0 of createTypstExtensions is the built-in shiki, we replace it with our compartment
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
   let formatter: TypstFormatter | undefined;
 
@@ -90,7 +90,7 @@
       }),
     });
 
-    // Trigger initial compile — replace doc with itself so compiler sees docChanged
+    // Trigger initial compile, replace doc with itself so compiler sees docChanged
     if (initialDoc.length > 0) {
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: initialDoc },
@@ -100,7 +100,7 @@
   }
 
   $effect(() => {
-    // Destructure to read both doc and docKey synchronously — Svelte tracks both.
+    // Destructure to read both doc and docKey synchronously, Svelte tracks both.
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
     const [initialDoc] = [doc, docKey];
     ready.then(() => {

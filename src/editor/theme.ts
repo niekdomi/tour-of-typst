@@ -24,7 +24,7 @@ export const cmBaseTheme = EditorView.theme({
     borderLeftColor: "var(--color-text)",
   },
   "&.cm-focused .cm-selectionBackground, .cm-selectionBackground": {
-    // CM applies inline styles for selections — !important is required to override them
+    // CM applies inline styles for selections, !important is required to override them
     backgroundColor: "var(--color-surface-hover) !important",
   },
   ".cm-content": {

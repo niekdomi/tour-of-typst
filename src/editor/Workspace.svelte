@@ -15,7 +15,7 @@
   let editorFraction = $state(0.5);
   let svg = $state<string | undefined>();
 
-  // Plain Map intentionally — SvelteMap would make doc reactive on every keystroke
+  // Plain Map intentionally, SvelteMap would make doc reactive on every keystroke
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const editsMap = new Map<string, string>();
   const editsKey = (loc: string, key: string) => `${loc}:${key}`;
