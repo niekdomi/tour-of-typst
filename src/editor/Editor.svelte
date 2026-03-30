@@ -1,6 +1,7 @@
 <script lang="ts">
   import { EditorView, basicSetup } from "codemirror";
   import { EditorState, Compartment, Transaction } from "@codemirror/state";
+  import { keymap } from "@codemirror/view";
   import { cmBaseTheme } from "./theme";
   import {
     createTypstExtensions,
@@ -22,7 +23,15 @@
     oncompile?: (svg: string) => void;
   }
 
-  let { doc = "", template = "", docKey = "", solution, theme = "light", onchange, oncompile }: Props = $props();
+  let {
+    doc = "",
+    template = "",
+    docKey = "",
+    solution,
+    theme = "light",
+    onchange,
+    oncompile,
+  }: Props = $props();
 
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
@@ -39,7 +48,7 @@
   async function init() {
     const compiler = await TypstCompiler.create();
     const renderer = TypstRenderer.create();
-    formatter = TypstFormatter.create();
+    formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
 
     shikiHighlighting = await createTypstShikiHighlighting({
       themes: { light: "github-light", dark: "github-dark-dimmed" },
@@ -69,6 +78,7 @@
       state: EditorState.create({
         doc: initialDoc,
         extensions: [
+          keymap.of([{ key: "Mod-f", run: () => true }]),
           basicSetup,
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),

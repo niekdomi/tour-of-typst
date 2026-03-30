@@ -17,14 +17,16 @@
   let highlighter = $state<Highlighter | null>(null);
   highlighterReady.then((h) => (highlighter = h));
 
+  const copyIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M5 10.5H3.5a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3.5 1.5h6A1.5 1.5 0 0 1 11 3v1.5"/></svg>`;
+  const checkIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#3fb950" stroke-width="2"><path d="M3 8.5 6.5 12 13 4"/></svg>`;
+
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
     if (!btn) return;
     const code = decodeURIComponent(btn.dataset.code ?? "");
     navigator.clipboard.writeText(code).then(() => {
-      const prev = btn.textContent;
-      btn.textContent = "Copied!";
-      setTimeout(() => (btn.textContent = prev), 1500);
+      btn.innerHTML = checkIcon;
+      setTimeout(() => (btn.innerHTML = copyIcon), 1500);
     });
   }
 
@@ -41,7 +43,7 @@
             defaultColor: false,
           })
         : `<pre><code>${text}</code></pre>`;
-      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">Copy</button></div>`;
+      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">${copyIcon}</button></div>`;
     };
 
     return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
@@ -132,9 +134,10 @@
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.72rem;
-    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     background: var(--color-surface);

@@ -12,7 +12,10 @@
 
   let currentKey = $state("");
   const currentIndex = $derived(
-    Math.max(0, chapters.findIndex((c) => c.key === currentKey))
+    Math.max(
+      0,
+      chapters.findIndex((c) => c.key === currentKey)
+    )
   );
 
   $effect(() => {
