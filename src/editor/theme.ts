@@ -3,8 +3,9 @@ import { EditorView } from "codemirror";
 /**
  * CodeMirror base theme that delegates all colors to CSS custom properties,
  * so the editor automatically follows light/dark mode without JS intervention.
+ * This keeps palette control in CSS and lets the editor follow the site's theme
+ * without extra JS toggles.
  */
-// TODO: Is this clean?
 export const cmBaseTheme = EditorView.theme({
   "&": {
     backgroundColor: "var(--color-bg)",

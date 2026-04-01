@@ -15,7 +15,8 @@
   let editorFraction = $state(0.5);
   let svg = $state<string | undefined>();
 
-  // Plain Map intentionally, SvelteMap would make doc reactive on every keystroke
+  // Plain Map intentionally, SvelteMap would make doc reactive on every keystroke.
+  // Persists edits per locale+chapter so navigation restores the last draft.
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const editsMap = new Map<string, string>();
   const editsKey = (loc: string, key: string) => `${loc}:${key}`;
@@ -31,6 +32,7 @@
     svg = undefined;
   });
 
+  // Update persisted edits for the current locale+chapter pair.
   function handleChange(content: string) {
     editsMap.set(editsKey(locale, chapterKey), content);
   }

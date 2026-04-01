@@ -5,6 +5,8 @@
   import type { Chapter } from "../content/types";
   import { highlighterReady } from "../lib/highlighter";
   import type { Highlighter } from "shiki";
+  import copyIcon from "../assets/icons/copy.svg?raw";
+  import checkIcon from "../assets/icons/check.svg?raw";
 
   interface Props {
     chapter: Chapter;
@@ -16,10 +18,6 @@
 
   let highlighter = $state<Highlighter | null>(null);
   highlighterReady.then((h) => (highlighter = h));
-
-  // TODO: Can we fetch tehis or use a url or something instead of hard-coding this which seems quite fragile
-  const copyIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M5 10.5H3.5a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3.5 1.5h6A1.5 1.5 0 0 1 11 3v1.5"/></svg>`;
-  const checkIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#3fb950" stroke-width="2"><path d="M3 8.5 6.5 12 13 4"/></svg>`;
 
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");

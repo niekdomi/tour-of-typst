@@ -19,6 +19,7 @@ words = [
 ]
 include_paths = [
   "**/*.md",
+  "**/*.typ",
   "**/*.svelte",
   "**/*.ts",
 ]

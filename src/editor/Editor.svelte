@@ -45,6 +45,10 @@
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
   let formatter: TypstFormatter | undefined;
 
+  /**
+   * Initialize Typst compiler/renderer/formatter and Shiki highlighting.
+   * Must run before creating a view so extensions are available.
+   */
   async function init() {
     const compiler = await TypstCompiler.create();
     const renderer = TypstRenderer.create();
@@ -71,6 +75,9 @@
 
   const ready = init();
 
+  /**
+   * Build a fresh CodeMirror view with current theme/highlighting and trigger an initial compile.
+   */
   function createView(initialDoc: string) {
     view?.destroy();
     if (!shikiHighlighting || !compilerExtensions || !editorContainer) {
@@ -129,6 +136,9 @@
     }
   });
 
+  /**
+   * Restore the template, clear saved solution state, and rebuild the view.
+   */
   function reset() {
     showingSolution = false;
     savedCode = undefined;
@@ -136,6 +146,9 @@
     onchange?.(template);
   }
 
+  /**
+   * Format the current document with the Typst formatter and apply changes if different.
+   */
   async function format() {
     if (!view || !formatter) {
       return;
@@ -151,17 +164,24 @@
     }
   }
 
+  /**
+   * Toggle between user code and solution, preserving user edits when showing the solution.
+   */
   function toggleSolution() {
+    if (!solution) {
+      return;
+    }
+
     if (showingSolution) {
       showingSolution = false;
       createView(savedCode ?? doc);
       savedCode = undefined;
-      // TODO: Do we even need the else if condition
-    } else if (solution) {
-      savedCode = view?.state.doc.toString() ?? doc;
-      showingSolution = true;
-      createView(solution);
+      return;
     }
+
+    savedCode = view?.state.doc.toString() ?? doc;
+    showingSolution = true;
+    createView(solution);
   }
 </script>
 

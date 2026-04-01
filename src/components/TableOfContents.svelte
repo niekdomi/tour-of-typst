@@ -16,9 +16,11 @@
     open = false;
   }
 
-  // TODO: Use better param names
-  function flatIndex(pi: number, ci: number): number {
-    return parts.slice(0, pi).reduce((sum, p) => sum + p.chapters.length, 0) + ci;
+  // Linearize part/chapter indices into a single flattened chapter index.
+  function flatIndex(partIndex: number, chapterIndex: number): number {
+    return (
+      parts.slice(0, partIndex).reduce((sum, part) => sum + part.chapters.length, 0) + chapterIndex
+    );
   }
 </script>
 
