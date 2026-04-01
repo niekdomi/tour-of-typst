@@ -30,6 +30,3 @@ will reject this faster than toast hits the floor. Let's fix it with proper refe
 - In the Introduction: "As shown in @fig-rotation..."
 - In Results: "Using @eq-omega..."
 - In the Conclusion: "The data in @tab-results confirms..."
-
-> [!TIP] If a reference shows a question mark (?), the label doesn't exist yet. Check for typos,
-> Typst won't guess what you meant.
