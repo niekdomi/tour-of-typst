@@ -20,7 +20,9 @@
 
   function onPointerMove(e: PointerEvent) {
     const parent = el?.parentElement;
-    if (!dragging || !parent) return;
+    if (!dragging || !parent) {
+      return;
+    }
 
     const rect = parent.getBoundingClientRect();
     const raw =

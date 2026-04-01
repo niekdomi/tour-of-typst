@@ -5,7 +5,7 @@
 }
 
 :root {
-  /* Typst light palette */
+  /* light palette */
   --color-bg: #fdfdfd;
   --color-text: #19181f;
   --color-text-muted: #565565;
@@ -27,7 +27,6 @@
 }
 
 [data-theme="dark"] {
-  /* Derived dark palette, same Typst brand feel, deep purple-tinted darks */
   --color-bg: #13121a;
   --color-text: #f0eff5;
   --color-text-muted: #8887a0;
@@ -43,7 +42,7 @@
   --btn-text: #f0eff5;
 }
 
-/* Shiki dual-theme switching */
+/* Shiki */
 .shiki,
 .shiki span {
   color: var(--shiki-light);

@@ -54,24 +54,28 @@
       themes: { light: "github-light", dark: "github-dark-dimmed" },
       defaultColor: theme,
     });
-    const all = await createTypstExtensions({
+    const typstExtension = await createTypstExtensions({
       compiler: {
         instance: compiler,
         throttleDelay: 100,
         onCompile: async (result: CompileResult) => {
-          if (result.vector) oncompile?.(await renderer.renderSvg(result.vector));
+          if (result.vector) {
+            oncompile?.(await renderer.renderSvg(result.vector));
+          }
         },
       },
       highlighting: { theme: "light" },
     });
-    compilerExtensions = all.slice(1);
+    compilerExtensions = typstExtension.slice(1);
   }
 
   const ready = init();
 
   function createView(initialDoc: string) {
     view?.destroy();
-    if (!shikiHighlighting || !compilerExtensions || !editorContainer) return;
+    if (!shikiHighlighting || !compilerExtensions || !editorContainer) {
+      return;
+    }
 
     view = new EditorView({
       parent: editorContainer,
@@ -83,7 +87,9 @@
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
           EditorView.updateListener.of((u) => {
-            if (u.docChanged) onchange?.(u.state.doc.toString());
+            if (u.docChanged) {
+              onchange?.(u.state.doc.toString());
+            }
           }),
           ...compilerExtensions,
         ],
@@ -108,6 +114,7 @@
       savedCode = undefined;
       createView(initialDoc);
     });
+
     return () => view?.destroy();
   });
 
@@ -130,9 +137,13 @@
   }
 
   async function format() {
-    if (!view || !formatter) return;
+    if (!view || !formatter) {
+      return;
+    }
+
     const source = view.state.doc.toString();
     const formatted = await formatter.format(source);
+
     if (formatted !== source) {
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: formatted },
@@ -145,6 +156,7 @@
       showingSolution = false;
       createView(savedCode ?? doc);
       savedCode = undefined;
+      // TODO: Do we even need the else if condition
     } else if (solution) {
       savedCode = view?.state.doc.toString() ?? doc;
       showingSolution = true;

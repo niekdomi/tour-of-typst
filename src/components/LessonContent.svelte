@@ -17,13 +17,18 @@
   let highlighter = $state<Highlighter | null>(null);
   highlighterReady.then((h) => (highlighter = h));
 
+  // TODO: Can we fetch tehis or use a url or something instead of hard-coding this which seems quite fragile
   const copyIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M5 10.5H3.5a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 3.5 1.5h6A1.5 1.5 0 0 1 11 3v1.5"/></svg>`;
   const checkIcon = `<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#3fb950" stroke-width="2"><path d="M3 8.5 6.5 12 13 4"/></svg>`;
 
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
-    if (!btn) return;
+    if (!btn) {
+      return;
+    }
+
     const code = decodeURIComponent(btn.dataset.code ?? "");
+
     navigator.clipboard.writeText(code).then(() => {
       btn.innerHTML = checkIcon;
       setTimeout(() => (btn.innerHTML = copyIcon), 1500);
@@ -32,7 +37,9 @@
 
   const html = $derived.by(() => {
     const raw = getChapterMarkdown(locale, chapter.key);
-    if (!raw) return null;
+    if (!raw) {
+      return null;
+    }
 
     const renderer = new Renderer();
     renderer.code = ({ text, lang }) => {
@@ -186,7 +193,7 @@
     font-weight: 600;
   }
 
-  /* Alerts (marked-alert) */
+  /* Alerts */
   .lesson :global(.markdown-alert) {
     border-left: 4px solid var(--color-border);
     background: var(--color-surface);

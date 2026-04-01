@@ -16,6 +16,7 @@
     open = false;
   }
 
+  // TODO: Use better param names
   function flatIndex(pi: number, ci: number): number {
     return parts.slice(0, pi).reduce((sum, p) => sum + p.chapters.length, 0) + ci;
   }

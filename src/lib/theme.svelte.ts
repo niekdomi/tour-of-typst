@@ -5,12 +5,14 @@ function createTheme() {
   let resolved = $state<"light" | "dark">("light");
 
   function apply(v: Theme) {
-    const r: "light" | "dark" =
-      v === "auto"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : v;
+    let r: "light" | "dark";
+
+    if (v === "auto") {
+      r = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    } else {
+      r = v;
+    }
+
     document.documentElement.setAttribute("data-theme", r);
     resolved = r;
   }
@@ -22,6 +24,7 @@ function createTheme() {
       if (value === "auto") {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
         const listener = () => apply("auto");
+
         mq.addEventListener("change", listener);
         return () => mq.removeEventListener("change", listener);
       }
