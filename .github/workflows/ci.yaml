@@ -72,7 +72,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    name: Test & Coverage
+    name: Test
     timeout-minutes: 1
     permissions:
       contents: read
