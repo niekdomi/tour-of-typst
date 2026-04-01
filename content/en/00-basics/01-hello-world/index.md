@@ -20,4 +20,4 @@ The `=` creates a top-level heading. Everything else is plain text. That's it, y
 new field of breakfast science.
 
 > [!NOTE] A line break inside a paragraph doesn't start a new paragraph in Typst. You need a blank
-> line for that. Think of it as telling Typst: "No really, I'm done with that thought."
+> line for that.

@@ -48,5 +48,6 @@ rotates predictably during its fall...
 // TODO: summarize
 ```
 
-> [!NOTE] The title already uses `=` (level 1), so sections should use `==` (level 2). Typst keeps
-> track of the hierarchy for you.
+> [!NOTE] The title uses `=` (level 1), so sections use `==` (level 2). Typst tracks the hierarchy
+> for numbering and the table of contents. In real academic papers, the title is usually styled
+> separately rather than as a heading. We'll get to that in the Templates chapter.

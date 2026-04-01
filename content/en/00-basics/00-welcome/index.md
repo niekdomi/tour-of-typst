@@ -24,3 +24,7 @@ Ready to make toast history? Head to the next chapter.
 
 > [!TIP] You can navigate with the arrow buttons at the top, or click the chapter title to open a
 > dropdown and jump to any chapter directly.
+
+> [!TIP] If your Typst code contains errors, a red dot will appear in the gutter. Hover over it to
+> see what's wrong. Don't worry, even the best typesetters make typos. Just fix the code and the
+> preview will bounce back to life.

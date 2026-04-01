@@ -18,21 +18,18 @@ If you add, remove, or rename a section, the outline updates on its own.
 You can control indentation and depth:
 
 ```typst
-#outline(indent: auto)           // indent sub-sections
-#outline(depth: 2)               // only show level 1 and 2 headings
-#outline(indent: auto, depth: 2) // both
+#outline(depth: 2) // only show level 1 and 2 headings
 ```
 
 You can also give it a custom title:
 
 ```typst
-#outline(title: "Contents")
+#outline(title: "Menu of Findings")
 ```
 
 ## Your Task
 
-Add `#outline()` right after the title and author, before the abstract. Use `indent: auto` so the
-sub-sections are visually nested.
+Add `#outline()` right after the title and author, before the abstract.
 
 > [!NOTE] The outline function is called `outline` in Typst, not "table of contents" but it does
 > exactly what you'd expect a TOC to do.

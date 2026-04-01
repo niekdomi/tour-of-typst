@@ -34,6 +34,9 @@ For more targeted control, you can wrap specific content in `#columns()`:
 Make the body of the paper two-column while keeping the title and abstract full-width. Add
 `#set page(columns: 2)` right after the abstract paragraph but before the Introduction.
 
-> [!IMPORTANT] If the preview looks cramped, try reducing the margins slightly (e.g., `1.5cm`) to
-> give the columns more breathing room. Academic papers are dense, but they shouldn't be
-> claustrophobic.
+> [!WARNING] `#set page(columns: 2)` changes the page layout, which forces a **page break**.
+> Everything after it starts on a new page. Scroll down in the preview to see it. This is expected.
+> Typst can't change the column count mid-page.
+
+> [!TIP] If the preview looks cramped, try reducing the margins slightly (e.g., `1.5cm`) to give the
+> columns more breathing room. Academic papers are dense, but they shouldn't be claustrophobic.

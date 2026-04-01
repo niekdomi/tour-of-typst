@@ -5,8 +5,7 @@ some mathematical credibility. Typst uses the `$` symbol to enter math mode.
 
 ### Inline vs. Display Math
 
-- **Inline math** (`$pi$`) is for variables or small expressions that live inside a sentence. The
-  angular velocity $omega$ sneaks right into your prose.
+- **Inline math** (`$pi$`) is for variables or small expressions that live inside a sentence.
 - **Display math** (`$ pi $`) is for the headliner equations. By adding a space after the opening
   `$` and before the closing `$`, Typst centers the formula on its own line and renders it in full
   glory.

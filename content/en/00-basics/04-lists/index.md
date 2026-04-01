@@ -11,6 +11,12 @@ camera, and a worrying disregard for kitchen hygiene. Typst has two types of lis
   - Spreadable, applied to one side only
 ```
 
+This will be rendered as:
+
+- White sandwich bread
+- Salted butter
+  - Spreadable, applied to one side only
+
 **Numbered lists** use `+`:
 
 ```typst
@@ -20,6 +26,14 @@ camera, and a worrying disregard for kitchen hygiene. Typst has two types of lis
 + Record the fall
 + Weep at the result
 ```
+
+This will be rendered as:
+
+1. Prepare one slice with butter on top
+2. Hold at table height
+3. Release without spin
+4. Record the fall
+5. Weep at the result
 
 > [!TIP] Indent with two spaces to create nested lists. This is how we specify sub-items like bread
 > thickness and butter brand.
