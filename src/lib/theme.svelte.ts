@@ -2,19 +2,17 @@ export type Theme = "auto" | "light" | "dark";
 
 function createTheme() {
   let value = $state<Theme>((localStorage.getItem("theme") as Theme) ?? "auto");
-  let resolved = $state<"light" | "dark">("light");
+  let theme = $state<"light" | "dark">("light");
 
   function apply(v: Theme) {
-    let r: "light" | "dark";
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
 
-    if (v === "auto") {
-      r = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    } else {
-      r = v;
-    }
+    const resolvedTheme = v === "auto" ? systemTheme : v;
 
-    document.documentElement.setAttribute("data-theme", r);
-    resolved = r;
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+    theme = resolvedTheme;
   }
 
   $effect.root(() => {
@@ -39,7 +37,7 @@ function createTheme() {
       value = v;
     },
     get resolved() {
-      return resolved;
+      return theme;
     },
   };
 }
