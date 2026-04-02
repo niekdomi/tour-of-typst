@@ -10,7 +10,7 @@
     label: string;
   }
 
-  let { options, value = $bindable(), label }: Props = $props();
+  let { options, value, label }: Props = $props();
 
   let open = $state(false);
   const selectedOption = $derived(options.find((o) => o.value === value));
@@ -59,7 +59,7 @@
             role="menuitem"
             class="menu-item"
             class:selected={option.value === value}
-            onclick={() => select(option.value)}
+            onclick={() => { select(option.value); }}
           >
             {option.label}
           </button>

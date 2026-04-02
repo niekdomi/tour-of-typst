@@ -5,47 +5,35 @@ on your own machine. Here's how to get started.
 
 ### Install Typst
 
-Typst is a single binary with no dependencies. Pick your platform:
+Typst is a single binary with no dependencies. On Linux, it's likely available in your
+distribution's package manager. For all platforms, check the official download page:
 
-```
-# macOS (Homebrew)
-brew install typst
-
-# Arch Linux
-pacman -S typst
-
-# Windows (Winget)
-winget install --id Typst.Typst
-
-# Cargo (any platform)
-cargo install typst-cli
-```
+[Download Typst](https://typst.app/open-source/#download)
 
 ### Editor Setup
 
-For the best experience, use **VS Code** with the **Tinymist** extension:
+For the best experience, install the
+[Tinymist](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist) extension
+for your editor. It provides syntax highlighting, autocomplete, live preview, and error diagnostics.
 
-1. Install [VS Code](https://code.visualstudio.com/)
-2. Install the **Tinymist Typst** extension from the marketplace
-3. Open a `.typ` file; you get syntax highlighting, autocomplete, live preview, and error
-   diagnostics
+Tinymist supports the following editors:
 
-> [!TIP] Tinymist also supports other editors like Neovim, Helix, and Zed. Check the Tinymist
-> documentation for setup instructions.
+- VS Code
+- Neovim
+- Helix
+- Zed
+- Sublime Text
+- Emacs
+
+See the [Tinymist documentation](https://myriad-dreamin.github.io/tinymist/frontend/main.html) for
+setup instructions for each editor.
 
 ### Compile Your Document
 
-From the terminal:
+Typst has two modes for compiling documents from the terminal:
 
-```
-# Compile once
-typst compile paper.typ
-
-# Watch mode: Recompiles on every save
-typst watch paper.typ
-```
-
-Both commands produce a `paper.pdf` in the same directory.
+- **`typst compile paper.typ`** compiles the document once and produces `paper.pdf`.
+- **`typst watch paper.typ`** watches for changes and recompiles automatically on every save.
 
 ### Project Structure
 
@@ -54,8 +42,8 @@ For small documents, a single `.typ` file is all you need. For larger projects, 
 ```
 my-paper/
   main.typ          # your content
-  template.typ      # styling (the template we built!)
-  refs.bib          # bibliography
+  template.typ      # styling
+  refs.yaml         # bibliography
   figures/
     diagram.png
 ```

@@ -2,7 +2,7 @@
   import Editor from "./Editor.svelte";
   import Preview from "./Preview.svelte";
   import ResizeHandle from "../components/ResizeHandle.svelte";
-  import { getChapterTemplate, getChapterSolution } from "../content";
+  import { getChapterTemplate, getChapterSolution, getChapterAuxFiles } from "../content";
 
   interface Props {
     locale: string;
@@ -23,6 +23,7 @@
 
   const solution = $derived(getChapterSolution(locale, chapterKey));
   const template = $derived(getChapterTemplate(locale, chapterKey) ?? "");
+  const auxFiles = $derived(getChapterAuxFiles(locale, chapterKey));
 
   // Persist user edits per locale+chapter; restores them on navigation
   let doc = $state("");
@@ -44,6 +45,7 @@
       {doc}
       {template}
       {solution}
+      {auxFiles}
       {theme}
       docKey="{locale}:{chapterKey}"
       onchange={handleChange}

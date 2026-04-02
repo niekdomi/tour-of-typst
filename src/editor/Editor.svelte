@@ -18,6 +18,7 @@
     template?: string;
     docKey?: string;
     solution?: string;
+    auxFiles?: Record<string, string>;
     theme?: "light" | "dark";
     onchange?: (content: string) => void;
     oncompile?: (svg: string) => void;
@@ -28,6 +29,7 @@
     template = "",
     docKey = "",
     solution,
+    auxFiles = {},
     theme = "light",
     onchange,
     oncompile,
@@ -59,6 +61,7 @@
       defaultColor: theme,
     });
     const typstExtension = await createTypstExtensions({
+      getFiles: () => auxFiles,
       compiler: {
         instance: compiler,
         throttleDelay: 100,

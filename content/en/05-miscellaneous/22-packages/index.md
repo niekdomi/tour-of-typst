@@ -9,7 +9,7 @@ Typst has a growing ecosystem of community packages. You can import them directl
 no package manager, no `node_modules` folder the size of a small country:
 
 ```typst
-#import "@preview/cetz:0.3.4": canvas, draw
+#import "@preview/cetz:0.4.2": canvas, draw
 ```
 
 Some popular packages:
@@ -40,6 +40,6 @@ Import the `showybox` package and use it to upgrade our plain `note()` boxes:
 )
 ```
 
-> [!WARNING] Package versions are pinned (e.g., `0.3.4`). This ensures your document always compiles
+> [!WARNING] Package versions are pinned (e.g., `0.4.2`). This ensures your document always compiles
 > the same way, even if the package gets updated later. Reproducibility matters, in science _and_ in
 > typesetting.

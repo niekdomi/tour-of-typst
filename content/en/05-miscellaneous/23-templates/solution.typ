@@ -160,4 +160,4 @@ across all trials.
   [- Thanks to #name for assistance with data collection.]
 }
 
-#bibliography("refs.bib")
+#bibliography("refs.yaml")

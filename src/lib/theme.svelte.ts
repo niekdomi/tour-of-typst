@@ -21,10 +21,10 @@ function createTheme() {
       localStorage.setItem("theme", value);
       if (value === "auto") {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
-        const listener = () => apply("auto");
+        const listener = () => { apply("auto"); };
 
         mq.addEventListener("change", listener);
-        return () => mq.removeEventListener("change", listener);
+        return () => { mq.removeEventListener("change", listener); };
       }
     });
   });

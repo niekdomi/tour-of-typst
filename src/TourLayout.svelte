@@ -20,7 +20,7 @@
     chapters,
     currentIndex,
     currentKey,
-    contentFraction = $bindable(0.5),
+    contentFraction,
     tocDropdownOpen,
   }: Props = $props();
 </script>

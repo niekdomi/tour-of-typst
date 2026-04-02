@@ -9,7 +9,7 @@
     onnavigate?: (index: number) => void;
   }
 
-  let { parts, chapters, currentIndex, open = $bindable(false), onnavigate }: Props = $props();
+  let { parts, chapters, currentIndex, open, onnavigate }: Props = $props();
 
   function select(index: number) {
     onnavigate?.(index);
@@ -46,7 +46,7 @@
         {#each part.chapters as chapter, ci (chapter.key)}
           {@const idx = flatIndex(pi, ci)}
           <li class:active={idx === currentIndex}>
-            <button onclick={() => select(idx)}>{chapter.title}</button>
+            <button onclick={() => { select(idx); }}>{chapter.title}</button>
           </li>
         {/each}
       {/each}

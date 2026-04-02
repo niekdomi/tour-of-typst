@@ -2,13 +2,14 @@
 
 No academic paper is complete without standing on the shoulders of giants, or at least citing them
 so they don't block your publication. Dr. Crumb's work builds on decades of controversial toast-drop
-research, and we need to show the committee we've done our homework. Typst uses standard `.bib`
-files for bibliography management.
+research, and we need to show the committee we've done our homework. Typst supports BibLaTex
+(`.bib`) files or their own Hayagriva (`.yaml` or `.yml`) files as its native bibliography format.
+We'll use Hayagriva for this tour, but the process is similar for BibLaTex.
 
 First, tell Typst where to find the bibliography:
 
 ```typst
-#bibliography("refs.bib")
+#bibliography("refs.yaml")
 ```
 
 Then cite sources in your text with `@`:
@@ -19,22 +20,21 @@ The physical model follows @matthews1995.
 ```
 
 > [!IMPORTANT] In this tour, the bibliography file is already provided for you. In your own
-> projects, you create a `.bib` file alongside your `.typ` file.
+> projects, you create a `.yaml` file alongside your `.typ` file.
 
-A `.bib` entry looks like this:
+A Hayagriva entry looks like this:
 
-```
-@article{murphy2003,
-  author = {Robert Murphy},
-  title = {Tumbling Toast, Murphy's Law and the Fundamental Constants},
-  journal = {Journal of Applied Butter Studies},
-  year = {2003},
-}
+```yaml
+murphy2003:
+  type: Article
+  author: Murphy, Robert
+  title: Tumbling Toast, Murphy's Law and the Fundamental Constants
+  date: 2003
 ```
 
 ## Your Task
 
-- Add `#bibliography("refs.bib")` at the very end of the document
+- Add `#bibliography("refs.yaml")` at the very end of the document
 - Cite `@murphy2003` in the Introduction where we discuss the phenomenon
 - Cite `@matthews1995` in the Methods section where we describe the physical model
 
