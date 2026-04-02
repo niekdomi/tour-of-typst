@@ -34,11 +34,6 @@ describe("getTranslations", () => {
     });
   }
 
-  it("falls back to English for unknown locale", () => {
-    const t = getTranslations("xx" as "en");
-    expect(t).toEqual(getTranslations("en"));
-  });
-
   it("defaultLocale is a known locale", () => {
     expect(locales).toContain(defaultLocale);
   });

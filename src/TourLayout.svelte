@@ -20,7 +20,8 @@
     chapters,
     currentIndex,
     currentKey,
-    contentFraction,
+    // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment
+    contentFraction = $bindable(),
     tocDropdownOpen,
   }: Props = $props();
 </script>
