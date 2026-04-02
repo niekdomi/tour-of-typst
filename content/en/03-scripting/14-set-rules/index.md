@@ -13,10 +13,10 @@ For example, instead of manually numbering headings, you can set it once:
 Now all headings get numbered automatically: 1, 1.1, 1.2, 2, etc. Other useful set rules:
 
 ```typst
-#set par(leading: 0.8em)        // line spacing within paragraphs
-#set par(spacing: 1.2em)        // spacing between paragraphs
-#set block(spacing: 1.5em)      // spacing around blocks
-#set text(hyphenate: true)       // enable hyphenation
+#set par(leading: 0.8em)   // line spacing within paragraphs
+#set par(spacing: 1.2em)   // spacing between paragraphs
+#set block(spacing: 1.5em) // spacing around blocks
+#set text(hyphenate: true) // enable hyphenation
 ```
 
 ## Your Task

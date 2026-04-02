@@ -23,7 +23,7 @@ More examples, because once you start, it's hard to stop:
 
 ```typst
 // Make links blue and underlined
-#show link: set text(fill: blue)
+#show link: it => underline(text(fill: blue, it))
 
 // Add a line under level-2 headings
 #show heading.where(level: 2): it => {
@@ -39,7 +39,6 @@ insists that aesthetic perfection can distract reviewers from minor calculation 
 show rules:
 
 - Make the title (level 1 heading) render in small caps using `#smallcaps()`
-- Add a horizontal line under level-2 section headings
 - Style the author name, try centering it or making it gray
 
 > [!TIP] You can filter by heading level with `heading.where(level: 1)`. This way your title styling
