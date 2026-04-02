@@ -59,7 +59,9 @@
             role="menuitem"
             class="menu-item"
             class:selected={option.value === value}
-            onclick={() => { select(option.value); }}
+            onclick={() => {
+              select(option.value);
+            }}
           >
             {option.label}
           </button>

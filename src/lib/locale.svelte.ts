@@ -5,7 +5,9 @@ function createLocale() {
   let value = $state<Locale>((localStorage.getItem("locale") as Locale) ?? defaultLocale);
 
   $effect.root(() => {
-    $effect(() => { localStorage.setItem("locale", value); });
+    $effect(() => {
+      localStorage.setItem("locale", value);
+    });
   });
 
   return {

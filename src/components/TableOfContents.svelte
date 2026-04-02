@@ -46,7 +46,11 @@
         {#each part.chapters as chapter, ci (chapter.key)}
           {@const idx = flatIndex(pi, ci)}
           <li class:active={idx === currentIndex}>
-            <button onclick={() => { select(idx); }}>{chapter.title}</button>
+            <button
+              onclick={() => {
+                select(idx);
+              }}>{chapter.title}</button
+            >
           </li>
         {/each}
       {/each}
