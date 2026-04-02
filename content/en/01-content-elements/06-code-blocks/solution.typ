@@ -41,9 +41,29 @@ Each trial proceeded as follows:
 + Inspect the landing and record which face contacted the floor
 + Repeat for a total of 50 trials per session, across 3 sessions
 
+The following simulation was used to verify the physical model:
+
+```python
+import numpy as np
+
+def simulate_toast_drop(height=0.75, mass=0.028):
+    g = 9.81
+    t_fall = np.sqrt(2 * height / g)
+    omega = (g * t_fall) / (0.05)
+    angle = omega * t_fall
+    return np.degrees(angle) % 360
+```
+
 == Results
 
-// TODO: present findings
+Drops were performed from a table height of $h approx 0.75$ m. The angular
+velocity of the toast during free fall is given by:
+
+$ omega = (g dot t) / r $
+
+The total rotation angle before impact is:
+
+$ theta = 1 / 2 dot g dot t^2 / r $
 
 == Conclusion
 

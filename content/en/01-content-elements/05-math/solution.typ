@@ -43,7 +43,14 @@ Each trial proceeded as follows:
 
 == Results
 
-// TODO: present findings
+Drops were performed from a table height of $h approx 0.75$ m. The angular
+velocity of the toast during free fall is given by:
+
+$ omega = (g dot t) / r $
+
+The total rotation angle before impact is:
+
+$ theta = 1 / 2 dot g dot t^2 / r $
 
 == Conclusion
 
