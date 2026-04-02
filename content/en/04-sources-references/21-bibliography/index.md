@@ -3,8 +3,10 @@
 No academic paper is complete without standing on the shoulders of giants, or at least citing them
 so they don't block your publication. Dr. Crumb's work builds on decades of controversial toast-drop
 research, and we need to show the committee we've done our homework. Typst supports BibLaTex
-(`.bib`) files or their own Hayagriva (`.yaml` or `.yml`) files as its native bibliography format.
-We'll use Hayagriva for this tour, but the process is similar for BibLaTex.
+(`.bib`) files or their own
+[Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) (`.yaml` or `.yml`)
+files as its native bibliography format. We'll use Hayagriva for this tour, but the process is
+similar for BibLaTex.
 
 First, tell Typst where to find the bibliography:
 
