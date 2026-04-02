@@ -59,7 +59,6 @@ physical model of toast rotation during free fall and demonstrates that
 #set page(columns: 2)
 
 == Introduction
-
 Toast, when dropped from a standard table height of approximately 0.75 m,
 rotates predictably during its fall and arrives at the floor with the buttered
 surface facing down. Previous work by @murphy2003 demonstrated this phenomenon.
@@ -76,7 +75,6 @@ rotation and validates it experimentally.
 ) <fig-rotation>
 
 == Methods <methods>
-
 The physical model follows @matthews1995. The following materials were used in
 each trial:
 
@@ -117,7 +115,6 @@ def simulate_toast_drop(height=0.75, mass=0.028):
   consumed responsibly after data collection.]
 
 == Results
-
 Drops were performed from a table height of $h approx 0.75$ m. Using @eq-omega,
 the angular velocity of the toast during free fall is given by:
 
@@ -137,7 +134,6 @@ $ theta = 1 / 2 dot g dot t^2 / r $
 ) <tab-results>
 
 == Conclusion
-
 Toast rotation is governed by geometry and torque, not superstition. The data in
 @tab-results confirms that the measured angular acceleration predicts a
 near-half-turn before impact, explaining the butter-side-down bias observed
@@ -147,7 +143,6 @@ across all trials.
   anti-torque plate designs to improve breakfast outcomes.]
 
 == Acknowledgments
-
 #for name in assistants {
   [- Thanks to #name for assistance with data collection.]
 }

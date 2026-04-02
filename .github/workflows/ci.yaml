@@ -70,6 +70,14 @@ jobs:
       - name: Type check
         run: bun check
 
+      - name: Install typstyle
+        uses: taiki-e/install-action@v2
+        with:
+          tool: typstyle
+
+      - name: Check Formatting of typst files
+        run: typstyle --line-width 80 --wrap-text --check .
+
   test:
     runs-on: ubuntu-latest
     name: Test

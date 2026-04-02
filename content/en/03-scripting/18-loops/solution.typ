@@ -9,8 +9,10 @@
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
 )
+
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true, leading: 0.8em)
+
 #set heading(numbering: "1.1")
 #show heading: set text(font: "DejaVu Sans Mono")
 
@@ -58,7 +60,6 @@ physical model of toast rotation during free fall and demonstrates that
 #set page(columns: 2)
 
 == Introduction
-
 Toast, when dropped from a standard table height of approximately 0.75 m,
 rotates predictably during its fall and arrives at the floor with the buttered
 surface facing down. This is not a matter of perception or pessimism. It is a
@@ -143,7 +144,6 @@ explaining the butter-side-down bias observed across all trials.
   anti-torque plate designs to improve breakfast outcomes.]
 
 == Acknowledgments
-
 #for name in assistants {
   [- Thanks to #name for assistance with data collection.]
 }

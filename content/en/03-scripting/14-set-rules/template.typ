@@ -22,7 +22,6 @@ physical model of toast rotation during free fall and demonstrates that
 #set page(columns: 2)
 
 == Introduction
-
 Toast, when dropped from a standard table height of approximately 0.75 m,
 rotates predictably during its fall and arrives at the floor with the buttered
 surface facing down. This is not a matter of perception or pessimism. It is a
