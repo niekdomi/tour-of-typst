@@ -23,6 +23,7 @@ const solutionFiles = import.meta.glob<string>("../../content/*/*/*/solution.typ
   import: "default",
 });
 
+
 const allModules: TourModule[] = Object.values(tourModules);
 
 export const availableLocales: LocaleMeta[] = allModules.map((m) => m.meta);

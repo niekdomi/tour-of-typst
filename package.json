@@ -10,7 +10,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
-    "test": "bun test"
+    "test": "bun test",
+    "postinstall": "bun scripts/patch-typst-grammar.ts"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",

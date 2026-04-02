@@ -17,6 +17,12 @@ Labels are added with `<angle-brackets>` right after an element:
 $ omega = (g dot t) / r $ <eq-omega>
 ```
 
+Equations need numbering before they can be labelled. Add a set rule to enable it:
+
+```typst
+#set math.equation(numbering: "(1)")
+```
+
 Labels are invisible, they don't show up in the output. They just quietly mark the element so you
 can reference it later. You can label headings too:
 

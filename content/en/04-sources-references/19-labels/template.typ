@@ -9,9 +9,13 @@
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
 )
+
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true, leading: 0.8em)
+
 #set heading(numbering: "1.1")
+// TODO: Add equation numbering and reference support
+
 #show heading: set text(font: "DejaVu Sans Mono")
 
 #show heading.where(level: 1): it => [
