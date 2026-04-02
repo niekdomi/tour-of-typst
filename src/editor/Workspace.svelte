@@ -2,7 +2,7 @@
   import Editor from "./Editor.svelte";
   import Preview from "./Preview.svelte";
   import ResizeHandle from "../components/ResizeHandle.svelte";
-  import { getChapterTemplate, getChapterSolution } from "../content";
+  import { getChapterTemplate, getChapterSolution, getChapterAuxFiles } from "../content";
 
   interface Props {
     locale: string;
@@ -15,22 +15,25 @@
   let editorFraction = $state(0.5);
   let svg = $state<string | undefined>();
 
-  // Plain Map intentionally — SvelteMap would make doc reactive on every keystroke
+  // Plain Map intentionally, SvelteMap would make doc reactive on every keystroke.
+  // Persists edits per locale+chapter so navigation restores the last draft.
   // eslint-disable-next-line svelte/prefer-svelte-reactivity
   const editsMap = new Map<string, string>();
   const editsKey = (loc: string, key: string) => `${loc}:${key}`;
 
   const solution = $derived(getChapterSolution(locale, chapterKey));
+  const template = $derived(getChapterTemplate(locale, chapterKey) ?? "");
+  const auxFiles = $derived(getChapterAuxFiles(locale, chapterKey));
 
   // Persist user edits per locale+chapter; restores them on navigation
   let doc = $state("");
 
   $effect(() => {
-    doc =
-      editsMap.get(editsKey(locale, chapterKey)) ?? getChapterTemplate(locale, chapterKey) ?? "";
+    doc = editsMap.get(editsKey(locale, chapterKey)) ?? template;
     svg = undefined;
   });
 
+  // Update persisted edits for the current locale+chapter pair.
   function handleChange(content: string) {
     editsMap.set(editsKey(locale, chapterKey), content);
   }
@@ -38,13 +41,22 @@
 
 <div class="workspace">
   <div class="pane" style="flex: {editorFraction}">
-    <Editor {doc} {solution} {theme} onchange={handleChange} oncompile={(s) => (svg = s)} />
+    <Editor
+      {doc}
+      {template}
+      {solution}
+      {auxFiles}
+      {theme}
+      docKey="{locale}:{chapterKey}"
+      onchange={handleChange}
+      oncompile={(s: string) => (svg = s)}
+    />
   </div>
 
   <ResizeHandle
     direction="vertical"
     fraction={editorFraction}
-    onchange={(f) => (editorFraction = f)}
+    onchange={(f: number) => (editorFraction = f)}
   />
 
   <div class="pane" style="flex: {1 - editorFraction}">

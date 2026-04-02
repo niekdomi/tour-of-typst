@@ -1,6 +1,7 @@
 <script lang="ts">
   import { EditorView, basicSetup } from "codemirror";
   import { EditorState, Compartment, Transaction } from "@codemirror/state";
+  import { keymap } from "@codemirror/view";
   import { cmBaseTheme } from "./theme";
   import {
     createTypstExtensions,
@@ -14,13 +15,25 @@
 
   interface Props {
     doc?: string;
+    template?: string;
+    docKey?: string;
     solution?: string;
+    auxFiles?: Record<string, string>;
     theme?: "light" | "dark";
     onchange?: (content: string) => void;
     oncompile?: (svg: string) => void;
   }
 
-  let { doc = "", solution, theme = "light", onchange, oncompile }: Props = $props();
+  let {
+    doc = "",
+    template = "",
+    docKey = "",
+    solution,
+    auxFiles = {},
+    theme = "light",
+    onchange,
+    oncompile,
+  }: Props = $props();
 
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
@@ -30,55 +43,71 @@
   const highlightCompartment = new Compartment();
 
   let shikiHighlighting: TypstShikiHighlighting | undefined;
-  // index 0 of createTypstExtensions is the built-in shiki — we replace it with our compartment
+  // index 0 of createTypstExtensions is the built-in shiki, we replace it with our compartment
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
   let formatter: TypstFormatter | undefined;
 
+  /**
+   * Initialize Typst compiler/renderer/formatter and Shiki highlighting.
+   * Must run before creating a view so extensions are available.
+   */
   async function init() {
     const compiler = await TypstCompiler.create();
     const renderer = TypstRenderer.create();
-    formatter = TypstFormatter.create();
+    formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
 
     shikiHighlighting = await createTypstShikiHighlighting({
       themes: { light: "github-light", dark: "github-dark-dimmed" },
       defaultColor: theme,
     });
-    const all = await createTypstExtensions({
+    const typstExtension = await createTypstExtensions({
+      getFiles: () => auxFiles,
       compiler: {
         instance: compiler,
         throttleDelay: 100,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onCompile: async (result: CompileResult) => {
-          if (result.vector) oncompile?.(await renderer.renderSvg(result.vector));
+          if (result.vector) {
+            oncompile?.(await renderer.renderSvg(result.vector));
+          }
         },
       },
       highlighting: { theme: "light" },
     });
-    compilerExtensions = all.slice(1);
+    compilerExtensions = typstExtension.slice(1);
   }
 
   const ready = init();
 
+  /**
+   * Build a fresh CodeMirror view with current theme/highlighting and trigger an initial compile.
+   */
   function createView(initialDoc: string) {
     view?.destroy();
-    if (!shikiHighlighting || !compilerExtensions || !editorContainer) return;
+    if (!shikiHighlighting || !compilerExtensions) {
+      return;
+    }
 
     view = new EditorView({
       parent: editorContainer,
       state: EditorState.create({
         doc: initialDoc,
         extensions: [
+          keymap.of([{ key: "Mod-f", run: () => true }]),
           basicSetup,
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
           EditorView.updateListener.of((u) => {
-            if (u.docChanged) onchange?.(u.state.doc.toString());
+            if (u.docChanged) {
+              onchange?.(u.state.doc.toString());
+            }
           }),
           ...compilerExtensions,
         ],
       }),
     });
 
-    // Trigger initial compile — replace doc with itself so compiler sees docChanged
+    // Trigger initial compile, replace doc with itself so compiler sees docChanged
     if (initialDoc.length > 0) {
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: initialDoc },
@@ -88,11 +117,15 @@
   }
 
   $effect(() => {
-    ready.then(() => {
+    // Destructure to read both doc and docKey synchronously, Svelte tracks both.
+    // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
+    const [initialDoc] = [doc, docKey];
+    void ready.then(() => {
       showingSolution = false;
       savedCode = undefined;
-      createView(doc);
+      createView(initialDoc);
     });
+
     return () => view?.destroy();
   });
 
@@ -107,16 +140,27 @@
     }
   });
 
+  /**
+   * Restore the template, clear saved solution state, and rebuild the view.
+   */
   function reset() {
     showingSolution = false;
     savedCode = undefined;
-    createView(doc);
+    createView(template);
+    onchange?.(template);
   }
 
+  /**
+   * Format the current document with the Typst formatter and apply changes if different.
+   */
   async function format() {
-    if (!view || !formatter) return;
+    if (!view || !formatter) {
+      return;
+    }
+
     const source = view.state.doc.toString();
     const formatted = await formatter.format(source);
+
     if (formatted !== source) {
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: formatted },
@@ -124,16 +168,24 @@
     }
   }
 
+  /**
+   * Toggle between user code and solution, preserving user edits when showing the solution.
+   */
   function toggleSolution() {
+    if (!solution) {
+      return;
+    }
+
     if (showingSolution) {
       showingSolution = false;
       createView(savedCode ?? doc);
       savedCode = undefined;
-    } else if (solution) {
-      savedCode = view?.state.doc.toString() ?? doc;
-      showingSolution = true;
-      createView(solution);
+      return;
     }
+
+    savedCode = view?.state.doc.toString() ?? doc;
+    showingSolution = true;
+    createView(solution);
   }
 </script>
 

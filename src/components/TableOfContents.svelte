@@ -5,19 +5,22 @@
     parts: Part[];
     chapters: Chapter[];
     currentIndex: number;
-    open: boolean;
+    open?: boolean;
     onnavigate?: (index: number) => void;
   }
 
-  let { parts, chapters, currentIndex, open = $bindable(false), onnavigate }: Props = $props();
+  let { parts, chapters, currentIndex, open = $bindable(), onnavigate }: Props = $props();
 
   function select(index: number) {
     onnavigate?.(index);
     open = false;
   }
 
-  function flatIndex(pi: number, ci: number): number {
-    return parts.slice(0, pi).reduce((sum, p) => sum + p.chapters.length, 0) + ci;
+  // Linearize part/chapter indices into a single flattened chapter index.
+  function flatIndex(partIndex: number, chapterIndex: number): number {
+    return (
+      parts.slice(0, partIndex).reduce((sum, part) => sum + part.chapters.length, 0) + chapterIndex
+    );
   }
 </script>
 
@@ -43,7 +46,11 @@
         {#each part.chapters as chapter, ci (chapter.key)}
           {@const idx = flatIndex(pi, ci)}
           <li class:active={idx === currentIndex}>
-            <button onclick={() => select(idx)}>{chapter.title}</button>
+            <button
+              onclick={() => {
+                select(idx);
+              }}>{chapter.title}</button
+            >
           </li>
         {/each}
       {/each}
@@ -127,7 +134,7 @@
     position: relative;
   }
 
-  /* Gutter only on chapter rows — breaks at each part header to visually group */
+  /* Gutter only on chapter rows, breaks at each part header to visually group */
   .menu li:not(.part-header)::before {
     content: "";
     position: absolute;

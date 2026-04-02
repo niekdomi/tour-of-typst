@@ -5,43 +5,47 @@ import type { TourModule } from "./types";
 // --- findFile ---
 
 const mockFiles = {
-  "/content/en/basics/01-hello-world/index.md": "hello content",
-  "/content/en/basics/02-text-formatting/index.md": "formatting content",
-  "/content/de/basics/01-hello-world/index.md": "hallo inhalt",
+  "/foo/content/en/basics/01-hello-world/index.md": "hello content",
+  "/foo/content/en/basics/02-text-formatting/index.md": "formatting content",
+  "/foo/content/de/basics/01-hello-world/index.md": "hallo inhalt",
+  "/foo/content/en/scripting/01-c++/index.md": "cpp content",
+  "/foo/content/en/basics/99-extra/index.txt": "not an index",
+  "/foo/other/en/basics/01-off-path/index.md": "wrong root",
 };
 
 describe("findFile", () => {
-  it("finds file by locale and key", () => {
+  it("finds file by locale and key even with a leading path prefix", () => {
     expect(findFile(mockFiles, "en", "hello-world")).toBe("hello content");
   });
 
-  it("respects locale", () => {
+  it("respects locale separation", () => {
     expect(findFile(mockFiles, "de", "hello-world")).toBe("hallo inhalt");
-  });
-
-  it("does not return file from wrong locale", () => {
     expect(findFile(mockFiles, "de", "text-formatting")).toBeUndefined();
   });
 
-  it("returns undefined for unknown key", () => {
-    expect(findFile(mockFiles, "en", "missing")).toBeUndefined();
+  it("requires an index.md filename inside the chapter directory", () => {
+    expect(findFile(mockFiles, "en", "extra")).toBeUndefined();
   });
 
-  it("returns undefined for unknown locale", () => {
+  it("ignores paths that do not include the /content/ root segment", () => {
+    expect(findFile(mockFiles, "en", "off-path")).toBeUndefined();
+  });
+
+  it("returns undefined for unknown key or locale", () => {
+    expect(findFile(mockFiles, "en", "missing")).toBeUndefined();
     expect(findFile(mockFiles, "fr", "hello-world")).toBeUndefined();
   });
 
-  it("does not match partial key (hello does not match hello-world)", () => {
+  it("does not match partial keys (hello does not match hello-world)", () => {
     expect(findFile(mockFiles, "en", "hello")).toBeUndefined();
   });
 
-  it("returns undefined for empty file map", () => {
-    expect(findFile({}, "en", "hello-world")).toBeUndefined();
+  it("handles keys with regex special characters", () => {
+    expect(findFile(mockFiles, "en", "c++")).toBe("cpp content");
   });
 
-  it("handles keys with regex special characters", () => {
-    const files = { "/content/en/scripting/01-c++/index.md": "cpp content" };
-    expect(findFile(files, "en", "c++")).toBe("cpp content");
+  it("returns undefined for empty file maps", () => {
+    expect(findFile({}, "en", "hello-world")).toBeUndefined();
   });
 });
 

@@ -1,18 +1,18 @@
 export type Theme = "auto" | "light" | "dark";
 
 function createTheme() {
-  let value = $state<Theme>((localStorage.getItem("theme") as Theme) ?? "auto");
-  let resolved = $state<"light" | "dark">("light");
+  let value = $state<Theme>((localStorage.getItem("theme") as Theme | null) ?? "auto");
+  let theme = $state<"light" | "dark">("light");
 
   function apply(v: Theme) {
-    const r: "light" | "dark" =
-      v === "auto"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : v;
-    document.documentElement.setAttribute("data-theme", r);
-    resolved = r;
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+
+    const resolvedTheme = v === "auto" ? systemTheme : v;
+
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+    theme = resolvedTheme;
   }
 
   $effect.root(() => {
@@ -21,9 +21,14 @@ function createTheme() {
       localStorage.setItem("theme", value);
       if (value === "auto") {
         const mq = window.matchMedia("(prefers-color-scheme: dark)");
-        const listener = () => apply("auto");
+        const listener = () => {
+          apply("auto");
+        };
+
         mq.addEventListener("change", listener);
-        return () => mq.removeEventListener("change", listener);
+        return () => {
+          mq.removeEventListener("change", listener);
+        };
       }
     });
   });
@@ -36,7 +41,7 @@ function createTheme() {
       value = v;
     },
     get resolved() {
-      return resolved;
+      return theme;
     },
   };
 }

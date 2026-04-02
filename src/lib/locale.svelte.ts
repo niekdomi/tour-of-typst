@@ -2,10 +2,12 @@ import { defaultLocale } from "../../content/i18n";
 import type { Locale } from "../../content/i18n";
 
 function createLocale() {
-  let value = $state<Locale>((localStorage.getItem("locale") as Locale) ?? defaultLocale);
+  let value = $state<Locale>((localStorage.getItem("locale") as Locale | null) ?? defaultLocale);
 
   $effect.root(() => {
-    $effect(() => localStorage.setItem("locale", value));
+    $effect(() => {
+      localStorage.setItem("locale", value);
+    });
   });
 
   return {

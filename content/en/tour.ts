@@ -27,8 +27,10 @@ export const parts = [
     title: "Page & Layout",
     chapters: [
       { key: "page-setup", title: "Page Setup" },
+      { key: "fonts", title: "Fonts" },
       { key: "headers-footers", title: "Headers & Footers" },
       { key: "columns", title: "Columns" },
+      { key: "table-of-contents", title: "Table of Contents" },
     ],
   },
   {
@@ -54,6 +56,7 @@ export const parts = [
     chapters: [
       { key: "packages", title: "Packages & Imports" },
       { key: "templates", title: "Templates" },
+      { key: "local-setup", title: "Local Setup" },
     ],
   },
 ];

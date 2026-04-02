@@ -1,0 +1,12 @@
+murphy2003:
+  type: Article
+  author: Murphy, Robert
+  title: Tumbling Toast, Murphy's Law and the Fundamental Constants
+  date: 2003
+
+matthews1995:
+  type: Article
+  author: Matthews, Robert
+  title: Tumbling Toast and the Constant of Gravitation
+  date: 1995
+  page-range: 172-176

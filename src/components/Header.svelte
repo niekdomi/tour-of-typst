@@ -57,21 +57,23 @@
           bind:open={tocDropdownOpen}
           {onnavigate}
         />
-
-        <div class="nav-arrows" aria-label="Chapter navigation">
-          <button
-            disabled={!hasPrev}
-            aria-label="Previous chapter"
-            onclick={() => onnavigate?.(currentIndex - 1)}>←</button
-          >
-          <button
-            disabled={!hasNext}
-            aria-label="Next chapter"
-            onclick={() => onnavigate?.(currentIndex + 1)}>→</button
-          >
-        </div>
       {/if}
     </div>
+
+    {#if parts.length > 0}
+      <div class="nav-arrows" aria-label="Chapter navigation">
+        <button
+          disabled={!hasPrev}
+          aria-label="Previous chapter"
+          onclick={() => onnavigate?.(currentIndex - 1)}>←</button
+        >
+        <button
+          disabled={!hasNext}
+          aria-label="Next chapter"
+          onclick={() => onnavigate?.(currentIndex + 1)}>→</button
+        >
+      </div>
+    {/if}
 
     <div class="right" style="flex: {1 - contentFraction}">
       <Dropdown options={localeOptions} bind:value={locale.value} label={t.selectLanguage} />
@@ -101,8 +103,11 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    min-width: 0;
     position: relative;
+  }
+
+  .left {
+    min-width: 0;
   }
 
   .right {
@@ -141,9 +146,8 @@
   .nav-arrows {
     display: flex;
     gap: 0.25rem;
-    margin-left: auto;
-    margin-right: 1rem;
     flex-shrink: 0;
+    margin: 0 0.5rem;
   }
 
   .nav-arrows button {

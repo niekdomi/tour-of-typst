@@ -5,6 +5,8 @@
   import type { Chapter } from "../content/types";
   import { highlighterReady } from "../lib/highlighter";
   import type { Highlighter } from "shiki";
+  import copyIcon from "../assets/icons/copy.svg?raw";
+  import checkIcon from "../assets/icons/check.svg?raw";
 
   interface Props {
     chapter: Chapter;
@@ -15,22 +17,27 @@
   let { chapter, index, locale }: Props = $props();
 
   let highlighter = $state<Highlighter | null>(null);
-  highlighterReady.then((h) => (highlighter = h));
+  void highlighterReady.then((h) => (highlighter = h));
 
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
-    if (!btn) return;
+    if (!btn) {
+      return;
+    }
+
     const code = decodeURIComponent(btn.dataset.code ?? "");
-    navigator.clipboard.writeText(code).then(() => {
-      const prev = btn.textContent;
-      btn.textContent = "Copied!";
-      setTimeout(() => (btn.textContent = prev), 1500);
+
+    void navigator.clipboard.writeText(code).then(() => {
+      btn.innerHTML = checkIcon;
+      setTimeout(() => (btn.innerHTML = copyIcon), 1500);
     });
   }
 
   const html = $derived.by(() => {
     const raw = getChapterMarkdown(locale, chapter.key);
-    if (!raw) return null;
+    if (!raw) {
+      return null;
+    }
 
     const renderer = new Renderer();
     renderer.code = ({ text, lang }) => {
@@ -41,7 +48,7 @@
             defaultColor: false,
           })
         : `<pre><code>${text}</code></pre>`;
-      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">Copy</button></div>`;
+      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">${copyIcon}</button></div>`;
     };
 
     return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
@@ -101,7 +108,7 @@
     text-decoration: underline;
   }
 
-  /* Code — inline only; pre code inherits nothing from this rule */
+  /* Code, inline only; pre code inherits nothing from this rule */
   .lesson :global(:not(pre) > code) {
     font-family: var(--font-mono);
     font-size: 0.85em;
@@ -132,9 +139,10 @@
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.72rem;
-    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     background: var(--color-surface);
@@ -183,7 +191,7 @@
     font-weight: 600;
   }
 
-  /* Alerts (marked-alert) */
+  /* Alerts */
   .lesson :global(.markdown-alert) {
     border-left: 4px solid var(--color-border);
     background: var(--color-surface);

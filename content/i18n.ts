@@ -26,7 +26,7 @@ const translations: Record<Locale, Translations> = {
 };
 
 export function getTranslations(locale: Locale): Translations {
-  return translations[locale] ?? translations.en;
+  return translations[locale];
 }
 
 export const defaultLocale: Locale = "en";

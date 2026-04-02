@@ -18,6 +18,12 @@
     )
   );
 
+  $effect(() => {
+    if (!currentKey && chapters.length > 0) {
+      currentKey = chapters[0].key;
+    }
+  });
+
   function navigate(index: number) {
     currentKey = chapters[index]?.key ?? "";
   }
