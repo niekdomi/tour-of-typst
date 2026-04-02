@@ -19,7 +19,7 @@ for your editor. It provides syntax highlighting, autocomplete, live preview, an
 Tinymist supports the following editors:
 
 - VS Code
-- Neovim
+- NeoVim
 - Helix
 - Zed
 - Sublime Text
