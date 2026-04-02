@@ -12,7 +12,7 @@
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true, leading: 0.8em)
 #set heading(numbering: "1.1")
-#show heading: set text(font: "IBM Plex Sans")
+#show heading: set text(font: "DejaVu Sans Mono")
 
 #show heading.where(level: 1): it => [
   #set text(size: 18pt)
@@ -51,10 +51,9 @@
 #outline(indent: auto)
 
 The phenomenon of _toast landing butter-side down_ has been observed across
-cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents
-a physical model of toast rotation during free fall and demonstrates that
-*gravitational torque, not bad luck* is responsible for this culinary
-tragedy.
+cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents a
+physical model of toast rotation during free fall and demonstrates that
+*gravitational torque, not bad luck* is responsible for this culinary tragedy.
 
 #set page(columns: 2)
 
@@ -80,7 +79,7 @@ The following materials were used in each trial:
 
 - Bread
   - White sandwich bread, 12 mm thickness
-  - Uniform slice mass of 28 ± 1 g
+  - Uniform slice mass of 28 #sym.plus.minus 1 g
 - Butter
   - Salted, spreadable, applied to one side only
   - Layer thickness: 2 mm, verified with digital calipers
@@ -112,7 +111,7 @@ def simulate_toast_drop(height=0.75, mass=0.028):
 ```
 
 #note[No toasts were harmed unnecessarily in this study. All slices were
-consumed responsibly after data collection.]
+  consumed responsibly after data collection.]
 
 == Results
 
@@ -129,7 +128,7 @@ $ theta = 1 / 2 dot g dot t^2 / r $
   table(
     columns: (1fr, 1fr, 1fr, 1fr),
     [*Session*], [*Drops*], [*Butter-Side Down*], [*Avg. Rotation*],
-    ..data.map(row => row.map(v => [#v])).flatten()
+    ..data.map(row => row.map(v => [#v])).flatten(),
   ),
   caption: [Summary of the butter-density correlation trials.],
 )
@@ -141,10 +140,10 @@ measured angular acceleration predicts a near-half-turn before impact,
 explaining the butter-side-down bias observed across all trials.
 
 #note[Future work: investigate different bread types, butter densities, and
-anti-torque plate designs to improve breakfast outcomes.]
+  anti-torque plate designs to improve breakfast outcomes.]
 
 == Acknowledgments
 
 #for name in assistants {
-  [- Thanks to #name for assistance with data collection. ]
+  [- Thanks to #name for assistance with data collection.]
 }

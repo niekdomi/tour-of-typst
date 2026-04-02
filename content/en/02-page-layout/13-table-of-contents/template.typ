@@ -6,17 +6,16 @@
 )
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true)
-#show heading: set text(font: "IBM Plex Sans")
+#show heading: set text(font: "DejaVu Sans Mono")
 
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
 
 Dr. Eleanor Crumb
 
 The phenomenon of _toast landing butter-side down_ has been observed across
-cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents
-a physical model of toast rotation during free fall and demonstrates that
-*gravitational torque, not bad luck* is responsible for this culinary
-tragedy.
+cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents a
+physical model of toast rotation during free fall and demonstrates that
+*gravitational torque, not bad luck* is responsible for this culinary tragedy.
 
 #set page(columns: 2)
 
@@ -42,7 +41,7 @@ The following materials were used in each trial:
 
 - Bread
   - White sandwich bread, 12 mm thickness
-  - Uniform slice mass of 28 ± 1 g
+  - Uniform slice mass of 28 #sym.plus.minus 1 g
 - Butter
   - Salted, spreadable, applied to one side only
   - Layer thickness: 2 mm, verified with digital calipers

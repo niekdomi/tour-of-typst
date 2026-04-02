@@ -32,5 +32,7 @@ export function getTourForLocale(locale: string): TourModule | undefined {
 }
 
 export const getChapterMarkdown = (l: string, k: string) => findFile(markdownFiles, l, k);
-export const getChapterTemplate = (l: string, k: string) => findFile(templateFiles, l, k);
-export const getChapterSolution = (l: string, k: string) => findFile(solutionFiles, l, k);
+export const getChapterTemplate = (l: string, k: string) =>
+  findFile(templateFiles, l, k, "template.typ");
+export const getChapterSolution = (l: string, k: string) =>
+  findFile(solutionFiles, l, k, "solution.typ");

@@ -1,23 +1,24 @@
 import type { TourModule, Chapter } from "./types";
 
 /**
- * Locate a chapter's markdown contents by locale and chapter key.
+ * Locate a chapter file's contents by locale, chapter key, and filename.
  *
  * Expected path shape (with any leading prefix allowed):
- *   /.../content/{locale}/{part}/{chapterDir}/index.md
+ *   /.../content/{locale}/{part}/{chapterDir}/{filename}
  *
  * The chapterDir must end with `-{key}`.
  */
 export function findFile(
   files: Record<string, string>,
   locale: string,
-  key: string
+  key: string,
+  expectedFilename = "index.md"
 ): string | undefined {
   for (const [path, contents] of Object.entries(files)) {
     const segments = path.split("/").filter(Boolean);
     const contentIndex = segments.indexOf("content");
 
-    // Require: content/{locale}/.../{chapterDir}/index.md (at least 5 segments from "content")
+    // Require: content/{locale}/.../{chapterDir}/{filename} (at least 5 segments from "content")
     if (contentIndex === -1 || segments.length - contentIndex < 5) {
       continue;
     }
@@ -26,7 +27,7 @@ export function findFile(
     const chapterDir = segments[contentIndex + 3];
     const filename = segments[contentIndex + 4];
 
-    if (localeSegment !== locale || filename !== "index.md") {
+    if (localeSegment !== locale || filename !== expectedFilename) {
       continue;
     }
 

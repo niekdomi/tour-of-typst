@@ -7,10 +7,9 @@
 Dr. Eleanor Crumb
 
 The phenomenon of _toast landing butter-side down_ has been observed across
-cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents
-a physical model of toast rotation during free fall and demonstrates that
-*gravitational torque, not bad luck* is responsible for this culinary
-tragedy.
+cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents a
+physical model of toast rotation during free fall and demonstrates that
+*gravitational torque, not bad luck* is responsible for this culinary tragedy.
 
 == Introduction
 
@@ -34,7 +33,7 @@ The following materials were used in each trial:
 
 - Bread
   - White sandwich bread, 12 mm thickness
-  - Uniform slice mass of 28 ± 1 g
+  - Uniform slice mass of 28 #sym.plus.minus 1 g
 - Butter
   - Salted, spreadable, applied to one side only
   - Layer thickness: 2 mm, verified with digital calipers
