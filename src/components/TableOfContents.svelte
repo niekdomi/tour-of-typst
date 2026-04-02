@@ -5,11 +5,11 @@
     parts: Part[];
     chapters: Chapter[];
     currentIndex: number;
-    open: boolean;
+    open?: boolean;
     onnavigate?: (index: number) => void;
   }
 
-  let { parts, chapters, currentIndex, open, onnavigate }: Props = $props();
+  let { parts, chapters, currentIndex, open = $bindable(), onnavigate }: Props = $props();
 
   function select(index: number) {
     onnavigate?.(index);

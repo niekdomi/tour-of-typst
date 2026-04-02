@@ -65,6 +65,7 @@
       compiler: {
         instance: compiler,
         throttleDelay: 100,
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onCompile: async (result: CompileResult) => {
           if (result.vector) {
             oncompile?.(await renderer.renderSvg(result.vector));
@@ -83,7 +84,7 @@
    */
   function createView(initialDoc: string) {
     view?.destroy();
-    if (!shikiHighlighting || !compilerExtensions || !editorContainer) {
+    if (!shikiHighlighting || !compilerExtensions) {
       return;
     }
 
@@ -119,7 +120,7 @@
     // Destructure to read both doc and docKey synchronously, Svelte tracks both.
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
     const [initialDoc] = [doc, docKey];
-    ready.then(() => {
+    void ready.then(() => {
       showingSolution = false;
       savedCode = undefined;
       createView(initialDoc);

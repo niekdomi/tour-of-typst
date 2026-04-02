@@ -8,6 +8,7 @@ import { defineConfig } from "eslint/config";
 import { includeIgnoreFile } from "@eslint/compat";
 
 const gitignorePath = path.resolve(import.meta.dirname, ".gitignore");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const svelteTypeChecked =
   svelte.configs["flat/recommended-type-checked"] ?? svelte.configs.recommended;
 
@@ -16,6 +17,7 @@ export default defineConfig(
   js.configs.recommended,
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   ...svelteTypeChecked,
   prettier,
   ...svelte.configs.prettier,
@@ -23,12 +25,15 @@ export default defineConfig(
     languageOptions: {
       globals: { ...globals.browser },
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ["eslint.config.js", "vite.config.ts", "scripts/*.ts"],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
       "no-undef": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
     },
   },
   {

@@ -19,7 +19,7 @@
   }
 
   function onPointerMove(e: PointerEvent) {
-    const parent = el?.parentElement;
+    const parent = el.parentElement;
     if (!dragging || !parent) {
       return;
     }

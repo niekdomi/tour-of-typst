@@ -6,13 +6,12 @@
 
   interface Props {
     options: DropdownOption[];
-    value: string;
+    value?: string;
     label: string;
+    open?: boolean;
   }
 
-  let { options, value, label }: Props = $props();
-
-  let open = $state(false);
+  let { options, value = $bindable(), label, open = $bindable(false) }: Props = $props();
   const selectedOption = $derived(options.find((o) => o.value === value));
 
   function select(val: string) {

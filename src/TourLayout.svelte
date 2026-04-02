@@ -35,7 +35,7 @@
   <ResizeHandle
     direction="horizontal"
     fraction={contentFraction}
-    onchange={(f) => (contentFraction = f)}
+    onchange={(f: number) => (contentFraction = f)}
   />
 
   <div class="workspace-side" style="flex: {1 - contentFraction}">

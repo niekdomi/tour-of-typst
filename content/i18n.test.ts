@@ -51,7 +51,8 @@ describe("i18n completeness", () => {
   for (const locale of locales) {
     it(`${locale} has all translation keys with non-empty values`, () => {
       const t = getTranslations(locale);
-      expect(Object.keys(t)).toEqual(expect.arrayContaining(requiredKeys));
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      expect(Object.keys(t)).toEqual(expect.arrayContaining(requiredKeys as string[]));
       const empty = requiredKeys.filter((k) => !t[k]);
       expect(empty).toEqual([]);
     });

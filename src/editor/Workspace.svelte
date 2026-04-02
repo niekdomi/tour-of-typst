@@ -49,14 +49,14 @@
       {theme}
       docKey="{locale}:{chapterKey}"
       onchange={handleChange}
-      oncompile={(s) => (svg = s)}
+      oncompile={(s: string) => (svg = s)}
     />
   </div>
 
   <ResizeHandle
     direction="vertical"
     fraction={editorFraction}
-    onchange={(f) => (editorFraction = f)}
+    onchange={(f: number) => (editorFraction = f)}
   />
 
   <div class="pane" style="flex: {1 - editorFraction}">

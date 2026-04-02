@@ -1,7 +1,7 @@
 export type Theme = "auto" | "light" | "dark";
 
 function createTheme() {
-  let value = $state<Theme>((localStorage.getItem("theme") as Theme) ?? "auto");
+  let value = $state<Theme>((localStorage.getItem("theme") as Theme | null) ?? "auto");
   let theme = $state<"light" | "dark">("light");
 
   function apply(v: Theme) {

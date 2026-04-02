@@ -17,7 +17,7 @@
   let { chapter, index, locale }: Props = $props();
 
   let highlighter = $state<Highlighter | null>(null);
-  highlighterReady.then((h) => (highlighter = h));
+  void highlighterReady.then((h) => (highlighter = h));
 
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
@@ -27,7 +27,7 @@
 
     const code = decodeURIComponent(btn.dataset.code ?? "");
 
-    navigator.clipboard.writeText(code).then(() => {
+    void navigator.clipboard.writeText(code).then(() => {
       btn.innerHTML = checkIcon;
       setTimeout(() => (btn.innerHTML = copyIcon), 1500);
     });
