@@ -58,7 +58,6 @@ rotation and validates it experimentally.
 )
 
 == Methods
-
 The following materials were used in each trial:
 
 - Bread
@@ -98,7 +97,6 @@ def simulate_toast_drop(height=0.75, mass=0.028):
   consumed responsibly after data collection.]
 
 == Results
-
 Drops were performed from a table height of $h approx 0.75$ m. The angular
 velocity of the toast during free fall is given by:
 
@@ -120,7 +118,6 @@ $ theta = 1 / 2 dot g dot t^2 / r $
 )
 
 == Conclusion
-
 Toast rotation is governed by geometry and torque, not superstition. The
 measured angular acceleration predicts a near-half-turn before impact,
 explaining the butter-side-down bias observed across all trials.

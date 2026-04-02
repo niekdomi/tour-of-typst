@@ -35,15 +35,12 @@ Toast, when dropped from a standard table height of approximately 0.75 m,
 rotates predictably during its fall...
 
 == Methods
-
 // TODO: describe experimental setup
 
 == Results
-
 // TODO: present findings
 
 == Conclusion
-
 // TODO: summarize
 ```
 

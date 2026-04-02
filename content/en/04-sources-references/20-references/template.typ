@@ -9,8 +9,10 @@
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
 )
+
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true, leading: 0.8em)
+
 #set heading(numbering: "1.1")
 #set math.equation(numbering: "(1)")
 #show heading: set text(font: "DejaVu Sans Mono")
@@ -114,7 +116,6 @@ def simulate_toast_drop(height=0.75, mass=0.028):
   consumed responsibly after data collection.]
 
 == Results
-
 Drops were performed from a table height of $h approx 0.75$ m. The angular
 velocity of the toast during free fall is given by:
 
@@ -134,7 +135,6 @@ $ theta = 1 / 2 dot g dot t^2 / r $
 ) <tab-results>
 
 == Conclusion
-
 Toast rotation is governed by geometry and torque, not superstition. The
 measured angular acceleration predicts a near-half-turn before impact,
 explaining the butter-side-down bias observed across all trials.

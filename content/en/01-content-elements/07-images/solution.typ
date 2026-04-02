@@ -1,5 +1,4 @@
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
-
 Dr. Eleanor Crumb
 
 The phenomenon of _toast landing butter-side down_ has been observed across
@@ -23,7 +22,6 @@ rotation and validates it experimentally.
 )
 
 == Methods
-
 The following materials were used in each trial:
 
 - Bread
@@ -60,7 +58,6 @@ def simulate_toast_drop(height=0.75, mass=0.028):
 ```
 
 == Results
-
 Drops were performed from a table height of $h approx 0.75$ m. The angular
 velocity of the toast during free fall is given by:
 
@@ -71,5 +68,4 @@ The total rotation angle before impact is:
 $ theta = 1 / 2 dot g dot t^2 / r $
 
 == Conclusion
-
 // TODO: summarize

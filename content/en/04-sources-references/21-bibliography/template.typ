@@ -9,8 +9,10 @@
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
 )
+
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true, leading: 0.8em)
+
 #set heading(numbering: "1.1")
 #set math.equation(numbering: "(1)")
 #show heading: set text(font: "DejaVu Sans Mono")

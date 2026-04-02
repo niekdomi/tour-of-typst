@@ -1,5 +1,4 @@
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
-
 Dr. Eleanor Crumb
 
 The phenomenon of _toast landing butter-side down_ has been observed across
@@ -16,7 +15,6 @@ unfortunate geometry of breakfast items. This paper derives a model for toast
 rotation and validates it experimentally.
 
 == Methods
-
 The following materials were used in each trial:
 
 - Bread
@@ -40,9 +38,7 @@ Each trial proceeded as follows:
 + Repeat for a total of 50 trials per session, across 3 sessions
 
 == Results
-
 // TODO: present findings
 
 == Conclusion
-
 // TODO: summarize
