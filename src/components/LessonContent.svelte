@@ -58,7 +58,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <article class="lesson" onclick={handleClick}>
-  <div class="chapter-label">Chapter {index + 1}</div>
+  <div class="chapter-label">{chapter.key === "welcome" ? "" : `Chapter ${String(index)}`}</div>
 
   {#if html}
     <!-- eslint-disable-next-line svelte/no-at-html-tags -->

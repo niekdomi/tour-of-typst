@@ -12,11 +12,11 @@ The simplest form applies a set rule to a specific element type:
 All headings are now blue. But for full control, you can intercept the element and rebuild it:
 
 ```typst
-#show heading.where(level: 1): it => [
-  #set text(size: 18pt)
-  #smallcaps(it.body)
-  #v(0.5em)
-]
+#show heading.where(level: 1): it => {
+  set text(size: 18pt)
+  smallcaps(it.body)
+  v(0.5em)
+}
 ```
 
 More examples, because once you start, it's hard to stop:

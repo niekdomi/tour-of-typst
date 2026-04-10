@@ -23,7 +23,7 @@ const solutionFiles = import.meta.glob<string>("../../content/*/*/*/solution.typ
   import: "default",
 });
 
-const auxFiles = import.meta.glob<string>("../../content/*/*/*/*.yaml", {
+const auxFiles = import.meta.glob<string>("../../content/*/*/*/*.{yaml,yml}", {
   eager: true,
   query: "?raw",
   import: "default",

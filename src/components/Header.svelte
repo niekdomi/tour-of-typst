@@ -14,6 +14,7 @@
     contentFraction?: number;
     tocDropdownOpen?: boolean;
     onnavigate?: (index: number) => void;
+    onresetall?: () => void;
   }
 
   let {
@@ -23,6 +24,7 @@
     contentFraction = 0.5,
     tocDropdownOpen = $bindable(false),
     onnavigate,
+    onresetall,
   }: Props = $props();
 
   const t = $derived(getTranslations(locale.value));
@@ -57,25 +59,29 @@
           bind:open={tocDropdownOpen}
           {onnavigate}
         />
+        <div class="nav-arrows" aria-label="Chapter navigation">
+          <button
+            disabled={!hasPrev}
+            aria-label="Previous chapter"
+            onclick={() => onnavigate?.(currentIndex - 1)}>←</button
+          >
+          <button
+            disabled={!hasNext}
+            aria-label="Next chapter"
+            onclick={() => onnavigate?.(currentIndex + 1)}>→</button
+          >
+        </div>
       {/if}
     </div>
 
-    {#if parts.length > 0}
-      <div class="nav-arrows" aria-label="Chapter navigation">
-        <button
-          disabled={!hasPrev}
-          aria-label="Previous chapter"
-          onclick={() => onnavigate?.(currentIndex - 1)}>←</button
-        >
-        <button
-          disabled={!hasNext}
-          aria-label="Next chapter"
-          onclick={() => onnavigate?.(currentIndex + 1)}>→</button
-        >
-      </div>
-    {/if}
+    <div class="header-split-spacer"></div>
 
     <div class="right" style="flex: {1 - contentFraction}">
+      <button
+        class="reset-all-btn"
+        onclick={onresetall}
+        title="Reset all chapters to their templates">Reset All</button
+      >
       <Dropdown options={localeOptions} bind:value={locale.value} label={t.selectLanguage} />
       <Dropdown options={themeOptions} bind:value={theme.value} label={t.selectTheme} />
     </div>
@@ -94,7 +100,6 @@
     align-items: center;
     max-width: 1600px;
     margin: 0 auto;
-    padding: 0 2rem;
     height: 100%;
   }
 
@@ -108,10 +113,12 @@
 
   .left {
     min-width: 0;
+    padding-left: 2rem;
   }
 
   .right {
     justify-content: flex-end;
+    padding-right: 2rem;
   }
 
   .brand {
@@ -147,7 +154,7 @@
     display: flex;
     gap: 0.25rem;
     flex-shrink: 0;
-    margin: 0 0.5rem;
+    margin-left: auto;
   }
 
   .nav-arrows button {
@@ -170,6 +177,22 @@
   .nav-arrows button:disabled {
     opacity: 0.25;
     cursor: default;
+  }
+
+  .reset-all-btn {
+    padding: 0.25rem 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--btn-fill);
+    color: var(--btn-text);
+    cursor: pointer;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .reset-all-btn:hover {
+    background: var(--btn-fill-hover);
   }
 
   @media (max-width: 800px) {

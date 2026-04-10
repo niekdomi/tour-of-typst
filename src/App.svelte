@@ -10,7 +10,7 @@
   const parts = $derived(tour?.parts ?? []);
   const chapters = $derived(tour ? flattenChapters(tour) : []);
 
-  let currentKey = $state("");
+  let currentKey = $state(localStorage.getItem("tour-of-typst-chapter") ?? "");
   const currentIndex = $derived(
     Math.max(
       0,
@@ -19,8 +19,14 @@
   );
 
   $effect(() => {
-    if (!currentKey && chapters.length > 0) {
+    if ((!currentKey || !chapters.some((c) => c.key === currentKey)) && chapters.length > 0) {
       currentKey = chapters[0].key;
+    }
+  });
+
+  $effect(() => {
+    if (currentKey) {
+      localStorage.setItem("tour-of-typst-chapter", currentKey);
     }
   });
 
@@ -31,6 +37,15 @@
   // --- Layout ---
   let contentFraction = $state(0.5);
   let tocDropdownOpen = $state(false);
+
+  // Bump to force Workspace to remount and reload edits from (cleared) localStorage
+  let resetGeneration = $state(0);
+
+  function resetAll() {
+    if (!confirm("Reset all chapters to their original templates?")) return;
+    localStorage.removeItem("tour-of-typst-edits");
+    resetGeneration++;
+  }
 </script>
 
 <div class="app">
@@ -41,16 +56,19 @@
     {contentFraction}
     bind:tocDropdownOpen
     onnavigate={navigate}
+    onresetall={resetAll}
   />
-  <TourLayout
-    locale={locale.value}
-    theme={theme.resolved}
-    {chapters}
-    {currentIndex}
-    {currentKey}
-    bind:contentFraction
-    {tocDropdownOpen}
-  />
+  {#key resetGeneration}
+    <TourLayout
+      locale={locale.value}
+      theme={theme.resolved}
+      {chapters}
+      {currentIndex}
+      {currentKey}
+      bind:contentFraction
+      {tocDropdownOpen}
+    />
+  {/key}
 </div>
 
 <style>
