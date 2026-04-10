@@ -36,8 +36,11 @@
   <ResizeHandle
     direction="horizontal"
     fraction={contentFraction}
+<<<<<<< HEAD
     min={0.25}
     max={0.75}
+=======
+>>>>>>> origin/main
     onchange={(f: number) => (contentFraction = f)}
   />
 

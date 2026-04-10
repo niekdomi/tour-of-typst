@@ -10,9 +10,13 @@ function detectBrowserLocale(): Locale {
 }
 
 function createLocale() {
+<<<<<<< HEAD
   let value = $state<Locale>(
     (localStorage.getItem("locale") as Locale | null) ?? detectBrowserLocale()
   );
+=======
+  let value = $state<Locale>((localStorage.getItem("locale") as Locale | null) ?? defaultLocale);
+>>>>>>> origin/main
 
   $effect.root(() => {
     $effect(() => {

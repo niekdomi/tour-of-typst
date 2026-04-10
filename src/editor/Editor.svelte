@@ -65,7 +65,11 @@
       getFiles: () => auxFiles,
       compiler: {
         instance: compiler,
+<<<<<<< HEAD
         throttleDelay: 50,
+=======
+        throttleDelay: 100,
+>>>>>>> origin/main
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onCompile: async (result: CompileResult) => {
           if (result.vector) {
@@ -94,12 +98,16 @@
       state: EditorState.create({
         doc: initialDoc,
         extensions: [
+<<<<<<< HEAD
           keymap.of([
             { key: "Mod-f", run: () => true },
             { key: "F3", run: () => true },
             { key: "Shift-F3", run: () => true },
             { key: "F2", run: () => true },
           ]),
+=======
+          keymap.of([{ key: "Mod-f", run: () => true }]),
+>>>>>>> origin/main
           basicSetup,
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
@@ -126,6 +134,7 @@
   $effect(() => {
     // Destructure to read both doc and docKey synchronously, Svelte tracks both.
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
+<<<<<<< HEAD
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [initialDoc, _key] = [doc, docKey];
     showingSolution = false;
@@ -134,6 +143,12 @@
     // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
     editorContainer?.replaceChildren();
     void ready.then(() => {
+=======
+    const [initialDoc] = [doc, docKey];
+    void ready.then(() => {
+      showingSolution = false;
+      savedCode = undefined;
+>>>>>>> origin/main
       createView(initialDoc);
     });
 

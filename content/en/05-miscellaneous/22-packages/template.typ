@@ -14,6 +14,7 @@
 #set par(justify: true, leading: 0.8em)
 
 #set heading(numbering: "1.1")
+<<<<<<< HEAD
 #set math.equation(numbering: "(1)")
 #show heading: set text(font: "DejaVu Sans Mono")
 
@@ -22,6 +23,15 @@
   smallcaps(it.body)
   v(0.5em)
 }
+=======
+#show heading: set text(font: "DejaVu Sans Mono")
+
+#show heading.where(level: 1): it => [
+  #set text(size: 18pt)
+  #smallcaps(it.body)
+  #v(0.5em)
+]
+>>>>>>> origin/main
 
 #show heading.where(level: 2): it => {
   it
