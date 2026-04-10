@@ -15,17 +15,36 @@
   let editorFraction = $state(0.5);
   let svg = $state<string | undefined>();
 
+  const STORAGE_KEY = "tour-of-typst-edits";
+
+  function loadEditsMap(): Map<string, string> {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return new Map(JSON.parse(raw) as [string, string][]);
+    } catch {
+      // corrupt data, start fresh
+    }
+    return new Map();
+  }
+
+  function saveEditsMap(map: Map<string, string>) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...map.entries()]));
+    } catch {
+      // storage full or unavailable
+    }
+  }
+
+  // Persist edits to localStorage so they survive page refresh.
   // Plain Map intentionally, SvelteMap would make doc reactive on every keystroke.
-  // Persists edits per locale+chapter so navigation restores the last draft.
-  // eslint-disable-next-line svelte/prefer-svelte-reactivity
-  const editsMap = new Map<string, string>();
+  const editsMap = loadEditsMap();
   const editsKey = (loc: string, key: string) => `${loc}:${key}`;
 
   const solution = $derived(getChapterSolution(locale, chapterKey));
   const template = $derived(getChapterTemplate(locale, chapterKey) ?? "");
   const auxFiles = $derived(getChapterAuxFiles(locale, chapterKey));
 
-  // Persist user edits per locale+chapter; restores them on navigation
+  // Resolve the document for the current chapter: saved edit > template > empty
   let doc = $state("");
 
   $effect(() => {
@@ -36,6 +55,7 @@
   // Update persisted edits for the current locale+chapter pair.
   function handleChange(content: string) {
     editsMap.set(editsKey(locale, chapterKey), content);
+    saveEditsMap(editsMap);
   }
 </script>
 

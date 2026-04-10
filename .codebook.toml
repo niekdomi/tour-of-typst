@@ -17,6 +17,7 @@ words = [
   "onpointerdown",
   "onpointermove",
   "onpointerup",
+  "onresetall",
   "recompiles",
   "reflows",
   "shiki",

@@ -16,11 +16,11 @@
 #set heading(numbering: "1.1")
 #show heading: set text(font: "DejaVu Sans Mono")
 
-#show heading.where(level: 1): it => [
-  #set text(size: 18pt)
-  #smallcaps(it.body)
-  #v(0.5em)
-]
+#show heading.where(level: 1): it => {
+  set text(size: 18pt)
+  smallcaps(it.body)
+  v(0.5em)
+}
 
 #show heading.where(level: 2): it => {
   it

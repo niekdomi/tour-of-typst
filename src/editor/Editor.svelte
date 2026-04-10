@@ -3,6 +3,7 @@
   import { EditorState, Compartment, Transaction } from "@codemirror/state";
   import { keymap } from "@codemirror/view";
   import { cmBaseTheme } from "./theme";
+  import diagnosticCopyPlugin from "./diagnosticCopyPlugin";
   import {
     createTypstExtensions,
     createTypstShikiHighlighting,
@@ -64,7 +65,7 @@
       getFiles: () => auxFiles,
       compiler: {
         instance: compiler,
-        throttleDelay: 100,
+        throttleDelay: 50,
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onCompile: async (result: CompileResult) => {
           if (result.vector) {
@@ -93,7 +94,12 @@
       state: EditorState.create({
         doc: initialDoc,
         extensions: [
-          keymap.of([{ key: "Mod-f", run: () => true }]),
+          keymap.of([
+            { key: "Mod-f", run: () => true },
+            { key: "F3", run: () => true },
+            { key: "Shift-F3", run: () => true },
+            { key: "F2", run: () => true },
+          ]),
           basicSetup,
           cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
@@ -103,6 +109,7 @@
             }
           }),
           ...compilerExtensions,
+          diagnosticCopyPlugin,
         ],
       }),
     });
@@ -119,10 +126,14 @@
   $effect(() => {
     // Destructure to read both doc and docKey synchronously, Svelte tracks both.
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
-    const [initialDoc] = [doc, docKey];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [initialDoc, _key] = [doc, docKey];
+    showingSolution = false;
+    savedCode = undefined;
+    // Clear container immediately so stale content from previous chapter is never visible
+    // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
+    editorContainer?.replaceChildren();
     void ready.then(() => {
-      showingSolution = false;
-      savedCode = undefined;
       createView(initialDoc);
     });
 
@@ -254,5 +265,63 @@
 
   .editor-container :global(.cm-scroller) {
     overflow: auto;
+  }
+
+  /* Lint gutter: filled circle markers */
+  .editor-container :global(.cm-lint-marker-error),
+  .editor-container :global(.cm-lint-marker-warning),
+  .editor-container :global(.cm-lint-marker-info) {
+    content: none;
+    background: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .editor-container :global(.cm-lint-marker-error::after) {
+    content: "\2B24";
+    font-size: 0.55em;
+    color: #e45649;
+  }
+  .editor-container :global(.cm-lint-marker-warning::after) {
+    content: "\2B24";
+    font-size: 0.55em;
+    color: #d19a66;
+  }
+  .editor-container :global(.cm-lint-marker-info::after) {
+    content: "\2B24";
+    font-size: 0.55em;
+    color: var(--color-accent);
+  }
+
+  /* Diagnostic tooltip */
+  .editor-container :global(.cm-diagnostic) {
+    position: relative;
+    padding-right: 2rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Copy button inside diagnostics – matches lesson code-block .copy-btn */
+  .editor-container :global(.diag-copy-btn) {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+  }
+  .editor-container :global(.diag-copy-btn:hover) {
+    background: var(--color-surface-hover);
+    color: var(--color-text);
+  }
+  .editor-container :global(.diag-copy-btn svg) {
+    width: 14px;
+    height: 14px;
   }
 </style>
