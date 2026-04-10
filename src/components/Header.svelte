@@ -59,7 +59,6 @@
           bind:open={tocDropdownOpen}
           {onnavigate}
         />
-<<<<<<< HEAD
         <div class="nav-arrows" aria-label="Chapter navigation">
           <button
             disabled={!hasPrev}
@@ -76,25 +75,6 @@
     </div>
 
     <div class="header-split-spacer"></div>
-=======
-      {/if}
-    </div>
-
-    {#if parts.length > 0}
-      <div class="nav-arrows" aria-label="Chapter navigation">
-        <button
-          disabled={!hasPrev}
-          aria-label="Previous chapter"
-          onclick={() => onnavigate?.(currentIndex - 1)}>←</button
-        >
-        <button
-          disabled={!hasNext}
-          aria-label="Next chapter"
-          onclick={() => onnavigate?.(currentIndex + 1)}>→</button
-        >
-      </div>
-    {/if}
->>>>>>> origin/main
 
     <div class="right" style="flex: {1 - contentFraction}">
       <button
@@ -133,10 +113,7 @@
 
   .left {
     min-width: 0;
-<<<<<<< HEAD
     padding-left: 2rem;
-=======
->>>>>>> origin/main
   }
 
   .right {
@@ -177,11 +154,7 @@
     display: flex;
     gap: 0.25rem;
     flex-shrink: 0;
-<<<<<<< HEAD
     margin-left: auto;
-=======
-    margin: 0 0.5rem;
->>>>>>> origin/main
   }
 
   .nav-arrows button {

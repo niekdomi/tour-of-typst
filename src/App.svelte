@@ -19,24 +19,17 @@
   );
 
   $effect(() => {
-<<<<<<< HEAD
     if ((!currentKey || !chapters.some((c) => c.key === currentKey)) && chapters.length > 0) {
-=======
-    if (!currentKey && chapters.length > 0) {
->>>>>>> origin/main
       currentKey = chapters[0].key;
     }
   });
 
-<<<<<<< HEAD
   $effect(() => {
     if (currentKey) {
       localStorage.setItem("tour-of-typst-chapter", currentKey);
     }
   });
 
-=======
->>>>>>> origin/main
   function navigate(index: number) {
     currentKey = chapters[index]?.key ?? "";
   }
