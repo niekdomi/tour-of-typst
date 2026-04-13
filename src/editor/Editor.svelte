@@ -40,6 +40,7 @@
   let view: EditorView | undefined = $state();
   let showingSolution = $state(false);
   let savedCode: string | undefined;
+  let effectGeneration = 0;
 
   const highlightCompartment = new Compartment();
 
@@ -128,12 +129,15 @@
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [initialDoc, _key] = [doc, docKey];
+    const gen = ++effectGeneration;
     showingSolution = false;
     savedCode = undefined;
     // Clear container immediately so stale content from previous chapter is never visible
     // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
     editorContainer?.replaceChildren();
     void ready.then(() => {
+      // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
+      if (gen !== effectGeneration) return;
       createView(initialDoc);
     });
 
@@ -301,7 +305,7 @@
     word-break: break-word;
   }
 
-  /* Copy button inside diagnostics – matches lesson code-block .copy-btn */
+  /* Copy button inside diagnostics */
   .editor-container :global(.diag-copy-btn) {
     position: absolute;
     top: 4px;
