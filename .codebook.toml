@@ -1,5 +1,6 @@
 dictionaries = ["en_us", "de_ch"]
 words = [
+  # English
   "apa",
   "buenard",
   "deja",
@@ -18,6 +19,9 @@ words = [
   "srgb",
   "tinymist",
   "vedivad",
+  # German
+  "vorausgefülltem",
+  "Kapiteltitel",
 ]
 include_paths = [
   "**/*.md",
