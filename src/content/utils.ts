@@ -24,8 +24,8 @@ export function findFile(
     }
 
     const localeSegment = segments[contentIndex + 1];
-    const chapterDir = segments[contentIndex + 3];
-    const filename = segments[contentIndex + 4];
+    const chapterDir = segments[contentIndex + 3]!;
+    const filename = segments[contentIndex + 4]!;
 
     if (localeSegment !== locale || filename !== expectedFilename) {
       continue;

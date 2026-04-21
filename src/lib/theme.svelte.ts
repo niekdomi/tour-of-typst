@@ -30,6 +30,7 @@ function createTheme() {
           mq.removeEventListener("change", listener);
         };
       }
+      return;
     });
   });
 

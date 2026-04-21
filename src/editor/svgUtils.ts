@@ -45,8 +45,8 @@ export function splitPages(svg: string): string[] {
   });
 
   return pageGroups.map((g, i) => {
-    const nextY = i + 1 < yOffsets.length ? yOffsets[i + 1] : vb.height;
-    const pageHeight = nextY - yOffsets[i];
+    const nextY = i + 1 < yOffsets.length ? (yOffsets[i + 1] ?? vb.height) : vb.height;
+    const pageHeight = nextY - (yOffsets[i] ?? 0);
 
     // Content inside each group is in local coordinates — remove the page-positioning transform
     const clone = g.cloneNode(true) as Element;

@@ -25,7 +25,7 @@
       return;
     }
 
-    const code = decodeURIComponent(btn.dataset.code ?? "");
+    const code = decodeURIComponent(btn.dataset["code"] ?? "");
 
     void navigator.clipboard.writeText(code).then(() => {
       btn.innerHTML = checkIcon;

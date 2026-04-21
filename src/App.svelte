@@ -20,7 +20,7 @@
 
   $effect(() => {
     if ((!currentKey || !chapters.some((c) => c.key === currentKey)) && chapters.length > 0) {
-      currentKey = chapters[0].key;
+      currentKey = chapters[0]!.key;
     }
   });
 
