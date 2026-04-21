@@ -42,7 +42,7 @@
   }
 
   function fitDimension(dim: "width" | "height") {
-    const svgEl = previewEl?.querySelector<SVGSVGElement>(".page svg");
+    const svgEl = previewEl.querySelector<SVGSVGElement>(".page svg");
     if (!svgEl) return;
     const rect = svgEl.getBoundingClientRect();
     const natural = (dim === "width" ? rect.width : rect.height) / zoom;
@@ -52,7 +52,7 @@
   }
 
   function handleWindowClick(e: MouseEvent) {
-    if (showDropdown && !dropdownWrapEl?.contains(e.target as Node)) {
+    if (showDropdown && !dropdownWrapEl.contains(e.target as Node)) {
       showDropdown = false;
     }
   }
@@ -90,13 +90,13 @@
 
       {#if showDropdown}
         <div class="zoom-dropdown">
-          <button onclick={() => fitDimension("width")}>Fit Width</button>
-          <button onclick={() => fitDimension("height")}>Fit Height</button>
+          <button onclick={() => { fitDimension("width"); }}>Fit Width</button>
+          <button onclick={() => { fitDimension("height"); }}>Fit Height</button>
           <hr />
-          <button onclick={() => setZoom(0.5)}>50%</button>
-          <button onclick={() => setZoom(0.75)}>75%</button>
-          <button onclick={() => setZoom(1.0)}>100%</button>
-          <button onclick={() => setZoom(2.0)}>200%</button>
+          <button onclick={() => { setZoom(0.5); }}>50%</button>
+          <button onclick={() => { setZoom(0.75); }}>75%</button>
+          <button onclick={() => { setZoom(1.0); }}>100%</button>
+          <button onclick={() => { setZoom(2.0); }}>200%</button>
         </div>
       {/if}
     </div>
