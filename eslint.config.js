@@ -34,6 +34,7 @@ export default defineConfig(
     rules: {
       "no-undef": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-confusing-void-expression": ["error", { ignoreArrowShorthand: true }],
     },
   },
   {

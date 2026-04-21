@@ -90,13 +90,13 @@
 
       {#if showDropdown}
         <div class="zoom-dropdown">
-          <button onclick={() => { fitDimension("width"); }}>Fit Width</button>
-          <button onclick={() => { fitDimension("height"); }}>Fit Height</button>
+          <button onclick={() => fitDimension("width")}>Fit Width</button>
+          <button onclick={() => fitDimension("height")}>Fit Height</button>
           <hr />
-          <button onclick={() => { setZoom(0.5); }}>50%</button>
-          <button onclick={() => { setZoom(0.75); }}>75%</button>
-          <button onclick={() => { setZoom(1.0); }}>100%</button>
-          <button onclick={() => { setZoom(2.0); }}>200%</button>
+          <button onclick={() => setZoom(0.5)}>50%</button>
+          <button onclick={() => setZoom(0.75)}>75%</button>
+          <button onclick={() => setZoom(1.0)}>100%</button>
+          <button onclick={() => setZoom(2.0)}>200%</button>
         </div>
       {/if}
     </div>
