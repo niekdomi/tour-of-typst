@@ -50,8 +50,8 @@ export function getChapterAuxFiles(locale: string, key: string): Record<string, 
     const contentIndex = segments.indexOf("content");
     if (contentIndex === -1 || segments.length - contentIndex < 5) continue;
     const loc = segments[contentIndex + 1];
-    const dir = segments[contentIndex + 3];
-    const file = segments[contentIndex + 4];
+    const dir = segments[contentIndex + 3]!;
+    const file = segments[contentIndex + 4]!;
     if (loc === locale && dir.endsWith(`-${key}`)) {
       result[`/${file}`] = contents;
     }

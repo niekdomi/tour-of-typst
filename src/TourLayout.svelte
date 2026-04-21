@@ -29,7 +29,7 @@
 <div class="layout">
   <div class="content-side" style="flex: {contentFraction}">
     <main class="content-panel" class:blurred={tocDropdownOpen}>
-      <LessonContent chapter={chapters[currentIndex]} index={currentIndex} {locale} />
+      <LessonContent chapter={chapters[currentIndex]!} index={currentIndex} {locale} />
     </main>
   </div>
 

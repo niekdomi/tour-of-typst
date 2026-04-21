@@ -2,17 +2,17 @@
   import { EditorView, basicSetup } from "codemirror";
   import { EditorState, Compartment, Transaction } from "@codemirror/state";
   import { keymap } from "@codemirror/view";
-  import { cmBaseTheme } from "./theme";
+  import { indentWithTab } from "@codemirror/commands";
   import diagnosticCopyPlugin from "./diagnosticCopyPlugin";
   import {
     createTypstExtensions,
     createTypstShikiHighlighting,
     TypstCompiler,
+    TypstProject,
     TypstRenderer,
     TypstFormatter,
   } from "@vedivad/codemirror-typst";
   import type { TypstShikiHighlighting } from "@vedivad/codemirror-typst";
-  import type { CompileResult } from "@vedivad/typst-web-service";
 
   interface Props {
     doc?: string;
@@ -40,6 +40,8 @@
   let view: EditorView | undefined = $state();
   let showingSolution = $state(false);
   let savedCode: string | undefined;
+  let userScrollTop = 0;
+  let solutionScrollTop = 0;
   let effectGeneration = 0;
 
   const highlightCompartment = new Compartment();
@@ -48,32 +50,32 @@
   // index 0 of createTypstExtensions is the built-in shiki, we replace it with our compartment
   let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
   let formatter: TypstFormatter | undefined;
+  let project: TypstProject | undefined;
 
-  /**
-   * Initialize Typst compiler/renderer/formatter and Shiki highlighting.
-   * Must run before creating a view so extensions are available.
-   */
   async function init() {
-    const compiler = await TypstCompiler.create();
     const renderer = TypstRenderer.create();
     formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
 
-    shikiHighlighting = await createTypstShikiHighlighting({
-      themes: { light: "github-light", dark: "github-dark-dimmed" },
-      defaultColor: theme,
+    // Compiler WASM load and Shiki language pack are independent — run in parallel
+    const [compiler, shiki] = await Promise.all([
+      TypstCompiler.create(),
+      createTypstShikiHighlighting({
+        themes: { light: "github-light", dark: "github-dark-dimmed" },
+        defaultColor: theme,
+      }),
+    ]);
+
+    shikiHighlighting = shiki;
+    project = new TypstProject({ compiler });
+    project.onCompile((result) => {
+      if (result.vector) {
+        void renderer.renderSvg(result.vector).then((svg) => oncompile?.(svg));
+      }
     });
+
     const typstExtension = await createTypstExtensions({
-      getFiles: () => auxFiles,
-      compiler: {
-        instance: compiler,
-        throttleDelay: 50,
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onCompile: async (result: CompileResult) => {
-          if (result.vector) {
-            oncompile?.(await renderer.renderSvg(result.vector));
-          }
-        },
-      },
+      project,
+      throttleDelay: 50,
       highlighting: { theme: "light" },
     });
     compilerExtensions = typstExtension.slice(1);
@@ -81,9 +83,12 @@
 
   const ready = init();
 
-  /**
-   * Build a fresh CodeMirror view with current theme/highlighting and trigger an initial compile.
-   */
+  /** Returns a CodeMirror ChangeSpec that replaces the entire document. */
+  function fullDocChange(v: EditorView, content: string) {
+    return { from: 0, to: v.state.doc.length, insert: content };
+  }
+
+  /** Build a fresh CodeMirror view for the given document and trigger an initial compile. */
   function createView(initialDoc: string) {
     view?.destroy();
     if (!shikiHighlighting || !compilerExtensions) {
@@ -96,13 +101,13 @@
         doc: initialDoc,
         extensions: [
           keymap.of([
+            indentWithTab,
             { key: "Mod-f", run: () => true },
             { key: "F3", run: () => true },
             { key: "Shift-F3", run: () => true },
             { key: "F2", run: () => true },
           ]),
           basicSetup,
-          cmBaseTheme,
           highlightCompartment.of(shikiHighlighting.getTheme(theme)),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) {
@@ -118,26 +123,28 @@
     // Trigger initial compile, replace doc with itself so compiler sees docChanged
     if (initialDoc.length > 0) {
       view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: initialDoc },
+        changes: fullDocChange(view, initialDoc),
         annotations: Transaction.addToHistory.of(false),
       });
     }
   }
 
   $effect(() => {
-    // Destructure to read both doc and docKey synchronously, Svelte tracks both.
+    // Destructure to read doc, docKey, and auxFiles synchronously so Svelte tracks all three.
     // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [initialDoc, _key] = [doc, docKey];
+    const [initialDoc, _key, files] = [doc, docKey, auxFiles];
     const gen = ++effectGeneration;
     showingSolution = false;
     savedCode = undefined;
     // Clear container immediately so stale content from previous chapter is never visible
     // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
     editorContainer?.replaceChildren();
-    void ready.then(() => {
+    void ready.then(async () => {
       // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
       if (gen !== effectGeneration) return;
+      await project?.clear();
+      if (Object.keys(files).length > 0) await project?.setMany(files);
       createView(initialDoc);
     });
 
@@ -149,15 +156,13 @@
       // Reconfigure compartment + force docChanged so Shiki re-decorates existing tokens
       view.dispatch({
         effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
-        changes: { from: 0, to: view.state.doc.length, insert: view.state.doc.toString() },
+        changes: fullDocChange(view, view.state.doc.toString()),
         annotations: Transaction.addToHistory.of(false),
       });
     }
   });
 
-  /**
-   * Restore the template, clear saved solution state, and rebuild the view.
-   */
+  /** Restore the template, clear saved solution state, and rebuild the view. */
   function reset() {
     showingSolution = false;
     savedCode = undefined;
@@ -165,9 +170,7 @@
     onchange?.(template);
   }
 
-  /**
-   * Format the current document with the Typst formatter and apply changes if different.
-   */
+  /** Format the current document with the Typst formatter and apply changes if different. */
   async function format() {
     if (!view || !formatter) {
       return;
@@ -177,30 +180,35 @@
     const formatted = await formatter.format(source);
 
     if (formatted !== source) {
-      view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: formatted },
-      });
+      view.dispatch({ changes: fullDocChange(view, formatted) });
     }
   }
 
-  /**
-   * Toggle between user code and solution, preserving user edits when showing the solution.
-   */
+  /** Toggle between user code and solution, preserving user edits when showing the solution. */
   function toggleSolution() {
     if (!solution) {
       return;
     }
 
     if (showingSolution) {
+      solutionScrollTop = view?.scrollDOM.scrollTop ?? 0;
       showingSolution = false;
       createView(savedCode ?? doc);
       savedCode = undefined;
-      return;
+    } else {
+      userScrollTop = view?.scrollDOM.scrollTop ?? 0;
+      savedCode = view?.state.doc.toString();
+      showingSolution = true;
+      createView(solution);
     }
 
-    savedCode = view?.state.doc.toString() ?? doc;
-    showingSolution = true;
-    createView(solution);
+    const restoreTop = showingSolution ? solutionScrollTop : userScrollTop;
+    if (view) {
+      const v = view;
+      requestAnimationFrame(() => {
+        v.scrollDOM.scrollTop = restoreTop;
+      });
+    }
   }
 </script>
 
@@ -265,10 +273,61 @@
 
   .editor-container :global(.cm-editor) {
     height: 100%;
+    background-color: var(--color-bg);
+    color: var(--color-text);
   }
 
   .editor-container :global(.cm-scroller) {
     overflow: auto;
+  }
+
+  .editor-container :global(.cm-content) {
+    caret-color: var(--color-text);
+  }
+
+  .editor-container :global(.cm-cursor),
+  .editor-container :global(.cm-dropCursor) {
+    border-left-color: var(--color-text);
+  }
+
+  .editor-container :global(.cm-gutters) {
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .editor-container :global(.cm-activeLine),
+  .editor-container :global(.cm-activeLineGutter) {
+    background-color: transparent;
+  }
+
+  .editor-container :global(.cm-selectionMatch) {
+    background-color: transparent;
+  }
+
+  .editor-container :global(.cm-selectionLayer .cm-selectionBackground) {
+    background: color-mix(in srgb, var(--color-accent) 30%, transparent) !important;
+  }
+
+  .editor-container :global(.cm-tooltip),
+  .editor-container :global(.cm-tooltip-lint),
+  .editor-container :global(.cm-diagnostic),
+  .editor-container :global(.cm-panel),
+  .editor-container :global(.cm-tooltip-autocomplete) {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .editor-container :global(.cm-tooltip),
+  .editor-container :global(.cm-tooltip-autocomplete) {
+    border: 1px solid var(--color-border);
+  }
+
+  .editor-container :global(.cm-tooltip-lint) {
+    max-width: calc(100% - 2rem);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
   }
 
   /* Lint gutter: filled circle markers */
