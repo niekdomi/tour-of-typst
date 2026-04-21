@@ -61,7 +61,7 @@
   // Scroll the preview to the target page and y-position.
   function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
     const pageEls = previewEl.querySelectorAll<HTMLElement>(".page");
-    const target = pageEls[page - 1] as HTMLElement | undefined;
+    const target = pageEls[page - 1];
     if (!target) return;
     const svgEl = target.querySelector("svg");
     const scale = svgEl ? target.clientHeight / svgEl.viewBox.baseVal.height : 1;

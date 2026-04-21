@@ -53,10 +53,19 @@
   let project: TypstProject | undefined;
 
   async function init() {
-    const compiler = await TypstCompiler.create();
     const renderer = TypstRenderer.create();
     formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
 
+    // Compiler WASM load and Shiki language pack are independent — run in parallel
+    const [compiler, shiki] = await Promise.all([
+      TypstCompiler.create(),
+      createTypstShikiHighlighting({
+        themes: { light: "github-light", dark: "github-dark-dimmed" },
+        defaultColor: theme,
+      }),
+    ]);
+
+    shikiHighlighting = shiki;
     project = new TypstProject({ compiler });
     project.onCompile((result) => {
       if (result.vector) {
@@ -64,10 +73,6 @@
       }
     });
 
-    shikiHighlighting = await createTypstShikiHighlighting({
-      themes: { light: "github-light", dark: "github-dark-dimmed" },
-      defaultColor: theme,
-    });
     const typstExtension = await createTypstExtensions({
       project,
       throttleDelay: 50,
@@ -78,9 +83,12 @@
 
   const ready = init();
 
-  /**
-   * Build a fresh CodeMirror view with current theme/highlighting and trigger an initial compile.
-   */
+  /** Returns a CodeMirror ChangeSpec that replaces the entire document. */
+  function fullDocChange(v: EditorView, content: string) {
+    return { from: 0, to: v.state.doc.length, insert: content };
+  }
+
+  /** Build a fresh CodeMirror view for the given document and trigger an initial compile. */
   function createView(initialDoc: string) {
     view?.destroy();
     if (!shikiHighlighting || !compilerExtensions) {
@@ -115,7 +123,7 @@
     // Trigger initial compile, replace doc with itself so compiler sees docChanged
     if (initialDoc.length > 0) {
       view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: initialDoc },
+        changes: fullDocChange(view, initialDoc),
         annotations: Transaction.addToHistory.of(false),
       });
     }
@@ -135,7 +143,6 @@
     void ready.then(async () => {
       // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
       if (gen !== effectGeneration) return;
-      // Clear old chapter's files then load the new ones before compiling
       await project?.clear();
       if (Object.keys(files).length > 0) await project?.setMany(files);
       createView(initialDoc);
@@ -149,15 +156,13 @@
       // Reconfigure compartment + force docChanged so Shiki re-decorates existing tokens
       view.dispatch({
         effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
-        changes: { from: 0, to: view.state.doc.length, insert: view.state.doc.toString() },
+        changes: fullDocChange(view, view.state.doc.toString()),
         annotations: Transaction.addToHistory.of(false),
       });
     }
   });
 
-  /**
-   * Restore the template, clear saved solution state, and rebuild the view.
-   */
+  /** Restore the template, clear saved solution state, and rebuild the view. */
   function reset() {
     showingSolution = false;
     savedCode = undefined;
@@ -165,9 +170,7 @@
     onchange?.(template);
   }
 
-  /**
-   * Format the current document with the Typst formatter and apply changes if different.
-   */
+  /** Format the current document with the Typst formatter and apply changes if different. */
   async function format() {
     if (!view || !formatter) {
       return;
@@ -177,15 +180,11 @@
     const formatted = await formatter.format(source);
 
     if (formatted !== source) {
-      view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: formatted },
-      });
+      view.dispatch({ changes: fullDocChange(view, formatted) });
     }
   }
 
-  /**
-   * Toggle between user code and solution, preserving user edits when showing the solution.
-   */
+  /** Toggle between user code and solution, preserving user edits when showing the solution. */
   function toggleSolution() {
     if (!solution) {
       return;
@@ -198,6 +197,7 @@
       savedCode = undefined;
     } else {
       userScrollTop = view?.scrollDOM.scrollTop ?? 0;
+      savedCode = view?.state.doc.toString();
       showingSolution = true;
       createView(solution);
     }
