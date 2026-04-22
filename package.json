@@ -48,8 +48,8 @@
   "dependencies": {
     "@codemirror/state": "^6.6.0",
     "@codemirror/view": "6.41.0",
-    "@vedivad/codemirror-typst": "^0.9.0",
-    "@vedivad/typst-web-service": "^0.9.0",
+    "@vedivad/codemirror-typst": "^0.9.1",
+    "@vedivad/typst-web-service": "^0.9.1",
     "codemirror": "^6.0.2",
     "marked": "^18.0.2",
     "marked-alert": "^2.1.2",

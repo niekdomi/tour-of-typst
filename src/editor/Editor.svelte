@@ -66,7 +66,7 @@
     ]);
 
     shikiHighlighting = shiki;
-    project = new TypstProject({ compiler, compileDebounceMs: 30, compileThrottleMs: 50 });
+    project = new TypstProject({ compiler, autoCompile: { debounceMs: 50, maxWaitMs: 300 } });
     project.onCompile((result) => {
       if (result.vector) {
         void renderer
