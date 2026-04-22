@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { splitPages } from "./svgUtils";
-
   interface Props {
-    svg?: string;
+    pages?: string[];
   }
 
-  let { svg }: Props = $props();
-
-  const pages = $derived(svg ? splitPages(svg) : []);
+  let { pages = [] }: Props = $props();
 
   let prevPages = $state<string[]>([]);
   $effect(() => {

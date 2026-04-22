@@ -13,7 +13,7 @@
   let { locale, chapterKey, theme }: Props = $props();
 
   let editorFraction = $state(0.5);
-  let svg = $state<string | undefined>();
+  let pages = $state<string[]>([]);
 
   const STORAGE_KEY = "tour-of-typst-edits";
 
@@ -49,7 +49,7 @@
 
   $effect(() => {
     doc = editsMap.get(editsKey(locale, chapterKey)) ?? template;
-    svg = undefined;
+    pages = [];
   });
 
   // Update persisted edits for the current locale+chapter pair.
@@ -69,7 +69,7 @@
       {theme}
       docKey="{locale}:{chapterKey}"
       onchange={handleChange}
-      oncompile={(s: string) => (svg = s)}
+      oncompile={(p: string[]) => (pages = p)}
     />
   </div>
 
@@ -80,7 +80,7 @@
   />
 
   <div class="pane" style="flex: {1 - editorFraction}">
-    <Preview {svg} />
+    <Preview {pages} />
   </div>
 </div>
 

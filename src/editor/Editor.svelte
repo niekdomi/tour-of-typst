@@ -22,7 +22,7 @@
     auxFiles?: Record<string, string>;
     theme?: "light" | "dark";
     onchange?: (content: string) => void;
-    oncompile?: (svg: string) => void;
+    oncompile?: (pages: string[]) => void;
   }
 
   let {
@@ -66,16 +66,17 @@
     ]);
 
     shikiHighlighting = shiki;
-    project = new TypstProject({ compiler });
+    project = new TypstProject({ compiler, compileDebounceMs: 30, compileThrottleMs: 50 });
     project.onCompile((result) => {
       if (result.vector) {
-        void renderer.renderSvg(result.vector).then((svg) => oncompile?.(svg));
+        void renderer
+          .renderSvgPages(result.vector)
+          .then((pages) => oncompile?.(pages.map((p) => p.svg)));
       }
     });
 
     const typstExtension = await createTypstExtensions({
       project,
-      throttleDelay: 50,
       highlighting: { theme: "light" },
     });
     compilerExtensions = typstExtension.slice(1);
