@@ -60,9 +60,11 @@
     const target = pageEls[page - 1];
     if (!target) return;
     const svgEl = target.querySelector("svg");
-    const scale = svgEl ? target.clientHeight / svgEl.viewBox.baseVal.height : 1;
+    const targetRect = target.getBoundingClientRect();
+    const previewRect = previewEl.getBoundingClientRect();
+    const scale = svgEl ? targetRect.height / svgEl.viewBox.baseVal.height : 1;
     previewEl.scrollTo({
-      top: target.offsetTop - previewEl.offsetTop + y * scale - 40,
+      top: previewEl.scrollTop + (targetRect.top - previewRect.top) + y * scale - 40,
       behavior: "smooth",
     });
   }
