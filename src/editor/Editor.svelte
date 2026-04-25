@@ -82,7 +82,7 @@
   }
 
   let cancelled = false;
-  let unsub: (() => void) | undefined;
+  let unsubscribe: (() => void) | undefined;
 
   onMount(async () => {
     for (const step of [
@@ -98,7 +98,7 @@
     // Subscribe after compile() — onCompile synchronously replays the cached
     // result, so this hands us the fresh render without flashing the previous
     // chapter's pages, and still catches future autoCompiles from edits.
-    unsub = project.onCompile((result) => {
+    unsubscribe = project.onCompile((result) => {
       if (result.vector) {
         void renderer
           .renderSvgPages(result.vector)
@@ -110,7 +110,7 @@
 
   onDestroy(() => {
     cancelled = true;
-    unsub?.();
+    unsubscribe?.();
     view?.destroy();
   });
 
