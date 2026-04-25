@@ -1,24 +1,16 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
   import { EditorView, basicSetup } from "codemirror";
   import { EditorState } from "@codemirror/state";
   import { keymap } from "@codemirror/view";
   import { indentWithTab } from "@codemirror/commands";
   import diagnosticCopyPlugin from "./diagnosticCopyPlugin";
-  import {
-    createTypstHighlighting,
-    createTypstSetup,
-    typstFilePath,
-    TypstCompiler,
-    TypstProject,
-    TypstRenderer,
-    TypstFormatter,
-  } from "@vedivad/codemirror-typst";
-  import type { TypstHighlightingController } from "@vedivad/codemirror-typst";
+  import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
+  import { useTypstResources } from "./typst-resources";
 
   interface Props {
     doc?: string;
     template?: string;
-    docKey?: string;
     solution?: string;
     auxFiles?: Record<string, string>;
     theme?: "light" | "dark";
@@ -29,7 +21,6 @@
   let {
     doc = "",
     template = "",
-    docKey = "",
     solution,
     auxFiles = {},
     theme = "light",
@@ -37,70 +28,27 @@
     oncompile,
   }: Props = $props();
 
+  const { project, highlighting, formatter, renderer } = useTypstResources();
+  const mainPath = "/main.typ";
+
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
   let showingSolution = $state(false);
   let savedCode: string | undefined;
   let userScrollTop = 0;
   let solutionScrollTop = 0;
-  let effectGeneration = 0;
 
-  let highlighting: TypstHighlightingController | undefined;
-  let typstExtensions: ReturnType<typeof createTypstSetup> | undefined;
-  let formatter: TypstFormatter | undefined;
-  let project: TypstProject | undefined;
-  const mainPath = "/main.typ";
+  const typstExtensions = createTypstSetup({
+    project,
+    sync: "editor-driven",
+    highlighting,
+    formatter: { instance: formatter },
+  });
 
-  async function init() {
-    const renderer = TypstRenderer.create();
-    formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
-
-    // Compiler WASM load and Shiki language pack are independent — run in parallel
-    const [compiler, shiki] = await Promise.all([
-      TypstCompiler.create(),
-      createTypstHighlighting({
-        themes: { light: "github-light", dark: "github-dark-dimmed" },
-        theme,
-      }),
-    ]);
-
-    highlighting = shiki;
-    const typstProject = new TypstProject({
-      compiler,
-      autoCompile: { debounceMs: 50, maxWaitMs: 300 },
-    });
-    project = typstProject;
-    typstProject.onCompile((result) => {
-      if (result.vector) {
-        void renderer
-          .renderSvgPages(result.vector)
-          .then((pages) => oncompile?.(pages.map((p) => p.svg)));
-      }
-    });
-
-    typstExtensions = createTypstSetup({
-      project: typstProject,
-      sync: "editor-driven",
-      highlighting: shiki,
-      formatter: { instance: formatter },
-    });
-  }
-
-  const ready = init();
-
-  /** Returns a CodeMirror ChangeSpec that replaces the entire document. */
-  function fullDocChange(v: EditorView, content: string) {
-    return { from: 0, to: v.state.doc.length, insert: content };
-  }
-
-  /** Build a fresh CodeMirror view for the given document and trigger an initial compile. */
-  function createView(initialDoc: string) {
+  /** Build a fresh CodeMirror view for the given document. */
+  function createView(initialDoc: string, initialScrollTop = 0) {
     view?.destroy();
-    if (!highlighting || !typstExtensions) {
-      return;
-    }
-
-    view = new EditorView({
+    const v = new EditorView({
       parent: editorContainer,
       state: EditorState.create({
         doc: initialDoc,
@@ -124,33 +72,50 @@
         ],
       }),
     });
+    view = v;
+
+    if (initialScrollTop > 0) {
+      requestAnimationFrame(() => {
+        v.scrollDOM.scrollTop = initialScrollTop;
+      });
+    }
   }
 
-  $effect(() => {
-    // Destructure to read doc, docKey, and auxFiles synchronously so Svelte tracks all three.
-    // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [initialDoc, _key, files] = [doc, docKey, auxFiles];
-    const gen = ++effectGeneration;
-    showingSolution = false;
-    savedCode = undefined;
-    // Clear container immediately so stale content from previous chapter is never visible
-    // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
-    editorContainer?.replaceChildren();
-    void ready.then(async () => {
-      // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
-      if (gen !== effectGeneration) return;
-      await project?.clear();
-      await project?.setMany({ ...files, [mainPath]: initialDoc });
-      await project?.compile();
-      createView(initialDoc);
-    });
+  let cancelled = false;
+  let unsub: (() => void) | undefined;
 
-    return () => view?.destroy();
+  onMount(async () => {
+    for (const step of [
+      () => project.clear(),
+      () => project.setMany({ ...auxFiles, [mainPath]: doc }),
+      () => project.compile(),
+    ]) {
+      if (cancelled) return;
+      await step();
+    }
+    if (cancelled) return;
+
+    // Subscribe after compile() — onCompile synchronously replays the cached
+    // result, so this hands us the fresh render without flashing the previous
+    // chapter's pages, and still catches future autoCompiles from edits.
+    unsub = project.onCompile((result) => {
+      if (result.vector) {
+        void renderer
+          .renderSvgPages(result.vector)
+          .then((pages) => oncompile?.(pages.map((p) => p.svg)));
+      }
+    });
+    createView(doc);
+  });
+
+  onDestroy(() => {
+    cancelled = true;
+    unsub?.();
+    view?.destroy();
   });
 
   $effect(() => {
-    if (view && highlighting) {
+    if (view) {
       highlighting.setTheme(view, theme);
     }
   });
@@ -165,15 +130,13 @@
 
   /** Format the current document with the Typst formatter and apply changes if different. */
   async function format() {
-    if (!view || !formatter) {
-      return;
-    }
+    if (!view) return;
 
     const source = view.state.doc.toString();
     const formatted = await formatter.format(source);
 
     if (formatted !== source) {
-      view.dispatch({ changes: fullDocChange(view, formatted) });
+      view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatted } });
     }
   }
 
@@ -186,21 +149,13 @@
     if (showingSolution) {
       solutionScrollTop = view?.scrollDOM.scrollTop ?? 0;
       showingSolution = false;
-      createView(savedCode ?? doc);
+      createView(savedCode ?? doc, userScrollTop);
       savedCode = undefined;
     } else {
       userScrollTop = view?.scrollDOM.scrollTop ?? 0;
       savedCode = view?.state.doc.toString();
       showingSolution = true;
-      createView(solution);
-    }
-
-    const restoreTop = showingSolution ? solutionScrollTop : userScrollTop;
-    if (view) {
-      const v = view;
-      requestAnimationFrame(() => {
-        v.scrollDOM.scrollTop = restoreTop;
-      });
+      createView(solution, solutionScrollTop);
     }
   }
 </script>

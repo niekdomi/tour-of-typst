@@ -1,5 +1,6 @@
 <script lang="ts">
   import Editor from "./Editor.svelte";
+  import EditorShell from "./EditorShell.svelte";
   import Preview from "./Preview.svelte";
   import ResizeHandle from "../components/ResizeHandle.svelte";
   import { getChapterTemplate, getChapterSolution, getChapterAuxFiles } from "../content";
@@ -61,16 +62,19 @@
 
 <div class="workspace">
   <div class="pane" style="flex: {editorFraction}">
-    <Editor
-      {doc}
-      {template}
-      {solution}
-      {auxFiles}
-      {theme}
-      docKey="{locale}:{chapterKey}"
-      onchange={handleChange}
-      oncompile={(p: string[]) => (pages = p)}
-    />
+    <EditorShell {theme}>
+      {#key `${locale}:${chapterKey}`}
+        <Editor
+          {doc}
+          {template}
+          {solution}
+          {auxFiles}
+          {theme}
+          onchange={handleChange}
+          oncompile={(p: string[]) => (pages = p)}
+        />
+      {/key}
+    </EditorShell>
   </div>
 
   <ResizeHandle
