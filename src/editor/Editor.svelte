@@ -1,18 +1,19 @@
 <script lang="ts">
   import { EditorView, basicSetup } from "codemirror";
-  import { EditorState, Compartment, Transaction } from "@codemirror/state";
+  import { EditorState } from "@codemirror/state";
   import { keymap } from "@codemirror/view";
   import { indentWithTab } from "@codemirror/commands";
   import diagnosticCopyPlugin from "./diagnosticCopyPlugin";
   import {
-    createTypstExtensions,
-    createTypstShikiHighlighting,
+    createTypstHighlighting,
+    createTypstSetup,
+    typstFilePath,
     TypstCompiler,
     TypstProject,
     TypstRenderer,
     TypstFormatter,
   } from "@vedivad/codemirror-typst";
-  import type { TypstShikiHighlighting } from "@vedivad/codemirror-typst";
+  import type { TypstHighlightingController } from "@vedivad/codemirror-typst";
 
   interface Props {
     doc?: string;
@@ -44,13 +45,11 @@
   let solutionScrollTop = 0;
   let effectGeneration = 0;
 
-  const highlightCompartment = new Compartment();
-
-  let shikiHighlighting: TypstShikiHighlighting | undefined;
-  // index 0 of createTypstExtensions is the built-in shiki, we replace it with our compartment
-  let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
+  let highlighting: TypstHighlightingController | undefined;
+  let typstExtensions: ReturnType<typeof createTypstSetup> | undefined;
   let formatter: TypstFormatter | undefined;
   let project: TypstProject | undefined;
+  const mainPath = "/main.typ";
 
   async function init() {
     const renderer = TypstRenderer.create();
@@ -59,15 +58,19 @@
     // Compiler WASM load and Shiki language pack are independent — run in parallel
     const [compiler, shiki] = await Promise.all([
       TypstCompiler.create(),
-      createTypstShikiHighlighting({
+      createTypstHighlighting({
         themes: { light: "github-light", dark: "github-dark-dimmed" },
-        defaultColor: theme,
+        theme,
       }),
     ]);
 
-    shikiHighlighting = shiki;
-    project = new TypstProject({ compiler, autoCompile: { debounceMs: 50, maxWaitMs: 300 } });
-    project.onCompile((result) => {
+    highlighting = shiki;
+    const typstProject = new TypstProject({
+      compiler,
+      autoCompile: { debounceMs: 50, maxWaitMs: 300 },
+    });
+    project = typstProject;
+    typstProject.onCompile((result) => {
       if (result.vector) {
         void renderer
           .renderSvgPages(result.vector)
@@ -75,11 +78,12 @@
       }
     });
 
-    const typstExtension = await createTypstExtensions({
-      project,
-      highlighting: { theme: "light" },
+    typstExtensions = createTypstSetup({
+      project: typstProject,
+      sync: "editor-driven",
+      highlighting: shiki,
+      formatter: { instance: formatter },
     });
-    compilerExtensions = typstExtension.slice(1);
   }
 
   const ready = init();
@@ -92,7 +96,7 @@
   /** Build a fresh CodeMirror view for the given document and trigger an initial compile. */
   function createView(initialDoc: string) {
     view?.destroy();
-    if (!shikiHighlighting || !compilerExtensions) {
+    if (!highlighting || !typstExtensions) {
       return;
     }
 
@@ -109,25 +113,17 @@
             { key: "F2", run: () => true },
           ]),
           basicSetup,
-          highlightCompartment.of(shikiHighlighting.getTheme(theme)),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) {
               onchange?.(u.state.doc.toString());
             }
           }),
-          ...compilerExtensions,
+          ...typstExtensions,
+          typstFilePath.of(mainPath),
           diagnosticCopyPlugin,
         ],
       }),
     });
-
-    // Trigger initial compile, replace doc with itself so compiler sees docChanged
-    if (initialDoc.length > 0) {
-      view.dispatch({
-        changes: fullDocChange(view, initialDoc),
-        annotations: Transaction.addToHistory.of(false),
-      });
-    }
   }
 
   $effect(() => {
@@ -145,7 +141,8 @@
       // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
       if (gen !== effectGeneration) return;
       await project?.clear();
-      if (Object.keys(files).length > 0) await project?.setMany(files);
+      await project?.setMany({ ...files, [mainPath]: initialDoc });
+      await project?.compile();
       createView(initialDoc);
     });
 
@@ -153,13 +150,8 @@
   });
 
   $effect(() => {
-    if (view && shikiHighlighting) {
-      // Reconfigure compartment + force docChanged so Shiki re-decorates existing tokens
-      view.dispatch({
-        effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
-        changes: fullDocChange(view, view.state.doc.toString()),
-        annotations: Transaction.addToHistory.of(false),
-      });
+    if (view && highlighting) {
+      highlighting.setTheme(view, theme);
     }
   });
 
