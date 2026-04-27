@@ -1,23 +1,16 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
   import { EditorView, basicSetup } from "codemirror";
-  import { EditorState, Compartment, Transaction } from "@codemirror/state";
+  import { EditorState } from "@codemirror/state";
   import { keymap } from "@codemirror/view";
   import { indentWithTab } from "@codemirror/commands";
   import diagnosticCopyPlugin from "./diagnosticCopyPlugin";
-  import {
-    createTypstExtensions,
-    createTypstShikiHighlighting,
-    TypstCompiler,
-    TypstProject,
-    TypstRenderer,
-    TypstFormatter,
-  } from "@vedivad/codemirror-typst";
-  import type { TypstShikiHighlighting } from "@vedivad/codemirror-typst";
+  import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
+  import { useTypstResources } from "./typst-resources";
 
   interface Props {
     doc?: string;
     template?: string;
-    docKey?: string;
     solution?: string;
     auxFiles?: Record<string, string>;
     theme?: "light" | "dark";
@@ -28,7 +21,6 @@
   let {
     doc = "",
     template = "",
-    docKey = "",
     solution,
     auxFiles = {},
     theme = "light",
@@ -36,67 +28,27 @@
     oncompile,
   }: Props = $props();
 
+  const { project, highlighting, formatter, renderer } = useTypstResources();
+  const mainPath = "/main.typ";
+
   let editorContainer: HTMLDivElement;
   let view: EditorView | undefined = $state();
   let showingSolution = $state(false);
   let savedCode: string | undefined;
   let userScrollTop = 0;
   let solutionScrollTop = 0;
-  let effectGeneration = 0;
 
-  const highlightCompartment = new Compartment();
+  const typstExtensions = createTypstSetup({
+    project,
+    sync: "editor-driven",
+    highlighting,
+    formatter: { instance: formatter },
+  });
 
-  let shikiHighlighting: TypstShikiHighlighting | undefined;
-  // index 0 of createTypstExtensions is the built-in shiki, we replace it with our compartment
-  let compilerExtensions: Awaited<ReturnType<typeof createTypstExtensions>> | undefined;
-  let formatter: TypstFormatter | undefined;
-  let project: TypstProject | undefined;
-
-  async function init() {
-    const renderer = TypstRenderer.create();
-    formatter = TypstFormatter.create({ max_width: 80, wrap_text: true });
-
-    // Compiler WASM load and Shiki language pack are independent — run in parallel
-    const [compiler, shiki] = await Promise.all([
-      TypstCompiler.create(),
-      createTypstShikiHighlighting({
-        themes: { light: "github-light", dark: "github-dark-dimmed" },
-        defaultColor: theme,
-      }),
-    ]);
-
-    shikiHighlighting = shiki;
-    project = new TypstProject({ compiler, autoCompile: { debounceMs: 50, maxWaitMs: 300 } });
-    project.onCompile((result) => {
-      if (result.vector) {
-        void renderer
-          .renderSvgPages(result.vector)
-          .then((pages) => oncompile?.(pages.map((p) => p.svg)));
-      }
-    });
-
-    const typstExtension = await createTypstExtensions({
-      project,
-      highlighting: { theme: "light" },
-    });
-    compilerExtensions = typstExtension.slice(1);
-  }
-
-  const ready = init();
-
-  /** Returns a CodeMirror ChangeSpec that replaces the entire document. */
-  function fullDocChange(v: EditorView, content: string) {
-    return { from: 0, to: v.state.doc.length, insert: content };
-  }
-
-  /** Build a fresh CodeMirror view for the given document and trigger an initial compile. */
-  function createView(initialDoc: string) {
+  /** Build a fresh CodeMirror view for the given document. */
+  function createView(initialDoc: string, initialScrollTop = 0) {
     view?.destroy();
-    if (!shikiHighlighting || !compilerExtensions) {
-      return;
-    }
-
-    view = new EditorView({
+    const v = new EditorView({
       parent: editorContainer,
       state: EditorState.create({
         doc: initialDoc,
@@ -109,57 +61,62 @@
             { key: "F2", run: () => true },
           ]),
           basicSetup,
-          highlightCompartment.of(shikiHighlighting.getTheme(theme)),
           EditorView.updateListener.of((u) => {
             if (u.docChanged) {
               onchange?.(u.state.doc.toString());
             }
           }),
-          ...compilerExtensions,
+          ...typstExtensions,
+          typstFilePath.of(mainPath),
           diagnosticCopyPlugin,
         ],
       }),
     });
+    view = v;
 
-    // Trigger initial compile, replace doc with itself so compiler sees docChanged
-    if (initialDoc.length > 0) {
-      view.dispatch({
-        changes: fullDocChange(view, initialDoc),
-        annotations: Transaction.addToHistory.of(false),
+    if (initialScrollTop > 0) {
+      requestAnimationFrame(() => {
+        v.scrollDOM.scrollTop = initialScrollTop;
       });
     }
   }
 
-  $effect(() => {
-    // Destructure to read doc, docKey, and auxFiles synchronously so Svelte tracks all three.
-    // docKey ensures the effect re-runs on chapter/locale change even if doc content is identical.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [initialDoc, _key, files] = [doc, docKey, auxFiles];
-    const gen = ++effectGeneration;
-    showingSolution = false;
-    savedCode = undefined;
-    // Clear container immediately so stale content from previous chapter is never visible
-    // eslint-disable-next-line svelte/no-dom-manipulating, @typescript-eslint/no-unnecessary-condition
-    editorContainer?.replaceChildren();
-    void ready.then(async () => {
-      // Skip if a newer effect has already fired (e.g. user switched chapters while init was pending)
-      if (gen !== effectGeneration) return;
-      await project?.clear();
-      if (Object.keys(files).length > 0) await project?.setMany(files);
-      createView(initialDoc);
-    });
+  let cancelled = false;
+  let unsubscribe: (() => void) | undefined;
 
-    return () => view?.destroy();
+  onMount(async () => {
+    for (const step of [
+      () => project.clear(),
+      () => project.setMany({ ...auxFiles, [mainPath]: doc }),
+      () => project.compile(),
+    ]) {
+      if (cancelled) return;
+      await step();
+    }
+    if (cancelled) return;
+
+    // Subscribe after compile() — onCompile synchronously replays the cached
+    // result, so this hands us the fresh render without flashing the previous
+    // chapter's pages, and still catches future autoCompiles from edits.
+    unsubscribe = project.onCompile((result) => {
+      if (result.vector) {
+        void renderer
+          .renderSvgPages(result.vector)
+          .then((pages) => oncompile?.(pages.map((p) => p.svg)));
+      }
+    });
+    createView(doc);
+  });
+
+  onDestroy(() => {
+    cancelled = true;
+    unsubscribe?.();
+    view?.destroy();
   });
 
   $effect(() => {
-    if (view && shikiHighlighting) {
-      // Reconfigure compartment + force docChanged so Shiki re-decorates existing tokens
-      view.dispatch({
-        effects: highlightCompartment.reconfigure(shikiHighlighting.getTheme(theme)),
-        changes: fullDocChange(view, view.state.doc.toString()),
-        annotations: Transaction.addToHistory.of(false),
-      });
+    if (view) {
+      highlighting.setTheme(view, theme);
     }
   });
 
@@ -173,15 +130,13 @@
 
   /** Format the current document with the Typst formatter and apply changes if different. */
   async function format() {
-    if (!view || !formatter) {
-      return;
-    }
+    if (!view) return;
 
     const source = view.state.doc.toString();
     const formatted = await formatter.format(source);
 
     if (formatted !== source) {
-      view.dispatch({ changes: fullDocChange(view, formatted) });
+      view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatted } });
     }
   }
 
@@ -194,21 +149,13 @@
     if (showingSolution) {
       solutionScrollTop = view?.scrollDOM.scrollTop ?? 0;
       showingSolution = false;
-      createView(savedCode ?? doc);
+      createView(savedCode ?? doc, userScrollTop);
       savedCode = undefined;
     } else {
       userScrollTop = view?.scrollDOM.scrollTop ?? 0;
       savedCode = view?.state.doc.toString();
       showingSolution = true;
-      createView(solution);
-    }
-
-    const restoreTop = showingSolution ? solutionScrollTop : userScrollTop;
-    if (view) {
-      const v = view;
-      requestAnimationFrame(() => {
-        v.scrollDOM.scrollTop = restoreTop;
-      });
+      createView(solution, solutionScrollTop);
     }
   }
 </script>
