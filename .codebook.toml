@@ -67,8 +67,8 @@ words = [
   "zeitschriftenartikel",
   "zeitschriftenvorlagen",
   "zitierstile",
-  "überschriftsebene",
-  "überschriftszeile",
+  "Überschriftsebene",
+  "Überschriftszeile",
 ]
 include_paths = [
   "**/*.md",
