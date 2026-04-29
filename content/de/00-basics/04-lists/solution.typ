@@ -1,0 +1,45 @@
+= Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet
+Dr. Eleanor Crumb
+
+Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in
+verschiedenen Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten
+beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der Toast-Rotation
+im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht Pech* für diese
+kulinarische Tragödie verantwortlich ist.
+
+== Einleitung
+Toast, der von einer Standardtischhöhe von etwa 0,75 m fallen gelassen wird,
+rotiert vorhersehbar während des Falls und landet mit der gebutterten Seite auf
+dem Boden. Das ist keine Frage der Wahrnehmung oder des Pessimismus. Es ist eine
+Folge des _Drehimpulses_, der _Gravitationsbeschleunigung_ und der unglücklichen
+Geometrie von Frühstücksartikeln. Diese Arbeit leitet ein Modell für die
+Toast-Rotation her und validiert es experimentell.
+
+== Methoden
+Für jeden Versuch wurden folgende Materialien verwendet:
+
+- Brot
+  - Weissbrot, 12 mm Dicke
+  - Einheitliche Scheibenmasse von 28 #sym.plus.minus 1 g
+- Butter
+  - Gesalzen, streichfähig, nur auf einer Seite aufgetragen
+  - Schichtdicke: 2 mm, mit digitalem Messschieber verifiziert
+- Ausrüstung
+  - Holztisch, Höhe 0,75 m
+  - Hochgeschwindigkeitskamera, 240 fps
+  - Boden mit Papier bedeckt für Aufprallaufzeichnung
+
+Jeder Versuch verlief wie folgt:
+
++ Eine Scheibe Brot mit Butter auf der Oberseite vorbereiten
++ Die Scheibe waagerecht auf Tischhöhe halten, gebutterte Seite oben
++ Die Scheibe ohne Drall fallen lassen
++ Den Fall mit der Hochgeschwindigkeitskamera aufzeichnen
++ Die Landung untersuchen und notieren, welche Seite den Boden berührt hat
++ Für insgesamt 50 Versuche pro Sitzung, über 3 Sitzungen wiederholen
+
+== Ergebnisse
+// TODO: Ergebnisse vorstellen
+
+== Schlussfolgerung
+// TODO: zusammenfassen
