@@ -1,8 +1,8 @@
 # Show-Regeln
 
-Set-Regeln ändern Parameter. Show-Regeln ändern _wie Elemente vollständig aussehen_. Wenn
-Set-Regeln wie das Einstellen des Thermostats sind, dann sind Show-Regeln wie das komplette
-Neudekorieren des Raums.
+Set-Regeln ändern Parameter. Show-Regeln ändern _wie Elemente vollständig aussehen_. Wenn Set-Regeln
+wie das Einstellen des Thermostats sind, dann sind Show-Regeln wie das komplette Neudekorieren des
+Raums.
 
 Die einfachste Form wendet eine Set-Regel auf einen bestimmten Elementtyp an:
 
@@ -36,12 +36,12 @@ Weitere Beispiele, denn wenn man einmal anfängt, hört man schwer auf:
 
 ## Deine Aufgabe
 
-Unser Paper ist funktional, sieht aber noch nicht wie ein seriöser Zeitschriftenartikel aus.
-Dr. Crumb besteht darauf, dass ästhetische Perfektion die Gutachter von kleineren
-Rechenfehlern ablenken kann. Füge einige Show-Regeln hinzu:
+Unser Paper ist funktional, sieht aber noch nicht wie ein seriöser Zeitschriftenartikel aus. Dr.
+Crumb besteht darauf, dass ästhetische Perfektion die Gutachter von kleineren Rechenfehlern ablenken
+kann. Füge einige Show-Regeln hinzu:
 
 - Lass den Titel (Überschrift Ebene 1) in Kapitälchen mit `#smallcaps()` rendern
-- Gestalte den Autorennamen – versuche ihn zu zentrieren oder grau zu machen
+- Gestalte den Autorennamen. Versuche ihn zu zentrieren oder grau zu machen
 
 > [!TIP] Du kannst nach Überschriftsebene filtern mit `heading.where(level: 1)`. So wird deine
 > Titelgestaltung nicht versehentlich auf jeden Abschnitt angewendet.

@@ -1,12 +1,12 @@
 # Literaturverzeichnis
 
-Kein akademisches Paper ist vollständig ohne auf den Schultern von Giganten zu stehen – oder sie
+Kein akademisches Paper ist vollständig ohne auf den Schultern von Giganten zu stehen, oder sie
 zumindest zu zitieren, damit sie deine Publikation nicht blockieren. Dr. Crumbs Arbeit baut auf
 Jahrzehnten kontroverser Toast-Fall-Forschung auf, und wir müssen dem Komitee zeigen, dass wir
 unsere Hausaufgaben gemacht haben. Typst unterstützt BibLaTex (`.bib`)-Dateien oder das eigene
 [Hayagriva](https://github.com/typst/hayagriva/blob/main/docs/file-format.md) (`.yaml` oder
-`.yml`)-Format als natives Literaturverzeichnisformat. Wir verwenden Hayagriva für diese Tour,
-aber der Prozess ist ähnlich für BibLaTex.
+`.yml`)-Format als natives Literaturverzeichnisformat. Wir verwenden Hayagriva für diese Tour, aber
+der Prozess ist ähnlich für BibLaTex.
 
 Zuerst teile Typst mit, wo die Literaturdatei zu finden ist:
 
@@ -43,5 +43,5 @@ murphy2003:
 Der Literaturverzeichnis-Abschnitt erscheint automatisch mit allen zitierten Werken. Unser
 Toast-Paper ist jetzt ordentlich akademisch.
 
-> [!NOTE] Typst unterstützt mehrere Zitierstile. Ändere ihn mit
-> `#set bibliography(style: "ieee")` oder probiere `"apa"`, `"chicago-author-date"` und andere.
+> [!NOTE] Typst unterstützt mehrere Zitierstile. Ändere ihn mit `#set bibliography(style: "ieee")`
+> oder probiere `"apa"`, `"chicago-author-date"` und andere.

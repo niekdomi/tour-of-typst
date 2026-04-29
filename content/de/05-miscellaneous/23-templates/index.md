@@ -2,8 +2,8 @@
 
 Scrolle zum Anfang unseres Dokuments. Siehst du all die Set-Regeln, Show-Regeln, Variablen und
 Funktionen, die sich vor dem eigentlichen Inhalt angehäuft haben? Es sieht aus wie unser Labortisch
-nach einem 48-stündigen Testmarathon – notwendig, aber ein totales Chaos. Vorlagen erlauben dir,
-das alles in eine separate, saubere Datei auszulagern.
+nach einem 48-stündigen Testmarathon: Notwendig, aber ein totales Chaos. Vorlagen erlauben dir, das
+alles in eine separate, saubere Datei auszulagern.
 
 Eine Vorlage ist einfach eine Funktion, die Inhalt mit Gestaltung einbettet:
 
@@ -36,24 +36,24 @@ In deiner Hauptdatei wendest du sie dann mit einer Show-Regel an:
   author: "Dr. Eleanor Crumb",
 )
 
-// Jetzt einfach Inhalt schreiben – alle Gestaltung kommt aus der Vorlage
+// Jetzt einfach Inhalt schreiben, alle Gestaltung kommt aus der Vorlage
 Das Phänomen, dass Toast mit der gebutterten Seite nach unten landet...
 ```
 
 Das Muster `#show: funktion` wendet die Funktion auf den gesamten Dokumentinhalt an. Deine
-Hauptdatei wird zu reinem Inhalt – sauber, lesbar und frei von Formatierungsunordnung.
+Hauptdatei wird zu reinem Inhalt: sauber, lesbar und frei von Formatierungsunordnung.
 
 ## Deine Aufgabe
 
 Lagere alle Gestaltungselemente vom Anfang des Dokuments in eine `paper()`-Vorlagenfunktion aus.
 Wende sie dann mit `#show: paper.with(...)` an.
 
-Dein Inhalt sollte sauber sein – nur Überschriften, Text, Abbildungen und Tabellen, ohne
-gemischte Set-/Show-Regeln.
+Dein Inhalt sollte sauber sein. Nur Überschriften, Text, Abbildungen und Tabellen, ohne gemischte
+Set-/Show-Regeln.
 
 > [!TIP] Genau so sind echte Typst-Projekte strukturiert. Konferenz- und Zeitschriftenvorlagen
 > folgen demselben Muster.
 
-Herzlichen Glückwunsch – du hast ein vollständiges akademisches Paper von Grund auf erstellt. Es
-hat Gleichungen, Abbildungen, Tabellen, Zitate, eine eigene Vorlage und eine
-Butter-unten-Rate von 61,3 %. Dr. Crumb wäre stolz.
+Herzlichen Glückwunsch! Du hast ein vollständiges akademisches Paper von Grund auf erstellt. Es hat
+Gleichungen, Abbildungen, Tabellen, Zitate, eine eigene Vorlage und eine Butter-unten-Rate von 61,3
+%. Dr. Crumb wäre stolz.

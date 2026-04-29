@@ -3,8 +3,7 @@
 Ein Physikpaper ohne Diagramm ist nur eine Sammlung beängstigend aussehender Buchstaben. Da wir
 nicht erwarten können, dass unsere Leser die Tragödie des fallenden Toasts einfach so imaginieren,
 müssen wir es ihnen zeigen. Jedes gute Paper hat Abbildungen. In Typst werden Bilder mit der
-Funktion `#image()` eingefügt und in `#figure()` eingebettet, um eine Bildunterschrift
-hinzuzufügen.
+Funktion `#image()` eingefügt und in `#figure()` eingebettet, um eine Bildunterschrift hinzuzufügen.
 
 ```typst
 #figure(
@@ -26,10 +25,10 @@ Platzhalter verwenden. Das hält dein Layout bereit, während du auf das echte B
 ```
 
 > [!NOTE] Die Funktion `#figure()` nummeriert deine Bilder automatisch (Abbildung 1, Abbildung 2
-> usw.). Du musst nicht selbst zählen – Typst macht das für dich! Später lernen wir, wie man sie
-> per Beschriftung referenziert.
+> usw.). Du musst nicht selbst zählen, Typst macht das für dich! Später lernen wir, wie man sie per
+> Beschriftung referenziert.
 
 ## Deine Aufgabe
 
-Füge eine Abbildung mit einem Platzhalter-Rechteck zum Abschnitt **Einleitung** hinzu. Gib ihr
-eine beschreibende Bildunterschrift über die Rotationsbahn des Toasts.
+Füge eine Abbildung mit einem Platzhalter-Rechteck zum Abschnitt **Einleitung** hinzu. Gib ihr eine
+beschreibende Bildunterschrift über die Rotationsbahn des Toasts.

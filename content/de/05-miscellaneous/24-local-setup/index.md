@@ -27,8 +27,8 @@ Tinymist unterstützt folgende Editoren:
 - Sublime Text
 - Emacs
 
-Siehe die [Tinymist-Dokumentation](https://myriad-dreamin.github.io/tinymist/frontend/main.html)
-für Einrichtungsanweisungen zu jedem Editor.
+Siehe die [Tinymist-Dokumentation](https://myriad-dreamin.github.io/tinymist/frontend/main.html) für
+Einrichtungsanweisungen zu jedem Editor.
 
 ### Dein Dokument kompilieren
 

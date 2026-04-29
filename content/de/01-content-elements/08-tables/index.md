@@ -1,8 +1,8 @@
 # Tabellen
 
-Nach wochenlangem Brotfallenlassen aus verschiedenen Höhen (und einer beträchtlichen Reinigungsrechnung)
-haben unsere Forscher endlich die Rohdaten gesammelt. In Typst präsentieren wir diese Ergebnisse
-mit der Funktion `#table()`.
+Nach wochenlangem Brotfallenlassen aus verschiedenen Höhen (und einer beträchtlichen
+Reinigungsrechnung) haben unsere Forscher endlich die Rohdaten gesammelt. In Typst präsentieren wir
+diese Ergebnisse mit der Funktion `#table()`.
 
 Eine Tabelle ist im Grunde ein Raster. Du sagst Typst, wie viele **Spalten** du möchtest, und
 listest dann einfach deine Datenpunkte nacheinander auf. Typst "bricht" sie automatisch in die

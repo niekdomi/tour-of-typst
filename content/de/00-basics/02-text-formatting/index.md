@@ -1,7 +1,7 @@
 # Textformatierung
 
-Ein wissenschaftliches Abstract ohne Betonung ist wie Toast ohne Butter – technisch funktional,
-aber am Ziel vorbei. Typst verwendet einfache Marker, um Text fett oder kursiv zu machen:
+Ein wissenschaftliches Abstract ohne Betonung ist wie Toast ohne Butter: Technisch funktional, aber
+am Ziel vorbei. Typst verwendet einfache Marker, um Text fett oder kursiv zu machen:
 
 | Syntax            | Ergebnis          |
 | ----------------- | ----------------- |
@@ -11,11 +11,11 @@ aber am Ziel vorbei. Typst verwendet einfache Marker, um Text fett oder kursiv z
 
 ## Deine Aufgabe
 
-Schreibe das Abstract für unser Paper. Die wichtigsten Erkenntnisse müssen hervorstechen, damit
-auch ein übermüdeter Gutachter sie bemerkt:
+Schreibe das Abstract für unser Paper. Die wichtigsten Erkenntnisse müssen hervorstechen, damit auch
+ein übermüdeter Gutachter sie bemerkt:
 
-- _Toast mit der gebutterten Seite nach unten_ soll kursiv sein – das ist das beobachtete Phänomen
-- **Gravitationsdrehmoment, nicht Pech** soll fett sein – das ist die dramatische Enthüllung
+- _Toast mit der gebutterten Seite nach unten_ soll kursiv sein. Das ist das beobachtete Phänomen
+- **Gravitationsdrehmoment, nicht Pech** soll fett sein. Das ist die dramatische Enthüllung
 
 ```typst
 Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in

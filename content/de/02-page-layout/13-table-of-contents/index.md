@@ -1,9 +1,9 @@
 # Inhaltsverzeichnis
 
-Unser Paper hat jetzt nummerierte Überschriften, Spalten, Kopf- und Fusszeilen. Es sieht aus wie
-ein richtiger Zeitschriftenartikel. Aber jedes Paper, das länger als ein paar Seiten ist, braucht
-ein Inhaltsverzeichnis, damit Leser direkt zu den Ergebnissen springen können (oder, seien wir
-ehrlich, zur Schlussfolgerung).
+Unser Paper hat jetzt nummerierte Überschriften, Spalten, Kopf- und Fusszeilen. Es sieht aus wie ein
+richtiger Zeitschriftenartikel. Aber jedes Paper, das länger als ein paar Seiten ist, braucht ein
+Inhaltsverzeichnis, damit Leser direkt zu den Ergebnissen springen können (oder, seien wir ehrlich,
+zur Schlussfolgerung).
 
 In Typst wird ein Inhaltsverzeichnis mit einer einzigen Funktion erstellt:
 
@@ -33,5 +33,5 @@ Du kannst auch einen benutzerdefinierten Titel vergeben:
 
 Füge `#outline()` direkt nach Titel und Autor, vor dem Abstract ein.
 
-> [!NOTE] Die Funktion heisst in Typst `outline` und nicht "Inhaltsverzeichnis" – aber sie tut
-> genau das, was du von einem Inhaltsverzeichnis erwartest.
+> [!NOTE] Die Funktion heisst in Typst `outline` und nicht "Inhaltsverzeichnis", aber sie tut genau
+> das, was du von einem Inhaltsverzeichnis erwartest.

@@ -2,8 +2,8 @@
 
 Unser Paper hat eine Abbildung, eine Tabelle und einige Gleichungen, aber im Moment zeigen sie
 gegenseitig mit dem Finger auf fehlende Daten. Der Abschnitt Ergebnisse sagt "siehe Tabelle", ohne
-irgendwo konkret hinzuzeigen. Bevor wir Querverweise erstellen können, müssen wir jedem Element
-ein Namensschild geben.
+irgendwo konkret hinzuzeigen. Bevor wir Querverweise erstellen können, müssen wir jedem Element ein
+Namensschild geben.
 
 Beschriftungen werden mit `<spitzen-klammern>` direkt nach einem Element hinzugefügt:
 
@@ -25,9 +25,8 @@ hinzu, um das zu aktivieren:
 #set math.equation(numbering: "(1)")
 ```
 
-Beschriftungen sind unsichtbar – sie erscheinen nicht in der Ausgabe. Sie markieren das Element
-nur stillschweigend, damit du es später referenzieren kannst. Du kannst auch Überschriften
-beschriften:
+Beschriftungen sind unsichtbar. Sie erscheinen nicht in der Ausgabe. Sie markieren das Element nur
+stillschweigend, damit du es später referenzieren kannst. Du kannst auch Überschriften beschriften:
 
 ```typst
 == Methoden <methoden>
@@ -46,4 +45,4 @@ In der Ausgabe wird sich noch nichts ändern, aber im nächsten Kapitel werden d
 zum Leben erweckt.
 
 > [!NOTE] Beschriftungsnamen können Buchstaben, Zahlen und Bindestriche enthalten. Wähle
-> beschreibende Namen – du wirst sie beim Erstellen von Verweisen eintippen.
+> beschreibende Namen. Du wirst sie beim Erstellen von Verweisen eintippen.

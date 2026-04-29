@@ -1,6 +1,6 @@
 # Funktionen
 
-Dr. Crumbs Paper braucht redaktionelle Hinweisboxen – eine für ethische Hinweise zur
+Dr. Crumbs Paper braucht redaktionelle Hinweisboxen. Eine für ethische Hinweise zur
 Toast-Behandlung, eine weitere für zukünftige Forschungsideen. Wir _könnten_ jedes Mal dieselbe
 Formatierung kopieren und einfügen, aber so sehen akademische Paper wie Erpresserbriefe aus.
 

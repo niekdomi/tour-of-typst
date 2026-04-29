@@ -1,15 +1,15 @@
 ## Code-Blöcke
 
-Unsere Forscher, des Butterabschabens vom Boden überdrüssig, schrieben eine Python-Simulation,
-um das Toast-Modell virtuell zu verifizieren. Lasst uns diese ins Paper aufnehmen, um zu beweisen,
-dass wir auch Computer verstehen. In Typst verwenden wir **Rohblöcke**, um Computercode von
-normalem Text zu unterscheiden.
+Unsere Forscher, des Butterabschabens vom Boden überdrüssig, schrieben eine Python-Simulation, um
+das Toast-Modell virtuell zu verifizieren. Lasst uns diese ins Paper aufnehmen, um zu beweisen, dass
+wir auch Computer verstehen. In Typst verwenden wir **Rohblöcke**, um Computercode von normalem Text
+zu unterscheiden.
 
 ### Inline-Code
 
-Verwende einfache Backticks (`` ` ``) für kurze Ausschnitte, wie Funktionsnamen oder Variablen,
-die innerhalb eines Satzes erscheinen. Dadurch wird eine nichtproportionale Schrift angewendet,
-damit sie hervorstechen.
+Verwende einfache Backticks (`` ` ``) für kurze Ausschnitte, wie Funktionsnamen oder Variablen, die
+innerhalb eines Satzes erscheinen. Dadurch wird eine nichtproportionale Schrift angewendet, damit
+sie hervorstechen.
 
 ```typst
 Die Funktion `simulate_drop()` berechnet den endgültigen Rotationswinkel.
@@ -20,9 +20,9 @@ Die Funktion `simulate_drop()` berechnet den endgültigen Rotationswinkel.
 Für vollständige Skripte verwende dreifache Backticks (` ``` `). Das erstellt einen separaten,
 eingerückten Container für deinen Code.
 
-> [!TIP] Wenn du den Namen der Programmiersprache (z.B. `python` oder `rust`) direkt nach den
-> ersten drei Backticks eingibst, hebt Typst den Code automatisch syntaktisch hervor, um ihn
-> leichter lesbar zu machen.
+> [!TIP] Wenn du den Namen der Programmiersprache (z.B. `python` oder `rust`) direkt nach den ersten
+> drei Backticks eingibst, hebt Typst den Code automatisch syntaktisch hervor, um ihn leichter
+> lesbar zu machen.
 >
 > ````typst
 > ```python
@@ -33,15 +33,15 @@ eingerückten Container für deinen Code.
 
 ### Die `raw`-Funktion
 
-Für fortgeschrittene Nutzer bietet Typst die Funktion `#raw()`. Diese ist nützlich, wenn du
-genauere Kontrolle über die Gestaltung benötigst, ohne Backticks zu verwenden.
+Für fortgeschrittene Nutzer bietet Typst die Funktion `#raw()`. Diese ist nützlich, wenn du genauere
+Kontrolle über die Gestaltung benötigst, ohne Backticks zu verwenden.
 
 ```typst
 #raw("print('Simulation abgeschlossen')", lang: "python")
 ```
 
-Wir werden Funktionen in einem späteren Kapitel besprechen, aber für jetzt reicht es zu wissen,
-dass `raw` das Einfügen von Code ohne dreifache Backticks ermöglicht.
+Wir werden Funktionen in einem späteren Kapitel besprechen, aber für jetzt reicht es zu wissen, dass
+`raw` das Einfügen von Code ohne dreifache Backticks ermöglicht.
 
 ## Deine Aufgabe
 
