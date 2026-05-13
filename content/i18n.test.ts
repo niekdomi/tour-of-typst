@@ -1,4 +1,5 @@
 import { describe, it, expect } from "bun:test";
+
 import { getTranslations, locales, defaultLocale } from "./i18n";
 
 const localeCases = [

@@ -1,6 +1,7 @@
 import { EditorView, ViewPlugin } from "@codemirror/view";
-import copyIcon from "../assets/icons/copy.svg?raw";
+
 import checkIcon from "../assets/icons/check.svg?raw";
+import copyIcon from "../assets/icons/copy.svg?raw";
 
 const diagnosticCopyPlugin = ViewPlugin.fromClass(
   class {
@@ -17,13 +18,16 @@ const diagnosticCopyPlugin = ViewPlugin.fromClass(
           btn.title = "Copy error message";
           btn.addEventListener("click", (e) => {
             e.stopPropagation();
-            const text = diag.textContent.replace(/Copy$/, "").trim();
-            void navigator.clipboard.writeText(text).then(() => {
+            const text = diag.textContent.replace(/Copy$/u, "").trim();
+            void (async () => {
+              await navigator.clipboard.writeText(text);
               btn.innerHTML = checkIcon;
-              setTimeout(() => (btn.innerHTML = copyIcon), 1500);
-            });
+              setTimeout(() => {
+                btn.innerHTML = copyIcon;
+              }, 1500);
+            })();
           });
-          diag.appendChild(btn);
+          diag.append(btn);
         }
       });
       this.observer.observe(view.dom.ownerDocument.body, {

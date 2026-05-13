@@ -14,18 +14,15 @@ const grammarPath = new URL("../node_modules/@shikijs/langs/dist/typst.mjs", imp
 const file = Bun.file(grammarPath);
 let src = await file.text();
 
-const before = '\\"end\\":\\"\\\\\\\\x00\\",\\"name\\":\\"markup.raw.block.typst\\"';
+const before = String.raw`\"end\":\"\\\\x00\",\"name\":\"markup.raw.block.typst\"`;
 const after = '\\"end\\":\\"`{3,}\\",\\"name\\":\\"markup.raw.block.typst\\"';
 
-if (!src.includes(before)) {
-  if (src.includes(after)) {
-    console.log("Typst grammar already patched.");
-    process.exit(0);
-  }
-  console.error("Could not find raw-block pattern to patch in Typst grammar.");
-  process.exit(1);
+if (src.includes(before)) {
+  src = src.replace(before, after);
+  await Bun.write(grammarPath, src);
+  console.log("Patched Typst grammar: raw block end pattern fixed.");
+} else if (src.includes(after)) {
+  console.log("Typst grammar already patched.");
+} else {
+  throw new Error("Could not find raw-block pattern to patch in Typst grammar.");
 }
-
-src = src.replace(before, after);
-await Bun.write(grammarPath, src);
-console.log("Patched Typst grammar: raw block end pattern fixed.");

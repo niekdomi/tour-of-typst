@@ -1,6 +1,7 @@
 import { describe, it, expect } from "bun:test";
-import { findFile, flattenChapters, findTourForLocale } from "./utils";
+
 import type { TourModule } from "./types";
+import { findFile, flattenChapters, findTourForLocale } from "./utils";
 
 // --- findFile ---
 
