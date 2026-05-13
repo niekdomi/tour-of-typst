@@ -72,7 +72,7 @@ export default function TableOfContents(props: Props) {
                       <li classList={{ "toc-active": idx === props.currentIndex }}>
                         <button
                           type="button"
-                          class="w-full py-2 pl-8 pr-4 text-left text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          class="w-full py-2 pl-8 pr-4 text-left text-base text-muted-foreground transition-colors hover:text-foreground"
                           classList={{
                             "font-semibold text-brand! hover:text-brand!":
                               idx === props.currentIndex,

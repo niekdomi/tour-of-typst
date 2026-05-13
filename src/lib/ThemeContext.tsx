@@ -11,7 +11,6 @@ import {
 export type Theme = "light" | "dark";
 
 const STORAGE_KEY = "theme";
-const FADE_MS = 200;
 
 function systemTheme(): Theme {
   return globalThis.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -20,10 +19,6 @@ function systemTheme(): Theme {
 function detectInitial(): Theme {
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored === "light" || stored === "dark" ? stored : systemTheme();
-}
-
-function applyTheme(t: Theme): void {
-  document.documentElement.dataset["theme"] = t;
 }
 
 interface ThemeContextValue {
@@ -36,45 +31,43 @@ const ThemeContext = createContext<ThemeContextValue>();
 export function ThemeProvider(props: { children: JSX.Element }) {
   const [theme, setTheme] = createSignal<Theme>(detectInitial());
 
-  // Apply synchronously in the body so children render against the right
-  // data-theme on first paint.
-  applyTheme(theme());
+  document.documentElement.dataset["theme"] = theme();
 
-  const setThemeWithFade = (next: Theme) => {
-    const root = document.documentElement;
-    root.classList.add("theme-fade");
-    applyTheme(next);
-    setTheme(next);
-    setTimeout(() => {
-      root.classList.remove("theme-fade");
-    }, FADE_MS);
-  };
+  function applyWithTransition(next: Theme) {
+    const apply = () => {
+      document.documentElement.dataset["theme"] = next;
+      setTheme(next);
+    };
+    if (typeof document.startViewTransition === "function") {
+      void document.startViewTransition(apply);
+    } else {
+      apply();
+    }
+  }
 
   onMount(() => {
     const mql = globalThis.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
-      if (localStorage.getItem(STORAGE_KEY)) {
-        return;
-      }
-      setThemeWithFade(systemTheme());
+      if (!localStorage.getItem(STORAGE_KEY)) applyWithTransition(systemTheme());
     };
-
     mql.addEventListener("change", handler);
-    onCleanup(() => {
-      mql.removeEventListener("change", handler);
-    });
+    onCleanup(() => mql.removeEventListener("change", handler));
   });
 
-  const value: ThemeContextValue = {
-    theme,
-    toggle: () => {
-      const next: Theme = theme() === "dark" ? "light" : "dark";
-      localStorage.setItem(STORAGE_KEY, next);
-      setThemeWithFade(next);
-    },
-  };
-
-  return <ThemeContext.Provider value={value}>{props.children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider
+      value={{
+        theme,
+        toggle: () => {
+          const next: Theme = theme() === "dark" ? "light" : "dark";
+          localStorage.setItem(STORAGE_KEY, next);
+          applyWithTransition(next);
+        },
+      }}
+    >
+      {props.children}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme(): ThemeContextValue {

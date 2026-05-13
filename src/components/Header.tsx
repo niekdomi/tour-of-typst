@@ -60,21 +60,21 @@ export default function Header(props: Props) {
               <nav class="ml-auto flex shrink-0 gap-1" aria-label="Chapter navigation">
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  size="icon"
                   disabled={!hasPrev()}
                   aria-label="Previous chapter"
                   onClick={() => props.onNavigate?.(props.currentIndex - 1)}
                 >
-                  ←
+                  <span class="text-lg">←</span>
                 </Button>
                 <Button
                   variant="ghost"
-                  size="icon-sm"
+                  size="icon"
                   disabled={!hasNext()}
                   aria-label="Next chapter"
                   onClick={() => props.onNavigate?.(props.currentIndex + 1)}
                 >
-                  →
+                  <span class="text-lg">→</span>
                 </Button>
               </nav>
             </>
@@ -87,7 +87,7 @@ export default function Header(props: Props) {
           class="flex items-center justify-end gap-3 pr-8"
           style={{ flex: 1 - props.contentFraction }}
         >
-          <Button variant="ghost" size="sm" onClick={props.onResetAll}>
+          <Button variant="outline" size="sm" onClick={props.onResetAll}>
             Reset All
           </Button>
 

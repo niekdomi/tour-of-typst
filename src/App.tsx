@@ -1,6 +1,16 @@
 import { useSearchParams } from "@solidjs/router";
 import { createEffect, createMemo, createSignal } from "solid-js";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./components/ui/alert-dialog";
 import Header from "./components/Header";
 import { flattenChapters, getTourForLocale } from "./content";
 import { locale } from "./lib/locale";
@@ -11,6 +21,7 @@ function TourApp() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [contentFraction, setContentFraction] = createSignal(0.5);
   const [resetGeneration, setResetGeneration] = createSignal(0);
+  const [resetDialogOpen, setResetDialogOpen] = createSignal(false);
 
   const tour = createMemo(() => getTourForLocale(locale()));
   const parts = createMemo(() => tour()?.parts ?? []);
@@ -47,8 +58,7 @@ function TourApp() {
     if (key) setSearchParams({ chapter: key });
   }
 
-  function resetAll() {
-    if (!confirm("Reset all chapters to their original templates?")) return;
+  function confirmResetAll() {
     localStorage.removeItem("tour-of-typst-edits");
     setResetGeneration((g) => g + 1);
   }
@@ -61,7 +71,7 @@ function TourApp() {
         currentIndex={currentIndex()}
         contentFraction={contentFraction()}
         onNavigate={navigate}
-        onResetAll={resetAll}
+        onResetAll={() => setResetDialogOpen(true)}
       />
       <TourLayout
         locale={locale()}
@@ -72,6 +82,20 @@ function TourApp() {
         resetGeneration={resetGeneration()}
         onContentFractionChange={setContentFraction}
       />
+      <AlertDialog open={resetDialogOpen()} onOpenChange={setResetDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset all chapters?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will discard all your edits and restore every chapter to its original template.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={confirmResetAll}>Reset All</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

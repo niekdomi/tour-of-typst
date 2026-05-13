@@ -74,12 +74,33 @@ export default function Preview(props: Props) {
     zoomAt(clampZoom((scroller.clientHeight - SCROLLER_PADDING_PX) / pageHeightPx));
   };
 
+  function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
+    if (!scroller) return;
+    const pageEls = scroller.querySelectorAll<HTMLElement>(".typst-page");
+    const target = pageEls[page - 1];
+    if (!target) return;
+    const svgEl = target.querySelector("svg");
+    const targetRect = target.getBoundingClientRect();
+    const scrollerRect = scroller.getBoundingClientRect();
+    const scale = svgEl ? targetRect.height / svgEl.viewBox.baseVal.height : 1;
+    scroller.scrollTo({
+      top: scroller.scrollTop + (targetRect.top - scrollerRect.top) + y * scale - 40,
+      behavior: "smooth",
+    });
+  }
+
   onMount(() => {
+    // The rendered SVG calls this as a global onclick handler for source links.
+    (globalThis as Record<string, unknown>)["handleTypstLocation"] = handleTypstLocation;
     requestAnimationFrame(() => {
       if (!scroller) return;
       const fit = (scroller.clientWidth - SCROLLER_PADDING_PX) / BASE_WIDTH_PX;
       if (fit < 1) setZoom(clampZoom(fit));
     });
+  });
+
+  onCleanup(() => {
+    delete (globalThis as Record<string, unknown>)["handleTypstLocation"];
   });
 
   const onMouseMove = (e: MouseEvent) => {

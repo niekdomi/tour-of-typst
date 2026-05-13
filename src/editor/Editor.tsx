@@ -1,11 +1,10 @@
 import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
+import { EditorView, keymap, runScopeHandlers } from "@codemirror/view";
 import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
+import type { RenderedSvgPage } from "@vedivad/typst-web-service";
 import { basicSetup } from "codemirror";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
-
-import type { RenderedSvgPage } from "@vedivad/typst-web-service";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
@@ -59,6 +58,7 @@ export default function Editor(props: Props) {
           { key: "F2", run: () => true },
         ]),
         basicSetup,
+        EditorView.clickAddsSelectionRange.of(() => false),
         fillHeight,
         popupTheme,
         themeCompartment.of(editorTheme(theme())),
@@ -118,13 +118,13 @@ export default function Editor(props: Props) {
     props.onChange?.(props.template);
   }
 
-  async function format() {
+  function format() {
     if (!view) return;
-    const source = view.state.doc.toString();
-    const formatted = await formatter.format(source);
-    if (formatted !== source) {
-      view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatted } });
-    }
+    runScopeHandlers(
+      view,
+      new KeyboardEvent("keydown", { key: "f", shiftKey: true, altKey: true, bubbles: true }),
+      "editor"
+    );
   }
 
   function toggleSolution() {
@@ -153,22 +153,15 @@ export default function Editor(props: Props) {
   return (
     <div class="flex h-full flex-col overflow-hidden">
       <div class="flex shrink-0 items-center gap-1 border-b border-border/60 bg-background px-2 py-1">
-        <Button variant="ghost" size="sm" onClick={reset}>
+        <Button variant="outline" size="sm" onClick={reset}>
           Reset
         </Button>
         {props.solution && (
-          <Button variant="ghost" size="sm" onClick={toggleSolution}>
+          <Button variant="outline" size="sm" onClick={toggleSolution}>
             {showingSolution() ? "Hide Solution" : "Show Solution"}
           </Button>
         )}
-        <Button
-          variant="ghost"
-          size="sm"
-          class="ml-auto"
-          onClick={() => {
-            void format();
-          }}
-        >
+        <Button variant="outline" size="sm" class="ml-auto" onClick={format}>
           Format
         </Button>
       </div>
