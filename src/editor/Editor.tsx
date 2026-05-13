@@ -58,7 +58,6 @@ export default function Editor(props: Props) {
           { key: "F2", run: () => true },
         ]),
         basicSetup,
-        EditorView.clickAddsSelectionRange.of(() => false),
         fillHeight,
         popupTheme,
         themeCompartment.of(editorTheme(theme())),
