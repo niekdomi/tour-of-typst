@@ -1,19 +1,9 @@
 import { type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { createTypstHighlighting } from "@vedivad/codemirror-typst";
 import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
 import { githubLight } from "@fsegurai/codemirror-theme-github-light";
 
 import { type Theme } from "../lib/ThemeContext";
-
-// Lazy-load the Typst highlighting controller on first editor mount. The
-// `initial` theme is only the controller's starting state — the editor calls
-// `controller.setTheme(view, theme())` on mount and on every theme change.
-let highlightingPromise: ReturnType<typeof createTypstHighlighting> | undefined;
-export const getHighlighting = (initial: Theme) => {
-  highlightingPromise ??= createTypstHighlighting({ theme: initial });
-  return highlightingPromise;
-};
 
 export const editorTheme = (t: Theme): Extension => (t === "dark" ? githubDark : githubLight);
 

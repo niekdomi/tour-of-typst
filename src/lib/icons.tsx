@@ -4,11 +4,8 @@ import { render } from "solid-js/web";
 function toHtml(fn: () => JSX.Element): string {
   const div = document.createElement("div");
   const dispose = render(fn, div);
-  console.log("[icons] childNodes:", div.childNodes.length, [...div.childNodes]);
-  console.log("[icons] innerHTML:", JSON.stringify(div.innerHTML));
   const html = div.innerHTML;
   dispose();
-  console.log("[icons] after dispose innerHTML:", JSON.stringify(html));
   return html;
 }
 

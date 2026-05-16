@@ -14,6 +14,19 @@ interface Props {
   locale: string;
 }
 
+function handleClick(e: MouseEvent) {
+  const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
+  if (!btn) return;
+  const code = decodeURIComponent(btn.dataset["code"] ?? "");
+  void (async () => {
+    await navigator.clipboard.writeText(code);
+    btn.innerHTML = checkIcon;
+    setTimeout(() => {
+      btn.innerHTML = copyIcon;
+    }, 1500);
+  })();
+}
+
 export default function LessonContent(props: Props) {
   const [highlighter, setHighlighter] = createSignal<Highlighter | null>(null);
   onMount(() => {
@@ -21,22 +34,6 @@ export default function LessonContent(props: Props) {
       setHighlighter(await highlighterReady);
     })();
   });
-
-  function handleClick(e: MouseEvent) {
-    const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
-    if (!btn) return;
-    console.log("[lesson] btn.innerHTML:", btn.innerHTML);
-    console.log("[lesson] btn computed color:", getComputedStyle(btn).color);
-    console.log("[lesson] copyIcon:", JSON.stringify(copyIcon));
-    const code = decodeURIComponent(btn.dataset["code"] ?? "");
-    void (async () => {
-      await navigator.clipboard.writeText(code);
-      btn.innerHTML = checkIcon;
-      setTimeout(() => {
-        btn.innerHTML = copyIcon;
-      }, 1500);
-    })();
-  }
 
   const html = createMemo(() => {
     const raw = getChapterMarkdown(props.locale, props.chapter.key);

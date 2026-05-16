@@ -13,6 +13,12 @@ interface LocaleOption {
   label: string;
 }
 
+const t = () => getTranslations(locale());
+const localeOptions: LocaleOption[] = availableLocales.map(({ locale: l, label }) => ({
+  value: l,
+  label,
+}));
+
 interface Props {
   parts: Part[];
   chapters: Chapter[];
@@ -23,12 +29,6 @@ interface Props {
 }
 
 export default function Header(props: Props) {
-  const t = () => getTranslations(locale());
-  const localeOptions: LocaleOption[] = availableLocales.map(({ locale: l, label }) => ({
-    value: l,
-    label,
-  }));
-
   const hasPrev = () => props.currentIndex > 0;
   const hasNext = () => props.currentIndex < props.chapters.length - 1;
 
