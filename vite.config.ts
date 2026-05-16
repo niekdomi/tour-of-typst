@@ -10,9 +10,6 @@ export default defineConfig({
     plugins: (): PluginOption[] => [wasm() as PluginOption],
     format: "es",
   },
-  resolve: {
-    dedupe: ["@codemirror/state", "@codemirror/view", "@codemirror/lint"],
-  },
   build: {
     target: "esnext",
   },

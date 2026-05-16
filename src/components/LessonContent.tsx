@@ -3,11 +3,10 @@ import markedAlert from "marked-alert";
 import type { Highlighter } from "shiki";
 import { createMemo, createSignal, onMount } from "solid-js";
 
-import checkIcon from "../assets/icons/check.svg?raw";
-import copyIcon from "../assets/icons/copy.svg?raw";
 import { getChapterMarkdown } from "../content";
 import type { Chapter } from "../content/types";
 import { highlighterReady } from "../lib/highlighter";
+import { checkIcon, copyIcon } from "../lib/icons";
 
 interface Props {
   chapter: Chapter;
@@ -26,6 +25,9 @@ export default function LessonContent(props: Props) {
   function handleClick(e: MouseEvent) {
     const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
     if (!btn) return;
+    console.log("[lesson] btn.innerHTML:", btn.innerHTML);
+    console.log("[lesson] btn computed color:", getComputedStyle(btn).color);
+    console.log("[lesson] copyIcon:", JSON.stringify(copyIcon));
     const code = decodeURIComponent(btn.dataset["code"] ?? "");
     void (async () => {
       await navigator.clipboard.writeText(code);

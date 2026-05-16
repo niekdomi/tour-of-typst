@@ -1,6 +1,7 @@
 import { useSearchParams } from "@solidjs/router";
 import { createEffect, createMemo, createSignal } from "solid-js";
 
+import Header from "./components/Header";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +12,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./components/ui/alert-dialog";
-import Header from "./components/Header";
 import { flattenChapters, getTourForLocale } from "./content";
 import { locale } from "./lib/locale";
 import { ThemeProvider } from "./lib/ThemeContext";
@@ -92,7 +92,9 @@ function TourApp() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={confirmResetAll}>Reset All</AlertDialogAction>
+            <AlertDialogAction variant="destructive" onClick={confirmResetAll}>
+              Reset All
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

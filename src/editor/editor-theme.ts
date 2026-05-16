@@ -1,7 +1,8 @@
 import { type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { githubDark, githubLight } from "@uiw/codemirror-theme-github";
 import { createTypstHighlighting } from "@vedivad/codemirror-typst";
+import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
+import { githubLight } from "@fsegurai/codemirror-theme-github-light";
 
 import { type Theme } from "../lib/ThemeContext";
 

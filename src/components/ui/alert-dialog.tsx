@@ -143,7 +143,10 @@ export type AlertDialogActionProps<T extends ValidComponent = "button"> = Compon
 export const AlertDialogAction = <T extends ValidComponent = "button">(
   props: AlertDialogActionProps<T> & { variant?: Parameters<typeof buttonVariants>[0]["variant"] }
 ) => {
-  const [local, rest] = splitProps(props as AlertDialogActionProps & { variant?: Parameters<typeof buttonVariants>[0]["variant"] }, ["class", "variant"]);
+  const [local, rest] = splitProps(
+    props as AlertDialogActionProps & { variant?: Parameters<typeof buttonVariants>[0]["variant"] },
+    ["class", "variant"]
+  );
 
   return (
     <AlertDialogPrimitive.CloseButton
