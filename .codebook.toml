@@ -28,5 +28,5 @@ words = [
   "vorausgefülltem",
   "Kapiteltitel",
 ]
-include_paths = ["**/*.md", "**/*.typ", "**/*.svelte", "**/*.ts"]
+include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
