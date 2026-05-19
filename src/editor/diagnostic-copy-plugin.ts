@@ -1,6 +1,6 @@
 import { EditorView, ViewPlugin } from "@codemirror/view";
 
-import { checkIcon, copyIcon } from "../lib/icons";
+import { checkIcon, copyIcon } from "../lib/Icons";
 
 const diagnosticCopyPlugin = ViewPlugin.fromClass(
   class {

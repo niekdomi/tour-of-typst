@@ -1,3 +1,5 @@
+import { Show } from "solid-js";
+
 import LessonContent from "./components/LessonContent";
 import ResizeHandle from "./components/ResizeHandle";
 import type { Chapter } from "./content/types";
@@ -14,21 +16,23 @@ interface Props {
 }
 
 export default function TourLayout(props: Props) {
+  const currentChapter = () => props.chapters[props.currentIndex];
+
   return (
     <div
       class="flex min-h-0 flex-1"
       style={{ "max-width": "1600px", width: "100%", margin: "0 auto" }}
     >
       <div
-        class="flex min-w-0 flex-col overflow-hidden border-r border-border"
+        class="border-border flex min-w-0 flex-col overflow-hidden border-r"
         style={{ flex: props.contentFraction }}
       >
         <main class="flex-1 overflow-y-auto px-12 py-8">
-          <LessonContent
-            chapter={props.chapters[props.currentIndex]!}
-            index={props.currentIndex}
-            locale={props.locale}
-          />
+          <Show when={currentChapter()}>
+            {(chapter) => (
+              <LessonContent chapter={chapter()} index={props.currentIndex} locale={props.locale} />
+            )}
+          </Show>
         </main>
       </div>
 

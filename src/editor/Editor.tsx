@@ -52,17 +52,16 @@ export default function Editor(props: Props) {
       extensions: [
         keymap.of([
           indentWithTab,
-          { key: "Mod-f", run: () => true },
-          { key: "F3", run: () => true },
-          { key: "Shift-F3", run: () => true },
-          { key: "F2", run: () => true },
+          ...["Mod-f", "F3", "Shift-F3", "F2"].map((key) => ({ key, run: () => true })),
         ]),
         basicSetup,
         fillHeight,
         popupTheme,
         themeCompartment.of(editorTheme(theme())),
         EditorView.updateListener.of((u) => {
-          if (u.docChanged) props.onChange?.(u.state.doc.toString());
+          if (u.docChanged) {
+            props.onChange?.(u.state.doc.toString());
+          }
         }),
         ...typstExtensions,
         typstFilePath.of(MAIN_PATH),
@@ -73,25 +72,29 @@ export default function Editor(props: Props) {
 
   onMount(() => {
     void (async () => {
-      for (const step of [
-        () => project.clear(),
-        () => project.setMany({ ...props.auxFiles, [MAIN_PATH]: props.doc }),
-        () => project.compile(),
-      ]) {
-        if (cancelled) return;
-        await step();
+      /* oxlint-disable typescript/no-unnecessary-condition -- `cancelled` is mutated by onCleanup */
+      await project.clear();
+      if (cancelled) {
+        return;
       }
-      if (cancelled) return;
-
+      await project.setMany({ ...props.auxFiles, [MAIN_PATH]: props.doc });
+      if (cancelled) {
+        return;
+      }
+      await project.compile();
+      if (cancelled) {
+        return;
+      }
+      /* oxlint-enable typescript/no-unnecessary-condition */
       unsubscribe = project.onCompile((result) => {
-        if (result.vector) {
-          void (async () => {
-            const pages = await renderer.renderSvgPages(result.vector!);
-            props.onCompile?.(pages);
-          })();
+        if (!result.vector) {
+          return;
         }
+        void (async () => {
+          const pages = await renderer.renderSvgPages(result.vector!);
+          props.onCompile?.(pages);
+        })();
       });
-
       view = new EditorView({ parent: container!, state: buildState(props.doc) });
     })();
   });
@@ -110,6 +113,22 @@ export default function Editor(props: Props) {
     }
   });
 
+  // Swap the editor's document and return the scroll position from before the swap,
+  // so callers can stash it for later restoration.
+  function swapDoc(nextDoc: string): number {
+    const previousScroll = view?.scrollDOM.scrollTop ?? 0;
+    view?.setState(buildState(nextDoc));
+    return previousScroll;
+  }
+
+  function restoreScroll(top: number) {
+    requestAnimationFrame(() => {
+      if (view) {
+        view.scrollDOM.scrollTop = top;
+      }
+    });
+  }
+
   function reset() {
     setShowingSolution(false);
     savedCode = undefined;
@@ -118,7 +137,9 @@ export default function Editor(props: Props) {
   }
 
   function format() {
-    if (!view) return;
+    if (!view) {
+      return;
+    }
     runScopeHandlers(
       view,
       new KeyboardEvent("keydown", { key: "f", shiftKey: true, altKey: true, bubbles: true }),
@@ -127,31 +148,25 @@ export default function Editor(props: Props) {
   }
 
   function toggleSolution() {
-    if (!props.solution) return;
+    if (!props.solution) {
+      return;
+    }
     if (showingSolution()) {
-      solutionScrollTop = view?.scrollDOM.scrollTop ?? 0;
-      setShowingSolution(false);
-      view?.setState(buildState(savedCode ?? props.doc));
+      solutionScrollTop = swapDoc(savedCode ?? props.doc);
       savedCode = undefined;
-      const top = userScrollTop;
-      requestAnimationFrame(() => {
-        if (view) view.scrollDOM.scrollTop = top;
-      });
+      setShowingSolution(false);
+      restoreScroll(userScrollTop);
     } else {
-      userScrollTop = view?.scrollDOM.scrollTop ?? 0;
       savedCode = view?.state.doc.toString();
+      userScrollTop = swapDoc(props.solution);
       setShowingSolution(true);
-      view?.setState(buildState(props.solution));
-      const top = solutionScrollTop;
-      requestAnimationFrame(() => {
-        if (view) view.scrollDOM.scrollTop = top;
-      });
+      restoreScroll(solutionScrollTop);
     }
   }
 
   return (
     <div class="flex h-full flex-col overflow-hidden">
-      <div class="flex shrink-0 items-center gap-1 border-b border-border/60 bg-background px-2 py-1">
+      <div class="border-border/60 bg-background flex shrink-0 items-center gap-1 border-b px-2 py-1">
         <Button variant="outline" size="sm" onClick={reset}>
           Reset
         </Button>

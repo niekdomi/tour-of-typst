@@ -1,42 +1,66 @@
-import type { TourModule, Chapter } from "./types";
+import type { Chapter, TourModule } from "./types";
+
+const CHAPTER_DIR_PREFIX = /^\d+-/;
+
+function parseContentPath(
+  path: string
+): { locale: string; key: string; filename: string } | undefined {
+  const segments = path.split("/").filter(Boolean);
+  const i = segments.indexOf("content");
+  if (i === -1 || segments.length - i < 5) {
+    return undefined;
+  }
+  const locale = segments[i + 1]!;
+  const chapterDir = segments[i + 3]!;
+  const filename = segments[i + 4]!;
+  const key = chapterDir.replace(CHAPTER_DIR_PREFIX, "");
+  return { locale, key, filename };
+}
 
 /**
- * Locate a chapter file's contents by locale, chapter key, and filename.
+ * Build a `locale:key → contents` index from a Vite glob record.
  *
  * Expected path shape (with any leading prefix allowed):
- *   /.../content/{locale}/{part}/{chapterDir}/{filename}
+ *   /.../content/{locale}/{part}/{number}-{key}/{filename}
  *
- * The chapterDir must end with `-{key}`.
+ * Entries that don't match the shape, or have a different filename than
+ * `expectedFilename`, are skipped.
  */
-export function findFile(
+export function buildFileIndex(
   files: Record<string, string>,
-  locale: string,
-  key: string,
-  expectedFilename = "index.md"
-): string | undefined {
+  expectedFilename: string
+): Map<string, string> {
+  const index = new Map<string, string>();
   for (const [path, contents] of Object.entries(files)) {
-    const segments = path.split("/").filter(Boolean);
-    const contentIndex = segments.indexOf("content");
-
-    // Require: content/{locale}/.../{chapterDir}/{filename} (at least 5 segments from "content")
-    if (contentIndex === -1 || segments.length - contentIndex < 5) {
+    const entry = parseContentPath(path);
+    if (!entry || entry.filename !== expectedFilename) {
       continue;
     }
-
-    const localeSegment = segments[contentIndex + 1];
-    const chapterDir = segments[contentIndex + 3]!;
-    const filename = segments[contentIndex + 4]!;
-
-    if (localeSegment !== locale || filename !== expectedFilename) {
-      continue;
-    }
-
-    if (chapterDir.endsWith(`-${key}`)) {
-      return contents;
-    }
+    index.set(`${entry.locale}:${entry.key}`, contents);
   }
+  return index;
+}
 
-  return undefined;
+/**
+ * Build a `locale:key → (filename → contents)` index from a Vite glob record.
+ * Used for chapter auxiliary files where multiple files per chapter coexist.
+ */
+export function buildAuxIndex(files: Record<string, string>): Map<string, Record<string, string>> {
+  const index = new Map<string, Record<string, string>>();
+  for (const [path, contents] of Object.entries(files)) {
+    const entry = parseContentPath(path);
+    if (!entry) {
+      continue;
+    }
+    const composite = `${entry.locale}:${entry.key}`;
+    let bucket = index.get(composite);
+    if (!bucket) {
+      bucket = {};
+      index.set(composite, bucket);
+    }
+    bucket[`/${entry.filename}`] = contents;
+  }
+  return index;
 }
 
 /**

@@ -1,5 +1,4 @@
-import { useSearchParams } from "@solidjs/router";
-import { createEffect, createMemo, createSignal } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 
 import Header from "./components/Header";
 import {
@@ -13,12 +12,13 @@ import {
   AlertDialogTitle,
 } from "./components/ui/alert-dialog";
 import { flattenChapters, getTourForLocale } from "./content";
+import { clearAllEdits } from "./editor/edits-store";
+import { useChapterRoute } from "./lib/chapter-route";
 import { locale } from "./lib/locale";
 import { ThemeProvider } from "./lib/ThemeContext";
 import TourLayout from "./TourLayout";
 
 function TourApp() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [contentFraction, setContentFraction] = createSignal(0.5);
   const [resetGeneration, setResetGeneration] = createSignal(0);
   const [resetDialogOpen, setResetDialogOpen] = createSignal(false);
@@ -30,36 +30,10 @@ function TourApp() {
     return t ? flattenChapters(t) : [];
   });
 
-  const currentIndex = createMemo(() => {
-    const key = searchParams["chapter"] ?? "";
-    const idx = chapters().findIndex((c) => c.key === key);
-    return Math.max(idx, 0);
-  });
-
-  const currentKey = createMemo(() => chapters()[currentIndex()]?.key ?? "");
-
-  createEffect(() => {
-    const chs = chapters();
-    if (chs.length === 0) return;
-    if (!searchParams["chapter"] || !chs.some((c) => c.key === searchParams["chapter"])) {
-      const saved = localStorage.getItem("tour-of-typst-chapter");
-      const initial = (saved && chs.some((c) => c.key === saved) ? saved : chs[0]?.key) ?? "";
-      setSearchParams({ chapter: initial }, { replace: true });
-    }
-  });
-
-  createEffect(() => {
-    const key = currentKey();
-    if (key) localStorage.setItem("tour-of-typst-chapter", key);
-  });
-
-  function navigate(index: number) {
-    const key = chapters()[index]?.key;
-    if (key) setSearchParams({ chapter: key });
-  }
+  const { currentIndex, currentKey, navigate } = useChapterRoute(chapters);
 
   function confirmResetAll() {
-    localStorage.removeItem("tour-of-typst-edits");
+    clearAllEdits();
     setResetGeneration((g) => g + 1);
   }
 

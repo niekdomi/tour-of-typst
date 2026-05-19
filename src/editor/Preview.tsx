@@ -5,7 +5,7 @@ import {
   TbOutlineZoomIn,
   TbOutlineZoomOut,
 } from "solid-icons/tb";
-import { createEffect, createSignal, For, onCleanup, onMount } from "solid-js";
+import { createMemo, createSignal, For, onCleanup, onMount } from "solid-js";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
@@ -27,20 +27,25 @@ export default function Preview(props: Props) {
   const [zoom, setZoom] = createSignal(1);
   const [panning, setPanning] = createSignal(false);
 
-  const [prevPages, setPrevPages] = createSignal<RenderedSvgPage[]>([]);
-  createEffect(() => {
-    if (props.pages.length > 0) setPrevPages(props.pages);
-  });
-  const displayPages = () => (props.pages.length > 0 ? props.pages : prevPages());
+  // Hold the last non-empty pages so the preview keeps showing the previous output
+  // (faded) while a recompile is in flight.
+  const displayPages = createMemo<RenderedSvgPage[]>(
+    (prev) => (props.pages.length > 0 ? props.pages : prev),
+    []
+  );
 
   let scroller: HTMLDivElement | undefined;
   let panOrigin: { x: number; y: number; scrollLeft: number; scrollTop: number } | null = null;
 
   const zoomAt = (newZoom: number, anchorClientX?: number, anchorClientY?: number) => {
-    if (!scroller) return;
+    if (!scroller) {
+      return;
+    }
     const next = clampZoom(newZoom);
     const prev = zoom();
-    if (next === prev) return;
+    if (next === prev) {
+      return;
+    }
     const ratio = next / prev;
     const rect = scroller.getBoundingClientRect();
     const ax = (anchorClientX ?? rect.left + rect.width / 2) - rect.left;
@@ -49,36 +54,53 @@ export default function Preview(props: Props) {
     const st = scroller.scrollTop;
     setZoom(next);
     requestAnimationFrame(() => {
-      if (!scroller) return;
+      if (!scroller) {
+        return;
+      }
       scroller.scrollLeft = (sl + ax) * ratio - ax;
       scroller.scrollTop = (st + ay) * ratio - ay;
     });
   };
 
   const onWheel = (e: WheelEvent) => {
-    if (!e.ctrlKey) return;
+    if (!e.ctrlKey) {
+      return;
+    }
     e.preventDefault();
     zoomAt(e.deltaY > 0 ? zoom() / ZOOM_STEP : zoom() * ZOOM_STEP, e.clientX, e.clientY);
   };
 
   const fitWidth = () => {
-    if (!scroller) return;
+    if (!scroller) {
+      return;
+    }
     zoomAt(clampZoom((scroller.clientWidth - SCROLLER_PADDING_PX) / BASE_WIDTH_PX));
   };
 
   const fitHeight = () => {
-    if (!scroller) return;
+    if (!scroller) {
+      return;
+    }
     const firstPage = displayPages()[0];
-    if (!firstPage) return;
+    if (!firstPage) {
+      return;
+    }
     const pageHeightPx = (firstPage.height / firstPage.width) * BASE_WIDTH_PX;
     zoomAt(clampZoom((scroller.clientHeight - SCROLLER_PADDING_PX) / pageHeightPx));
   };
 
+  // The rendered SVG calls this as a global onclick handler for source links —
+  // the rendered output emits `onclick="handleTypstLocation(...)"` inline, so a
+  // delegated listener wouldn't see it.
   function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
-    if (!scroller) return;
+    if (!scroller) {
+      return;
+    }
     const pageEls = scroller.querySelectorAll<HTMLElement>(".typst-page");
     const target = pageEls[page - 1];
-    if (!target) return;
+    if (!target) {
+      return;
+    }
     const svgEl = target.querySelector("svg");
     const targetRect = target.getBoundingClientRect();
     const scrollerRect = scroller.getBoundingClientRect();
@@ -90,12 +112,15 @@ export default function Preview(props: Props) {
   }
 
   onMount(() => {
-    // The rendered SVG calls this as a global onclick handler for source links.
     (globalThis as Record<string, unknown>)["handleTypstLocation"] = handleTypstLocation;
     requestAnimationFrame(() => {
-      if (!scroller) return;
+      if (!scroller) {
+        return;
+      }
       const fit = (scroller.clientWidth - SCROLLER_PADDING_PX) / BASE_WIDTH_PX;
-      if (fit < 1) setZoom(clampZoom(fit));
+      if (fit < 1) {
+        setZoom(clampZoom(fit));
+      }
     });
   });
 
@@ -103,22 +128,12 @@ export default function Preview(props: Props) {
     delete (globalThis as Record<string, unknown>)["handleTypstLocation"];
   });
 
-  const onMouseMove = (e: MouseEvent) => {
-    if (!panOrigin || !scroller) return;
-    scroller.scrollLeft = panOrigin.scrollLeft - (e.clientX - panOrigin.x);
-    scroller.scrollTop = panOrigin.scrollTop - (e.clientY - panOrigin.y);
-  };
-
-  const onMouseUp = () => {
-    panOrigin = null;
-    setPanning(false);
-    globalThis.removeEventListener("mousemove", onMouseMove);
-    globalThis.removeEventListener("mouseup", onMouseUp);
-  };
-
-  const onMouseDown = (e: MouseEvent) => {
-    if (e.button !== 0 || !scroller) return;
+  const onPointerDown = (e: PointerEvent) => {
+    if (e.button !== 0 || !scroller) {
+      return;
+    }
     e.preventDefault();
+    scroller.setPointerCapture(e.pointerId);
     scroller.focus({ preventScroll: true });
     panOrigin = {
       x: e.clientX,
@@ -127,18 +142,27 @@ export default function Preview(props: Props) {
       scrollTop: scroller.scrollTop,
     };
     setPanning(true);
-    globalThis.addEventListener("mousemove", onMouseMove);
-    globalThis.addEventListener("mouseup", onMouseUp);
   };
 
-  onCleanup(() => {
-    globalThis.removeEventListener("mousemove", onMouseMove);
-    globalThis.removeEventListener("mouseup", onMouseUp);
-  });
+  const onPointerMove = (e: PointerEvent) => {
+    if (!panOrigin || !scroller) {
+      return;
+    }
+    scroller.scrollLeft = panOrigin.scrollLeft - (e.clientX - panOrigin.x);
+    scroller.scrollTop = panOrigin.scrollTop - (e.clientY - panOrigin.y);
+  };
+
+  const onPointerUp = (e: PointerEvent) => {
+    if (scroller?.hasPointerCapture(e.pointerId)) {
+      scroller.releasePointerCapture(e.pointerId);
+    }
+    panOrigin = null;
+    setPanning(false);
+  };
 
   return (
     <div class="flex h-full w-full flex-col overflow-hidden">
-      <div class="flex shrink-0 items-center gap-1 border-b border-border/60 bg-background px-2 py-1">
+      <div class="border-border/60 bg-background flex shrink-0 items-center gap-1 border-b px-2 py-1">
         <Button
           variant="ghost"
           size="icon-sm"
@@ -202,10 +226,13 @@ export default function Preview(props: Props) {
           scroller = el;
         }}
         tabindex={-1}
-        class="min-h-0 flex-1 cursor-grab overflow-auto bg-muted/40 p-3 outline-none"
+        class="bg-muted/40 min-h-0 flex-1 cursor-grab overflow-auto p-3 outline-none"
         classList={{ "!cursor-grabbing select-none": panning() }}
         onWheel={onWheel}
-        onMouseDown={onMouseDown}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
       >
         <div
           class="mx-auto flex flex-col items-center gap-6"

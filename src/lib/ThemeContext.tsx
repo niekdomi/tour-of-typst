@@ -1,6 +1,7 @@
 import {
   type Accessor,
   createContext,
+  createRenderEffect,
   createSignal,
   type JSX,
   onCleanup,
@@ -31,24 +32,25 @@ const ThemeContext = createContext<ThemeContextValue>();
 export function ThemeProvider(props: { children: JSX.Element }) {
   const [theme, setTheme] = createSignal<Theme>(detectInitial());
 
-  document.documentElement.dataset["theme"] = theme();
+  // Sync the document theme on initial setup and any future change.
+  createRenderEffect(() => {
+    document.documentElement.dataset["theme"] = theme();
+  });
 
   function applyWithTransition(next: Theme) {
-    const apply = () => {
-      document.documentElement.dataset["theme"] = next;
-      setTheme(next);
-    };
     if (typeof document.startViewTransition === "function") {
-      void document.startViewTransition(apply);
+      void document.startViewTransition(() => setTheme(next));
     } else {
-      apply();
+      setTheme(next);
     }
   }
 
   onMount(() => {
     const mql = globalThis.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
-      if (!localStorage.getItem(STORAGE_KEY)) applyWithTransition(systemTheme());
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        applyWithTransition(systemTheme());
+      }
     };
     mql.addEventListener("change", handler);
     onCleanup(() => mql.removeEventListener("change", handler));

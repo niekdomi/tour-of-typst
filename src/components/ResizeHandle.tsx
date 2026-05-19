@@ -73,7 +73,7 @@ export default function ResizeHandle(props: Props) {
       tabindex={0}
       onPointerDown={onPointerDown}
       onKeyDown={onKeyDown}
-      class="relative z-10 shrink-0 touch-none bg-border transition-colors after:absolute after:inset-0 hover:bg-brand focus-visible:bg-brand focus-visible:outline-none"
+      class="bg-border hover:bg-brand focus-visible:bg-brand relative z-10 shrink-0 touch-none transition-colors after:absolute after:inset-0 focus-visible:outline-none"
       classList={{
         "w-[5px] h-full cursor-col-resize after:inset-y-0 after:-inset-x-1": isHorizontal(),
         "h-[5px] w-full cursor-row-resize after:inset-x-0 after:-inset-y-1": !isHorizontal(),

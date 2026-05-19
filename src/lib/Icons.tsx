@@ -1,4 +1,5 @@
 import { VsCheck, VsCopy } from "solid-icons/vs";
+import type { JSX } from "solid-js";
 import { render } from "solid-js/web";
 
 function toHtml(fn: () => JSX.Element): string {

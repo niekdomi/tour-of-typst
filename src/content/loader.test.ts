@@ -1,52 +1,97 @@
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 
 import type { TourModule } from "./types";
-import { findFile, flattenChapters, findTourForLocale } from "./utils";
+import { buildAuxIndex, buildFileIndex, findTourForLocale, flattenChapters } from "./utils";
 
-// --- findFile ---
+// --- buildFileIndex ---
 
 const mockFiles = {
   "/foo/content/en/basics/01-hello-world/index.md": "hello content",
   "/foo/content/en/basics/02-text-formatting/index.md": "formatting content",
   "/foo/content/de/basics/01-hello-world/index.md": "hallo inhalt",
-  "/foo/content/en/scripting/01-c++/index.md": "cpp content",
   "/foo/content/en/basics/99-extra/index.txt": "not an index",
   "/foo/other/en/basics/01-off-path/index.md": "wrong root",
 };
 
-describe("findFile", () => {
-  it("finds file by locale and key even with a leading path prefix", () => {
-    expect(findFile(mockFiles, "en", "hello-world")).toBe("hello content");
+describe("buildFileIndex", () => {
+  const index = buildFileIndex(mockFiles, "index.md");
+
+  it("indexes file by locale and key even with a leading path prefix", () => {
+    expect(index.get("en:hello-world")).toBe("hello content");
   });
 
   it("respects locale separation", () => {
-    expect(findFile(mockFiles, "de", "hello-world")).toBe("hallo inhalt");
-    expect(findFile(mockFiles, "de", "text-formatting")).toBeUndefined();
+    expect(index.get("de:hello-world")).toBe("hallo inhalt");
+    expect(index.get("de:text-formatting")).toBeUndefined();
   });
 
-  it("requires an index.md filename inside the chapter directory", () => {
-    expect(findFile(mockFiles, "en", "extra")).toBeUndefined();
+  it("skips files whose name does not match the expected filename", () => {
+    expect(index.get("en:extra")).toBeUndefined();
   });
 
   it("ignores paths that do not include the /content/ root segment", () => {
-    expect(findFile(mockFiles, "en", "off-path")).toBeUndefined();
+    expect(index.get("en:off-path")).toBeUndefined();
   });
 
   it("returns undefined for unknown key or locale", () => {
-    expect(findFile(mockFiles, "en", "missing")).toBeUndefined();
-    expect(findFile(mockFiles, "fr", "hello-world")).toBeUndefined();
+    expect(index.get("en:missing")).toBeUndefined();
+    expect(index.get("fr:hello-world")).toBeUndefined();
   });
 
   it("does not match partial keys (hello does not match hello-world)", () => {
-    expect(findFile(mockFiles, "en", "hello")).toBeUndefined();
+    expect(index.get("en:hello")).toBeUndefined();
   });
 
-  it("handles keys with regex special characters", () => {
-    expect(findFile(mockFiles, "en", "c++")).toBe("cpp content");
+  it("returns an empty index for empty file maps", () => {
+    expect(buildFileIndex({}, "index.md").size).toBe(0);
   });
 
-  it("returns undefined for empty file maps", () => {
-    expect(findFile({}, "en", "hello-world")).toBeUndefined();
+  it("strips multi-digit numeric prefixes from chapter dirs", () => {
+    const i = buildFileIndex({ "/c/content/en/part/100-advanced/index.md": "ok" }, "index.md");
+    expect(i.get("en:advanced")).toBe("ok");
+  });
+
+  it("uses the chapter dir verbatim when it has no numeric prefix", () => {
+    const i = buildFileIndex({ "/c/content/en/part/intro/index.md": "ok" }, "index.md");
+    expect(i.get("en:intro")).toBe("ok");
+  });
+});
+
+// --- buildAuxIndex ---
+
+describe("buildAuxIndex", () => {
+  const auxFiles = {
+    "/foo/content/en/basics/01-hello-world/data.yaml": "key: value",
+    "/foo/content/en/basics/01-hello-world/extra.yaml": "key: other",
+    "/foo/content/en/basics/02-text-formatting/data.yaml": "key: different-chapter",
+    "/foo/content/de/basics/01-hello-world/data.yaml": "schlüssel: wert",
+    "/foo/other/en/basics/01-off-path/data.yaml": "wrong root",
+  };
+  const index = buildAuxIndex(auxFiles);
+
+  it("groups multiple files per chapter under the leading-slash filename", () => {
+    expect(index.get("en:hello-world")).toEqual({
+      "/data.yaml": "key: value",
+      "/extra.yaml": "key: other",
+    });
+  });
+
+  it("does not conflate files with the same name across chapters", () => {
+    expect(index.get("en:text-formatting")).toEqual({
+      "/data.yaml": "key: different-chapter",
+    });
+  });
+
+  it("respects locale separation", () => {
+    expect(index.get("de:hello-world")).toEqual({ "/data.yaml": "schlüssel: wert" });
+  });
+
+  it("ignores paths outside /content/", () => {
+    expect(index.get("en:off-path")).toBeUndefined();
+  });
+
+  it("returns undefined for chapters with no aux files", () => {
+    expect(index.get("en:missing")).toBeUndefined();
   });
 });
 
@@ -67,16 +112,19 @@ describe("flattenChapters", () => {
     ],
   };
 
-  it("returns chapters in part order", () => {
-    expect(flattenChapters(tour).map((c) => c.key)).toEqual(["a", "b", "c"]);
+  it("returns chapters in part order with full properties preserved", () => {
+    expect(flattenChapters(tour)).toEqual([
+      { key: "a", title: "A" },
+      { key: "b", title: "B" },
+      { key: "c", title: "C" },
+    ]);
   });
 
-  it("returns empty array for tour with no parts", () => {
-    const empty: TourModule = { meta: { locale: "en", label: "English" }, parts: [] };
-    expect(flattenChapters(empty)).toEqual([]);
+  it("returns an empty array for tours with no parts", () => {
+    expect(flattenChapters({ meta: { locale: "en", label: "English" }, parts: [] })).toEqual([]);
   });
 
-  it("skips parts with empty chapter arrays", () => {
+  it("treats parts with empty chapter arrays as no-ops", () => {
     const sparse: TourModule = {
       meta: { locale: "en", label: "English" },
       parts: [
@@ -85,10 +133,6 @@ describe("flattenChapters", () => {
       ],
     };
     expect(flattenChapters(sparse).map((c) => c.key)).toEqual(["c"]);
-  });
-
-  it("preserves chapter properties", () => {
-    expect(flattenChapters(tour)[0]).toEqual({ key: "a", title: "A" });
   });
 });
 
@@ -115,5 +159,13 @@ describe("findTourForLocale", () => {
 
   it("returns undefined for empty module list", () => {
     expect(findTourForLocale([], "en")).toBeUndefined();
+  });
+
+  it("returns the first match when duplicate locales are present", () => {
+    const duplicates: TourModule[] = [
+      { meta: { locale: "en", label: "First" }, parts: [] },
+      { meta: { locale: "en", label: "Second" }, parts: [] },
+    ];
+    expect(findTourForLocale(duplicates, "en")?.meta.label).toBe("First");
   });
 });

@@ -33,10 +33,10 @@ export default function Header(props: Props) {
   const hasNext = () => props.currentIndex < props.chapters.length - 1;
 
   return (
-    <header class="shrink-0 border-b border-border bg-background">
+    <header class="border-border bg-background shrink-0 border-b">
       <div class="flex h-14 items-center" style={{ "max-width": "1600px", margin: "0 auto" }}>
         <div class="flex min-w-0 items-center gap-4 pl-8" style={{ flex: props.contentFraction }}>
-          <span class="flex shrink-0 items-baseline gap-1 font-serif text-xl font-bold text-brand">
+          <span class="text-brand flex shrink-0 items-baseline gap-1 font-serif text-xl font-bold">
             <span>Tour of</span>
             <a
               href="https://typst.app/"
@@ -50,7 +50,7 @@ export default function Header(props: Props) {
 
           {props.parts.length > 0 && (
             <>
-              <span class="h-5 w-px shrink-0 bg-border" />
+              <span class="bg-border h-5 w-px shrink-0" />
               <TableOfContents
                 parts={props.parts}
                 chapters={props.chapters}

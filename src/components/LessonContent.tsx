@@ -6,7 +6,7 @@ import { createMemo, createSignal, onMount } from "solid-js";
 import { getChapterMarkdown } from "../content";
 import type { Chapter } from "../content/types";
 import { highlighterReady } from "../lib/highlighter";
-import { checkIcon, copyIcon } from "../lib/icons";
+import { checkIcon, copyIcon } from "../lib/Icons";
 
 interface Props {
   chapter: Chapter;
