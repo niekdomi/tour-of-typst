@@ -37,7 +37,6 @@ export default function Editor(props: Props) {
   let container: HTMLDivElement | undefined;
   let view: EditorView | undefined;
   let unsubscribe: (() => void) | undefined;
-  let cancelled = false;
 
   const [showingSolution, setShowingSolution] = createSignal(false);
   let savedCode: string | undefined;
@@ -71,38 +70,40 @@ export default function Editor(props: Props) {
   }
 
   onMount(() => {
-    void (async () => {
-      /* oxlint-disable typescript/no-unnecessary-condition -- `cancelled` is mutated by onCleanup */
-      await project.clear();
-      if (cancelled) {
-        return;
-      }
-      await project.setMany({ ...props.auxFiles, [MAIN_PATH]: props.doc });
-      if (cancelled) {
-        return;
-      }
-      await project.compile();
-      if (cancelled) {
-        return;
-      }
-      /* oxlint-enable typescript/no-unnecessary-condition */
-      unsubscribe = project.onCompile((result) => {
-        if (!result.vector) {
-          return;
-        }
-        void (async () => {
-          const pages = await renderer.renderSvgPages(result.vector!);
-          props.onCompile?.(pages);
-        })();
-      });
-      view = new EditorView({ parent: container!, state: buildState(props.doc) });
-    })();
-  });
+    const controller = new AbortController();
+    const { signal } = controller;
 
-  onCleanup(() => {
-    cancelled = true;
-    unsubscribe?.();
-    view?.destroy();
+    void (async () => {
+      try {
+        await project.clear();
+        signal.throwIfAborted();
+        await project.setMany({ ...props.auxFiles, [MAIN_PATH]: props.doc });
+        signal.throwIfAborted();
+        await project.compile();
+        signal.throwIfAborted();
+
+        unsubscribe = project.onCompile((result) => {
+          if (!result.vector) {
+            return;
+          }
+          void (async () => {
+            const pages = await renderer.renderSvgPages(result.vector!);
+            props.onCompile?.(pages);
+          })();
+        });
+        view = new EditorView({ parent: container!, state: buildState(props.doc) });
+      } catch (error) {
+        if (!signal.aborted) {
+          throw error;
+        }
+      }
+    })();
+
+    onCleanup(() => {
+      controller.abort();
+      unsubscribe?.();
+      view?.destroy();
+    });
   });
 
   createEffect(() => {

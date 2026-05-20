@@ -46,14 +46,14 @@ export function ThemeProvider(props: { children: JSX.Element }) {
   }
 
   onMount(() => {
-    const mql = globalThis.matchMedia("(prefers-color-scheme: dark)");
+    const mediaQuery = globalThis.matchMedia("(prefers-color-scheme: dark)");
     const handler = () => {
       if (!localStorage.getItem(STORAGE_KEY)) {
         applyWithTransition(systemTheme());
       }
     };
-    mql.addEventListener("change", handler);
-    onCleanup(() => mql.removeEventListener("change", handler));
+    mediaQuery.addEventListener("change", handler);
+    onCleanup(() => mediaQuery.removeEventListener("change", handler));
   });
 
   return (
