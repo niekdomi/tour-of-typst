@@ -2,6 +2,9 @@ import type { Chapter, TourModule } from "./types";
 
 const CHAPTER_DIR_PREFIX = /^\d+-/;
 
+/** The composite key that identifies a chapter across locales: `locale:key`. */
+export const composeKey = (locale: string, key: string) => `${locale}:${key}`;
+
 function parseContentPath(
   path: string
 ): { locale: string; key: string; filename: string } | undefined {
@@ -36,7 +39,7 @@ export function buildFileIndex(
     if (!entry || entry.filename !== expectedFilename) {
       continue;
     }
-    index.set(`${entry.locale}:${entry.key}`, contents);
+    index.set(composeKey(entry.locale, entry.key), contents);
   }
   return index;
 }
@@ -52,7 +55,7 @@ export function buildAuxIndex(files: Record<string, string>): Map<string, Record
     if (!entry) {
       continue;
     }
-    const composite = `${entry.locale}:${entry.key}`;
+    const composite = composeKey(entry.locale, entry.key);
     let bucket = index.get(composite);
     if (!bucket) {
       bucket = {};

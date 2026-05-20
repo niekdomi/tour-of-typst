@@ -1,3 +1,5 @@
+import { composeKey } from "../content";
+
 const STORAGE_KEY = "tour-of-typst-edits";
 
 function load(): Map<string, string> {
@@ -21,7 +23,6 @@ function save(map: Map<string, string>) {
 }
 
 const edits = load();
-const composeKey = (loc: string, k: string) => `${loc}:${k}`;
 
 export function getEdit(loc: string, k: string): string | undefined {
   return edits.get(composeKey(loc, k));

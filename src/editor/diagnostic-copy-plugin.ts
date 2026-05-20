@@ -1,6 +1,7 @@
 import { EditorView, ViewPlugin } from "@codemirror/view";
 
-import { checkIcon, copyIcon } from "../lib/Icons";
+import { copyToButton } from "../lib/clipboard";
+import { copyIcon } from "../lib/icons";
 
 const diagnosticCopyPlugin = ViewPlugin.fromClass(
   class {
@@ -18,13 +19,7 @@ const diagnosticCopyPlugin = ViewPlugin.fromClass(
           btn.addEventListener("click", (e) => {
             e.stopPropagation();
             const text = diag.textContent.replace(/Copy$/u, "").trim();
-            void (async () => {
-              await navigator.clipboard.writeText(text);
-              btn.innerHTML = checkIcon;
-              setTimeout(() => {
-                btn.innerHTML = copyIcon;
-              }, 1500);
-            })();
+            void copyToButton(btn, text);
           });
           diag.append(btn);
         }

@@ -17,23 +17,19 @@ interface Props {
 export default function Workspace(props: Props) {
   const [editorFraction, setEditorFraction] = createSignal(0.5);
   const [pages, setPages] = createSignal<RenderedSvgPage[]>([]);
-  const [editorId, setEditorId] = createSignal(1);
 
   const solution = createMemo(() => getChapterSolution(props.locale, props.chapterKey));
   const template = createMemo(() => getChapterTemplate(props.locale, props.chapterKey) ?? "");
   const auxFiles = createMemo(() => getChapterAuxFiles(props.locale, props.chapterKey));
   const doc = createMemo(() => getEdit(props.locale, props.chapterKey) ?? template());
 
-  createEffect(
-    on(
-      [() => props.locale, () => props.chapterKey, () => props.resetGeneration],
-      () => {
-        setPages([]);
-        setEditorId((n) => n + 1);
-      },
-      { defer: true }
-    )
+  // Identity of the active chapter; a change remounts the editor (keyed <Show>)
+  // and clears the stale preview.
+  const editorKey = createMemo(
+    () => `${props.locale}:${props.chapterKey}:${String(props.resetGeneration)}`
   );
+
+  createEffect(on(editorKey, () => setPages([]), { defer: true }));
 
   function handleChange(content: string) {
     setEdit(props.locale, props.chapterKey, content);
@@ -43,7 +39,7 @@ export default function Workspace(props: Props) {
     <div class="flex h-full flex-col overflow-hidden">
       <div class="min-h-0 overflow-hidden" style={{ flex: editorFraction() }}>
         <EditorShell>
-          <Show when={editorId()} keyed>
+          <Show when={editorKey()} keyed>
             <Editor
               doc={doc()}
               template={template()}

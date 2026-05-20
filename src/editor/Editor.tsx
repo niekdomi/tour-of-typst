@@ -1,6 +1,6 @@
 import { indentWithTab } from "@codemirror/commands";
 import { Compartment, EditorState } from "@codemirror/state";
-import { EditorView, keymap, runScopeHandlers } from "@codemirror/view";
+import { EditorView, keymap } from "@codemirror/view";
 import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
 import type { RenderedSvgPage } from "@vedivad/typst-web-service";
 import { basicSetup } from "codemirror";
@@ -140,11 +140,13 @@ export default function Editor(props: Props) {
     if (!view) {
       return;
     }
-    runScopeHandlers(
-      view,
-      new KeyboardEvent("keydown", { key: "f", shiftKey: true, altKey: true, bubbles: true }),
-      "editor"
-    );
+    const source = view.state.doc.toString();
+    void (async () => {
+      const formatted = await formatter.format(source);
+      if (formatted !== source) {
+        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatted } });
+      }
+    })();
   }
 
   function toggleSolution() {

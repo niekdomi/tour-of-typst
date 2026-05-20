@@ -5,8 +5,9 @@ import { createMemo, createSignal, onMount } from "solid-js";
 
 import { getChapterMarkdown } from "../content";
 import type { Chapter } from "../content/types";
+import { copyToButton } from "../lib/clipboard";
 import { highlighterReady } from "../lib/highlighter";
-import { checkIcon, copyIcon } from "../lib/Icons";
+import { copyIcon } from "../lib/icons";
 
 interface Props {
   chapter: Chapter;
@@ -17,14 +18,7 @@ interface Props {
 function handleClick(e: MouseEvent) {
   const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
   if (!btn) return;
-  const code = decodeURIComponent(btn.dataset["code"] ?? "");
-  void (async () => {
-    await navigator.clipboard.writeText(code);
-    btn.innerHTML = checkIcon;
-    setTimeout(() => {
-      btn.innerHTML = copyIcon;
-    }, 1500);
-  })();
+  void copyToButton(btn, decodeURIComponent(btn.dataset["code"] ?? ""));
 }
 
 export default function LessonContent(props: Props) {

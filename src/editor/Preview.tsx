@@ -5,7 +5,7 @@ import {
   TbOutlineZoomIn,
   TbOutlineZoomOut,
 } from "solid-icons/tb";
-import { createMemo, createSignal, For, onCleanup, onMount } from "solid-js";
+import { createMemo, createSignal, Index, onCleanup, onMount } from "solid-js";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
@@ -125,7 +125,10 @@ export default function Preview(props: Props) {
   });
 
   onCleanup(() => {
-    delete (globalThis as Record<string, unknown>)["handleTypstLocation"];
+    const slot = globalThis as Record<string, unknown>;
+    if (slot["handleTypstLocation"] === handleTypstLocation) {
+      delete slot["handleTypstLocation"];
+    }
   });
 
   const onPointerDown = (e: PointerEvent) => {
@@ -241,15 +244,15 @@ export default function Preview(props: Props) {
             ...(theme() === "dark" ? { filter: "invert(0.85) hue-rotate(180deg)" } : {}),
           }}
         >
-          <For each={displayPages()}>
+          <Index each={displayPages()}>
             {(page) => (
               <div
                 class="w-full bg-white shadow-md ring-1 ring-black/10 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full"
                 classList={{ "opacity-50": props.pages.length === 0 }}
-                innerHTML={page.svg}
+                innerHTML={page().svg}
               />
             )}
-          </For>
+          </Index>
         </div>
       </div>
     </div>

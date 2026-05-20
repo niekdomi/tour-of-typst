@@ -1,7 +1,13 @@
 import type { LocaleMeta, TourModule } from "./types";
-import { buildAuxIndex, buildFileIndex, findTourForLocale, flattenChapters } from "./utils";
+import {
+  buildAuxIndex,
+  buildFileIndex,
+  composeKey,
+  findTourForLocale,
+  flattenChapters,
+} from "./utils";
 
-export { findTourForLocale, flattenChapters };
+export { composeKey, findTourForLocale, flattenChapters };
 
 const tourModules = import.meta.glob<TourModule>("../../content/*/tour.ts", { eager: true });
 
@@ -42,12 +48,12 @@ export function getTourForLocale(locale: string): TourModule | undefined {
 }
 
 export const getChapterMarkdown = (locale: string, key: string) =>
-  markdownIndex.get(`${locale}:${key}`);
+  markdownIndex.get(composeKey(locale, key));
 export const getChapterTemplate = (locale: string, key: string) =>
-  templateIndex.get(`${locale}:${key}`);
+  templateIndex.get(composeKey(locale, key));
 export const getChapterSolution = (locale: string, key: string) =>
-  solutionIndex.get(`${locale}:${key}`);
+  solutionIndex.get(composeKey(locale, key));
 
 export function getChapterAuxFiles(locale: string, key: string): Record<string, string> {
-  return auxIndex.get(`${locale}:${key}`) ?? {};
+  return auxIndex.get(composeKey(locale, key)) ?? {};
 }
