@@ -314,11 +314,21 @@
     fill: currentColor;
   }
 
-  .lesson .markdown-alert-note { --alert-color: #239dad; }
-  .lesson .markdown-alert-tip { --alert-color: #3fb950; }
-  .lesson .markdown-alert-important { --alert-color: #ab7df8; }
-  .lesson .markdown-alert-warning { --alert-color: #d29922; }
-  .lesson .markdown-alert-caution { --alert-color: #f85149; }
+  .lesson .markdown-alert-note {
+    --alert-color: #239dad;
+  }
+  .lesson .markdown-alert-tip {
+    --alert-color: #3fb950;
+  }
+  .lesson .markdown-alert-important {
+    --alert-color: #ab7df8;
+  }
+  .lesson .markdown-alert-warning {
+    --alert-color: #d29922;
+  }
+  .lesson .markdown-alert-caution {
+    --alert-color: #f85149;
+  }
 
   .lesson .placeholder {
     color: var(--muted-foreground);

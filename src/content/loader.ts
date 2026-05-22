@@ -47,12 +47,17 @@ export function getTourForLocale(locale: string): TourModule | undefined {
   return findTourForLocale(allModules, locale);
 }
 
-export const getChapterMarkdown = (locale: string, key: string) =>
-  markdownIndex.get(composeKey(locale, key));
-export const getChapterTemplate = (locale: string, key: string) =>
-  templateIndex.get(composeKey(locale, key));
-export const getChapterSolution = (locale: string, key: string) =>
-  solutionIndex.get(composeKey(locale, key));
+export const getChapterMarkdown = (locale: string, key: string) => {
+  return markdownIndex.get(composeKey(locale, key));
+};
+
+export const getChapterTemplate = (locale: string, key: string) => {
+  return templateIndex.get(composeKey(locale, key));
+};
+
+export const getChapterSolution = (locale: string, key: string) => {
+  return solutionIndex.get(composeKey(locale, key));
+};
 
 export function getChapterAuxFiles(locale: string, key: string): Record<string, string> {
   return auxIndex.get(composeKey(locale, key)) ?? {};

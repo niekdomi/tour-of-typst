@@ -1,3 +1,5 @@
+import { FaSolidArrowLeft, FaSolidArrowRight } from "solid-icons/fa";
+
 import { getTranslations } from "../../content/i18n";
 import type { Locale } from "../../content/i18n";
 import { availableLocales } from "../content";
@@ -7,6 +9,7 @@ import TableOfContents from "./TableOfContents";
 import ThemeToggle from "./ThemeToggle";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface LocaleOption {
   value: string;
@@ -29,8 +32,8 @@ interface Props {
 }
 
 export default function Header(props: Props) {
-  const hasPrev = () => props.currentIndex > 0;
-  const hasNext = () => props.currentIndex < props.chapters.length - 1;
+  const hasPrevChapter = () => props.currentIndex > 0;
+  const hasNextChapter = () => props.currentIndex < props.chapters.length - 1;
 
   return (
     <header class="border-border bg-background shrink-0 border-b">
@@ -58,24 +61,32 @@ export default function Header(props: Props) {
                 onNavigate={props.onNavigate}
               />
               <nav class="ml-auto flex shrink-0 gap-1" aria-label="Chapter navigation">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  disabled={!hasPrev()}
-                  aria-label="Previous chapter"
-                  onClick={() => props.onNavigate?.(props.currentIndex - 1)}
-                >
-                  <span class="text-lg">←</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  disabled={!hasNext()}
-                  aria-label="Next chapter"
-                  onClick={() => props.onNavigate?.(props.currentIndex + 1)}
-                >
-                  <span class="text-lg">→</span>
-                </Button>
+                <Tooltip openDelay={150}>
+                  <TooltipTrigger
+                    as={Button<"button">}
+                    variant="ghost"
+                    size="icon"
+                    disabled={!hasPrevChapter()}
+                    aria-label="Previous chapter"
+                    onClick={() => props.onNavigate?.(props.currentIndex - 1)}
+                  >
+                    <FaSolidArrowLeft />
+                  </TooltipTrigger>
+                  <TooltipContent>{props.chapters[props.currentIndex - 1]?.title}</TooltipContent>
+                </Tooltip>
+                <Tooltip openDelay={150}>
+                  <TooltipTrigger
+                    as={Button<"button">}
+                    variant="ghost"
+                    size="icon"
+                    disabled={!hasNextChapter()}
+                    aria-label="Next chapter"
+                    onClick={() => props.onNavigate?.(props.currentIndex + 1)}
+                  >
+                    <FaSolidArrowRight />
+                  </TooltipTrigger>
+                  <TooltipContent>{props.chapters[props.currentIndex + 1]?.title}</TooltipContent>
+                </Tooltip>
               </nav>
             </>
           )}
@@ -93,8 +104,10 @@ export default function Header(props: Props) {
 
           <Select<LocaleOption>
             value={localeOptions.find((o) => o.value === locale())}
-            onChange={(opt: LocaleOption | null) => {
-              if (opt) setLocale(opt.value as Locale);
+            onChange={(option: LocaleOption | null) => {
+              if (option) {
+                setLocale(option.value as Locale);
+              }
             }}
             options={localeOptions}
             optionValue="value"

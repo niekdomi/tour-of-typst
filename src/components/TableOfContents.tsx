@@ -1,6 +1,8 @@
 import { createSignal, For, Show } from "solid-js";
 
+import { getTranslations } from "../../content/i18n";
 import type { Chapter, Part } from "../content/types";
+import { locale } from "../lib/locale";
 
 interface Props {
   parts: Part[];
@@ -33,6 +35,12 @@ export default function TableOfContents(props: Props) {
       >
         <span class="min-w-0 flex-1 truncate text-left">
           {props.chapters[props.currentIndex]?.title ?? ""}
+          <Show when={props.currentIndex === 0 && !open()}>
+            {" "}
+            <span class="text-muted-foreground font-normal">
+              {getTranslations(locale()).tocHint}
+            </span>
+          </Show>
         </span>
         <svg
           class="size-3 shrink-0 opacity-60 transition-transform"

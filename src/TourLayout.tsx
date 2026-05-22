@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function TourLayout(props: Props) {
-  const currentChapter = () => props.chapters[props.currentIndex];
+  const currentChapter = () => props.chapters.at(props.currentIndex);
 
   return (
     <div

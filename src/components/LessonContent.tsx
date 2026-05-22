@@ -17,7 +17,9 @@ interface Props {
 
 function handleClick(e: MouseEvent) {
   const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
-  if (!btn) return;
+  if (!btn) {
+    return;
+  }
   void copyToButton(btn, decodeURIComponent(btn.dataset["code"] ?? ""));
 }
 
@@ -31,7 +33,9 @@ export default function LessonContent(props: Props) {
 
   const html = createMemo(() => {
     const raw = getChapterMarkdown(props.locale, props.chapter.key);
-    if (!raw) return null;
+    if (!raw) {
+      return null;
+    }
 
     const hl = highlighter();
     const renderer = new Renderer();
@@ -43,7 +47,13 @@ export default function LessonContent(props: Props) {
             defaultColor: false,
           })
         : `<pre><code>${text}</code></pre>`;
-      return `<div class="code-block">${highlighted}<button class="copy-btn" data-code="${encodeURIComponent(text)}" title="Copy">${copyIcon}</button></div>`;
+      const encoded = encodeURIComponent(text);
+      return [
+        `<div class="code-block">`,
+        highlighted,
+        `<button class="copy-btn" data-code="${encoded}" title="Copy">${copyIcon}</button>`,
+        `</div>`,
+      ].join("");
     };
 
     return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;

@@ -20,7 +20,7 @@ import TourLayout from "./TourLayout";
 
 function TourApp() {
   const [contentFraction, setContentFraction] = createSignal(0.5);
-  const [resetGeneration, setResetGeneration] = createSignal(0);
+  const [globalReset, setGlobalReset] = createSignal(0);
   const [resetDialogOpen, setResetDialogOpen] = createSignal(false);
 
   const tour = createMemo(() => getTourForLocale(locale()));
@@ -32,9 +32,10 @@ function TourApp() {
 
   const { currentIndex, currentKey, navigate } = useChapterRoute(chapters);
 
+  /** Will set all chapters to their initial state */
   function confirmResetAll() {
     clearAllEdits();
-    setResetGeneration((g) => g + 1);
+    setGlobalReset((g) => g + 1);
   }
 
   return (
@@ -53,7 +54,7 @@ function TourApp() {
         currentIndex={currentIndex()}
         currentKey={currentKey()}
         contentFraction={contentFraction()}
-        resetGeneration={resetGeneration()}
+        resetGeneration={globalReset()}
         onContentFractionChange={setContentFraction}
       />
       <AlertDialog open={resetDialogOpen()} onOpenChange={setResetDialogOpen}>

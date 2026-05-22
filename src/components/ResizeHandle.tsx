@@ -11,16 +11,21 @@ interface Props {
 export default function ResizeHandle(props: Props) {
   const min = () => props.min ?? 0.15;
   const max = () => props.max ?? 0.85;
+
   const [dragging, setDragging] = createSignal(false);
-  let el: HTMLDivElement | undefined;
+
+  let elem: HTMLDivElement | undefined;
 
   function onPointerMove(e: PointerEvent) {
-    if (!dragging() || !el?.parentElement) return;
-    const rect = el.parentElement.getBoundingClientRect();
-    const raw =
-      props.direction === "horizontal"
-        ? (e.clientX - rect.left) / rect.width
-        : (e.clientY - rect.top) / rect.height;
+    if (!dragging() || !elem?.parentElement) {
+      return;
+    }
+
+    const rect = elem.parentElement.getBoundingClientRect();
+    const isHorizontal = props.direction === "horizontal";
+    const raw = isHorizontal
+      ? (e.clientX - rect.left) / rect.width
+      : (e.clientY - rect.top) / rect.height;
     props.onChange(Math.min(Math.max(raw, min()), max()));
   }
 
@@ -46,8 +51,10 @@ export default function ResizeHandle(props: Props) {
 
   function onKeyDown(e: KeyboardEvent) {
     const step = 0.05;
+
     const back = props.direction === "horizontal" ? "ArrowLeft" : "ArrowUp";
     const forward = props.direction === "horizontal" ? "ArrowRight" : "ArrowDown";
+
     if (e.key === back) {
       e.preventDefault();
       props.onChange(Math.max(props.fraction - step, min()));
@@ -62,7 +69,7 @@ export default function ResizeHandle(props: Props) {
   return (
     <div
       ref={(e) => {
-        el = e;
+        elem = e;
       }}
       role="slider"
       aria-orientation={props.direction}
