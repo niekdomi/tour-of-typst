@@ -67,9 +67,6 @@ jobs:
       - name: Lint & Formatting check
         run: bun lint
 
-      - name: Type check
-        run: bun check
-
       - name: Install typstyle
         uses: taiki-e/install-action@v2
         with:

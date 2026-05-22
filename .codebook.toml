@@ -3,30 +3,34 @@ words = [
   # English
   "apa",
   "buenard",
+  "cva",
   "deja",
+  "fsegurai",
   "hayagriva",
+  "kobalte",
   "labelled",
   "libertinus",
   "noninteractive",
+  "nums",
+  "oklch",
   "oncompile",
   "onnavigate",
   "onresetall",
+  "pointermove",
+  "pointerup",
   "recompiles",
   "reflows",
   "shiki",
+  "shiki's",
   "showybox",
   "smallcaps",
-  "srgb",
+  "solidjs",
   "tinymist",
   "vedivad",
+
   # German
   "vorausgefülltem",
   "Kapiteltitel",
 ]
-include_paths = [
-  "**/*.md",
-  "**/*.typ",
-  "**/*.svelte",
-  "**/*.ts",
-]
+include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false

@@ -1,0 +1,5 @@
+telemetry = false
+
+[install]
+# Package should be at least a week old to prevent supply chain vulnerabilities
+minimumReleaseAge = 604800 # 3600 × 24 × 7 = 604800

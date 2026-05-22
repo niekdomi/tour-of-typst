@@ -19,7 +19,13 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "rewriteRelativeImportExtensions": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "paths": {
+      "@codemirror/view": ["./node_modules/@codemirror/view"],
+      "@codemirror/state": ["./node_modules/@codemirror/state"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte", "content/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "content/**/*.ts"]
 }

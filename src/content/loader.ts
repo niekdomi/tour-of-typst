@@ -1,7 +1,13 @@
-import type { TourModule, LocaleMeta } from "./types";
-import { findFile, flattenChapters, findTourForLocale } from "./utils";
+import type { LocaleMeta, TourModule } from "./types";
+import {
+  buildAuxIndex,
+  buildFileIndex,
+  composeKey,
+  findTourForLocale,
+  flattenChapters,
+} from "./utils";
 
-export { findFile, flattenChapters, findTourForLocale };
+export { composeKey, findTourForLocale, flattenChapters };
 
 const tourModules = import.meta.glob<TourModule>("../../content/*/tour.ts", { eager: true });
 
@@ -23,13 +29,17 @@ const solutionFiles = import.meta.glob<string>("../../content/*/*/*/solution.typ
   import: "default",
 });
 
-const auxFiles = import.meta.glob<string>("../../content/*/*/*/*.yaml", {
+const auxFilesRaw = import.meta.glob<string>("../../content/*/*/*/*.yaml", {
   eager: true,
   query: "?raw",
   import: "default",
 });
 
 const allModules: TourModule[] = Object.values(tourModules);
+const markdownIndex = buildFileIndex(markdownFiles, "index.md");
+const templateIndex = buildFileIndex(templateFiles, "template.typ");
+const solutionIndex = buildFileIndex(solutionFiles, "solution.typ");
+const auxIndex = buildAuxIndex(auxFilesRaw);
 
 export const availableLocales: LocaleMeta[] = allModules.map((m) => m.meta);
 
@@ -37,24 +47,18 @@ export function getTourForLocale(locale: string): TourModule | undefined {
   return findTourForLocale(allModules, locale);
 }
 
-export const getChapterMarkdown = (l: string, k: string) => findFile(markdownFiles, l, k);
-export const getChapterTemplate = (l: string, k: string) =>
-  findFile(templateFiles, l, k, "template.typ");
-export const getChapterSolution = (l: string, k: string) =>
-  findFile(solutionFiles, l, k, "solution.typ");
+export const getChapterMarkdown = (locale: string, key: string) => {
+  return markdownIndex.get(composeKey(locale, key));
+};
+
+export const getChapterTemplate = (locale: string, key: string) => {
+  return templateIndex.get(composeKey(locale, key));
+};
+
+export const getChapterSolution = (locale: string, key: string) => {
+  return solutionIndex.get(composeKey(locale, key));
+};
 
 export function getChapterAuxFiles(locale: string, key: string): Record<string, string> {
-  const result: Record<string, string> = {};
-  for (const [path, contents] of Object.entries(auxFiles)) {
-    const segments = path.split("/").filter(Boolean);
-    const contentIndex = segments.indexOf("content");
-    if (contentIndex === -1 || segments.length - contentIndex < 5) continue;
-    const loc = segments[contentIndex + 1];
-    const dir = segments[contentIndex + 3]!;
-    const file = segments[contentIndex + 4]!;
-    if (loc === locale && dir.endsWith(`-${key}`)) {
-      result[`/${file}`] = contents;
-    }
-  }
-  return result;
+  return auxIndex.get(composeKey(locale, key)) ?? {};
 }
