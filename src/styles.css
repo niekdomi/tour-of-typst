@@ -17,95 +17,48 @@
   --radius: 0.5rem;
   --background: #fdfdfd;
   --foreground: #19181f;
-  --card: #fdfdfd;
-  --card-foreground: #19181f;
   --popover: #fdfdfd;
-  --popover-foreground: #19181f;
-  --primary: #19181f;
-  --primary-foreground: #fdfdfd;
-  --secondary: #eff0f3;
-  --secondary-foreground: #19181f;
   --muted: #eff0f3;
   --muted-foreground: #565565;
   --accent: #eff0f3;
-  --accent-foreground: #19181f;
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #dc2626;
   --border: #bdbfcc;
-  --input: #bdbfcc;
-  --ring: #bdbfcc;
-  --sidebar: #eff0f3;
-  --sidebar-foreground: #19181f;
-  --sidebar-primary: #19181f;
-  --sidebar-primary-foreground: #fdfdfd;
-  --sidebar-accent: #e4e5ea;
-  --sidebar-accent-foreground: #19181f;
-  --sidebar-border: #bdbfcc;
-  --sidebar-ring: #bdbfcc;
 }
 
 [data-theme="dark"] {
   --brand: #5bcfde;
   --background: #13121a;
   --foreground: #f0eff5;
-  --card: #1e1d28;
-  --card-foreground: #f0eff5;
   --popover: #1e1d28;
-  --popover-foreground: #f0eff5;
-  --primary: #f0eff5;
-  --primary-foreground: #13121a;
-  --secondary: #1e1d28;
-  --secondary-foreground: #f0eff5;
   --muted: #1e1d28;
   --muted-foreground: #8887a0;
   --accent: #272634;
-  --accent-foreground: #f0eff5;
-  --destructive: oklch(0.704 0.191 22.216);
+  --destructive: #ef4444;
   --border: #302f42;
-  --input: #302f42;
-  --ring: #302f42;
-  --sidebar: #1e1d28;
-  --sidebar-foreground: #f0eff5;
-  --sidebar-primary: #1e1d28;
-  --sidebar-primary-foreground: #f0eff5;
-  --sidebar-accent: #272634;
-  --sidebar-accent-foreground: #f0eff5;
-  --sidebar-border: #302f42;
-  --sidebar-ring: #302f42;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--foreground);
+  --color-primary-foreground: var(--background);
+  --color-secondary: var(--muted);
+  --color-secondary-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-foreground: var(--foreground);
   --color-destructive: var(--destructive);
   --color-brand: var(--brand);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-input: var(--border);
+  --color-ring: var(--border);
 
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 4px);
 
   --font-sans: var(--sans);
   --font-mono: var(--mono);
@@ -337,7 +290,7 @@
   }
 
   .lesson .markdown-alert {
-    border-left: 4px solid var(--border);
+    border-left: 4px solid var(--alert-color, var(--border));
     background: var(--muted);
     margin: 1.5rem 0;
     padding: 0.5rem 1rem;
@@ -351,6 +304,7 @@
     font-weight: 600;
     font-size: 0.9rem;
     margin-bottom: 0.25rem;
+    color: var(--alert-color);
   }
 
   .lesson .markdown-alert-title svg {
@@ -360,36 +314,11 @@
     fill: currentColor;
   }
 
-  .lesson .markdown-alert-note {
-    border-left-color: #239dad;
-  }
-  .lesson .markdown-alert-note .markdown-alert-title {
-    color: #239dad;
-  }
-  .lesson .markdown-alert-tip {
-    border-left-color: #3fb950;
-  }
-  .lesson .markdown-alert-tip .markdown-alert-title {
-    color: #3fb950;
-  }
-  .lesson .markdown-alert-important {
-    border-left-color: #ab7df8;
-  }
-  .lesson .markdown-alert-important .markdown-alert-title {
-    color: #ab7df8;
-  }
-  .lesson .markdown-alert-warning {
-    border-left-color: #d29922;
-  }
-  .lesson .markdown-alert-warning .markdown-alert-title {
-    color: #d29922;
-  }
-  .lesson .markdown-alert-caution {
-    border-left-color: #f85149;
-  }
-  .lesson .markdown-alert-caution .markdown-alert-title {
-    color: #f85149;
-  }
+  .lesson .markdown-alert-note { --alert-color: #239dad; }
+  .lesson .markdown-alert-tip { --alert-color: #3fb950; }
+  .lesson .markdown-alert-important { --alert-color: #ab7df8; }
+  .lesson .markdown-alert-warning { --alert-color: #d29922; }
+  .lesson .markdown-alert-caution { --alert-color: #f85149; }
 
   .lesson .placeholder {
     color: var(--muted-foreground);
