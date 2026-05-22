@@ -1,26 +1,18 @@
 import { Marked, Renderer } from "marked";
 import markedAlert from "marked-alert";
 import type { Highlighter } from "shiki";
-import { createMemo, createSignal, onMount } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, onMount, Show } from "solid-js";
+import { render } from "solid-js/web";
 
 import { getChapterMarkdown } from "../content";
 import type { Chapter } from "../content/types";
-import { copyToButton } from "../lib/clipboard";
-import { highlighterReady } from "../lib/highlighter";
-import { copyIcon } from "../lib/icons";
+import { highlighterReady, shikiThemes } from "../lib/highlighter";
+import { CopyButton } from "./CopyButton";
 
 interface Props {
   chapter: Chapter;
   index: number;
   locale: string;
-}
-
-function handleClick(e: MouseEvent) {
-  const btn = (e.target as Element).closest<HTMLButtonElement>(".copy-btn");
-  if (!btn) {
-    return;
-  }
-  void copyToButton(btn, decodeURIComponent(btn.dataset["code"] ?? ""));
 }
 
 export default function LessonContent(props: Props) {
@@ -43,37 +35,71 @@ export default function LessonContent(props: Props) {
       const highlighted = hl
         ? hl.codeToHtml(text, {
             lang: lang && hl.getLoadedLanguages().includes(lang) ? lang : "text",
-            themes: { light: "github-light", dark: "github-dark-dimmed" },
+            themes: shikiThemes,
             defaultColor: false,
           })
         : `<pre><code>${text}</code></pre>`;
-      const encoded = encodeURIComponent(text);
-      return [
-        `<div class="code-block">`,
-        highlighted,
-        `<button class="copy-btn" data-code="${encoded}" title="Copy">${copyIcon}</button>`,
-        `</div>`,
-      ].join("");
+      return `<div class="code-block" data-code="${encodeURIComponent(text)}">${highlighted}</div>`;
     };
 
     return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
   });
 
+  let contentRef: HTMLDivElement | undefined;
+  const disposers: (() => void)[] = [];
+
+  createEffect(() => {
+    const content = html();
+
+    for (const disposer of disposers) {
+      disposer();
+    }
+
+    disposers.length = 0;
+
+    if (!contentRef || !content) {
+      return;
+    }
+
+    contentRef.innerHTML = content;
+
+    for (const block of contentRef.querySelectorAll<HTMLElement>(".code-block[data-code]")) {
+      const code = decodeURIComponent(block.dataset["code"] ?? "");
+      const anchor = document.createElement("span");
+
+      block.append(anchor);
+      disposers.push(render(() => <CopyButton code={code} />, anchor));
+    }
+  });
+
+  onCleanup(() => {
+    for (const disposer of disposers) {
+      disposer();
+    }
+  });
+
   return (
-    <article class="lesson" onClick={handleClick}>
+    <article class="lesson">
       <div class="lesson-chapter-label">
         {props.chapter.key === "welcome" ? "" : `Chapter ${String(props.index)}`}
       </div>
-      {html() ? (
-        <div innerHTML={html()!} />
-      ) : (
-        <>
-          <h1>{props.chapter.title}</h1>
-          <p class="placeholder">
-            Content for <em>{props.chapter.title}</em> is coming soon.
-          </p>
-        </>
-      )}
+      <Show
+        when={html()}
+        fallback={
+          <>
+            <h1>{props.chapter.title}</h1>
+            <p class="placeholder">
+              Content for <em>{props.chapter.title}</em> is coming soon.
+            </p>
+          </>
+        }
+      >
+        <div
+          ref={(el) => {
+            contentRef = el;
+          }}
+        />
+      </Show>
     </article>
   );
 }

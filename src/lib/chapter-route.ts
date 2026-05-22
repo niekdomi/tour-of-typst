@@ -10,8 +10,8 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
 
   const currentIndex = createMemo(() => {
     const key = searchParams["chapter"] ?? "";
-    const idx = chapters().findIndex((c) => c.key === key);
-    return Math.max(idx, 0);
+    const index = chapters().findIndex((c) => c.key === key);
+    return Math.max(index, 0);
   });
 
   const currentKey = createMemo(() => chapters()[currentIndex()]?.key ?? "");
@@ -24,7 +24,9 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
     const current = searchParams["chapter"];
     if (!current || !chs.some((c) => c.key === current)) {
       const saved = localStorage.getItem(STORAGE_KEY);
-      const initial = (saved && chs.some((c) => c.key === saved) ? saved : chs[0]?.key) ?? "";
+      const savedIsValid = saved !== null && chs.some((c) => c.key === saved);
+
+      const initial = savedIsValid ? saved : (chs[0]?.key ?? "");
       setSearchParams({ chapter: initial }, { replace: true });
     }
   });

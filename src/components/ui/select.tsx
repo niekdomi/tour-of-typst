@@ -1,5 +1,6 @@
 import { usePopperContext } from "@kobalte/core/popper";
 import { Select as SelectPrimitive } from "@kobalte/core/select";
+import { FaSolidCheck, FaSolidChevronDown } from "solid-icons/fa";
 import type { ComponentProps, ValidComponent, VoidProps } from "solid-js";
 import { mergeProps, splitProps } from "solid-js";
 
@@ -55,24 +56,19 @@ export const SelectTrigger = <T extends ValidComponent = "button">(
         "disabled:cursor-not-allowed disabled:opacity-50",
         "*:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "group",
         props.class
       )}
       {...rest}
     >
       {props.children}
       <SelectPrimitive.Icon<ValidComponent>
-        class="size-4 opacity-50"
-        as={(props) => (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m6 9l6 6l6-6"
-            />
-          </svg>
+        as={(iconProps) => (
+          <FaSolidChevronDown
+            {...iconProps}
+            size={12}
+            class="size-3 opacity-60 transition-transform group-data-[expanded]:rotate-180"
+          />
         )}
       />
     </SelectPrimitive.Trigger>
@@ -133,18 +129,7 @@ export const SelectItem = <T extends ValidComponent = "li">(props: SelectItemPro
       <SelectPrimitive.ItemLabel>{(props as SelectItemProps).children}</SelectPrimitive.ItemLabel>
       <SelectPrimitive.ItemIndicator<ValidComponent>
         class="size-3.5"
-        as={(props) => (
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...props}>
-            <path
-              fill="none"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M20 6L9 17l-5-5"
-            />
-          </svg>
-        )}
+        as={(props) => <FaSolidCheck {...props} />}
       />
     </SelectPrimitive.Item>
   );

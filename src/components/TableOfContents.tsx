@@ -1,3 +1,4 @@
+import { FaSolidChevronDown } from "solid-icons/fa";
 import { createSignal, For, Show } from "solid-js";
 
 import { getTranslations } from "../../content/i18n";
@@ -38,25 +39,16 @@ export default function TableOfContents(props: Props) {
           <Show when={props.currentIndex === 0 && !open()}>
             {" "}
             <span class="text-muted-foreground font-normal">
-              {getTranslations(locale()).tocHint}
+              {getTranslations(locale()).tocHint}{" "}
             </span>
           </Show>
         </span>
-        <svg
-          class="size-3 shrink-0 opacity-60 transition-transform"
+        <FaSolidChevronDown
+          size={12}
+          class="shrink-0 opacity-60 transition-transform"
           classList={{ "rotate-180": open() }}
           aria-hidden="true"
-          viewBox="0 0 10 6"
-          fill="none"
-        >
-          <path
-            d="M1 1l4 4 4-4"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
+        />
       </button>
 
       <Show when={open()}>
@@ -68,25 +60,25 @@ export default function TableOfContents(props: Props) {
         />
         <ul class="toc-menu border-border bg-popover absolute top-full right-0 left-0 z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-lg border py-1.5 shadow-lg">
           <For each={props.parts}>
-            {(part, pi) => (
+            {(part, partIndex) => (
               <>
                 <li class="toc-part-header text-muted-foreground [&:not(:first-child)]:border-border px-4 pt-2 pb-2 text-[0.7rem] font-bold tracking-widest uppercase first:pt-1.5 [&:not(:first-child)]:mt-3 [&:not(:first-child)]:border-t [&:not(:first-child)]:pt-3">
                   {part.title}
                 </li>
                 <For each={part.chapters}>
                   {(chapter, ci) => {
-                    const idx = flatIndex(pi(), ci());
+                    const index = flatIndex(partIndex(), ci());
                     return (
-                      <li classList={{ "toc-active": idx === props.currentIndex }}>
+                      <li classList={{ "toc-active": index === props.currentIndex }}>
                         <button
                           type="button"
                           class="text-muted-foreground hover:text-foreground w-full py-2 pr-4 pl-8 text-left text-base transition-colors"
                           classList={{
                             "font-semibold text-brand! hover:text-brand!":
-                              idx === props.currentIndex,
+                              index === props.currentIndex,
                           }}
                           onClick={() => {
-                            select(idx);
+                            select(index);
                           }}
                         >
                           {chapter.title}

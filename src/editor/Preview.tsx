@@ -41,22 +41,27 @@ export default function Preview(props: Props) {
     if (!scroller) {
       return;
     }
+
     const next = clampZoom(newZoom);
     const prev = zoom();
     if (next === prev) {
       return;
     }
     const ratio = next / prev;
+
     const rect = scroller.getBoundingClientRect();
     const ax = (anchorClientX ?? rect.left + rect.width / 2) - rect.left;
     const ay = (anchorClientY ?? rect.top + rect.height / 2) - rect.top;
     const sl = scroller.scrollLeft;
     const st = scroller.scrollTop;
+
     setZoom(next);
+
     requestAnimationFrame(() => {
       if (!scroller) {
         return;
       }
+
       scroller.scrollLeft = (sl + ax) * ratio - ax;
       scroller.scrollTop = (st + ay) * ratio - ay;
     });
@@ -66,8 +71,10 @@ export default function Preview(props: Props) {
     if (!e.ctrlKey) {
       return;
     }
+
     e.preventDefault();
-    zoomAt(e.deltaY > 0 ? zoom() / ZOOM_STEP : zoom() * ZOOM_STEP, e.clientX, e.clientY);
+    const newZoom = e.deltaY > 0 ? zoom() / ZOOM_STEP : zoom() * ZOOM_STEP;
+    zoomAt(newZoom, e.clientX, e.clientY);
   };
 
   const fitWidth = () => {
@@ -81,30 +88,35 @@ export default function Preview(props: Props) {
     if (!scroller) {
       return;
     }
+
     const firstPage = displayPages()[0];
     if (!firstPage) {
       return;
     }
+
     const pageHeightPx = (firstPage.height / firstPage.width) * BASE_WIDTH_PX;
     zoomAt(clampZoom((scroller.clientHeight - SCROLLER_PADDING_PX) / pageHeightPx));
   };
 
-  // The rendered SVG calls this as a global onclick handler for source links —
-  // the rendered output emits `onclick="handleTypstLocation(...)"` inline, so a
-  // delegated listener wouldn't see it.
+  // The rendered SVG calls this as a global onclick handler for source links.
+  // The rendered output emits `onclick="handleTypstLocation(...)"` inline,
+  // so a delegated listener wouldn't see it.
   function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
     if (!scroller) {
       return;
     }
-    const pageEls = scroller.querySelectorAll<HTMLElement>(".typst-page");
-    const target = pageEls[page - 1];
+
+    const pageElements = scroller.querySelectorAll<HTMLElement>(".typst-page");
+    const target = pageElements[page - 1];
     if (!target) {
       return;
     }
-    const svgEl = target.querySelector("svg");
+
+    const svgElement = target.querySelector("svg");
     const targetRect = target.getBoundingClientRect();
     const scrollerRect = scroller.getBoundingClientRect();
-    const scale = svgEl ? targetRect.height / svgEl.viewBox.baseVal.height : 1;
+    const scale = svgElement ? targetRect.height / svgElement.viewBox.baseVal.height : 1;
+
     scroller.scrollTo({
       top: scroller.scrollTop + (targetRect.top - scrollerRect.top) + y * scale - 40,
       behavior: "smooth",
@@ -113,10 +125,12 @@ export default function Preview(props: Props) {
 
   onMount(() => {
     (globalThis as Record<string, unknown>)["handleTypstLocation"] = handleTypstLocation;
+
     requestAnimationFrame(() => {
       if (!scroller) {
         return;
       }
+
       const fit = (scroller.clientWidth - SCROLLER_PADDING_PX) / BASE_WIDTH_PX;
       if (fit < 1) {
         setZoom(clampZoom(fit));
@@ -135,15 +149,18 @@ export default function Preview(props: Props) {
     if (e.button !== 0 || !scroller) {
       return;
     }
+
     e.preventDefault();
     scroller.setPointerCapture(e.pointerId);
     scroller.focus({ preventScroll: true });
+
     panOrigin = {
       x: e.clientX,
       y: e.clientY,
       scrollLeft: scroller.scrollLeft,
       scrollTop: scroller.scrollTop,
     };
+
     setPanning(true);
   };
 
@@ -151,6 +168,7 @@ export default function Preview(props: Props) {
     if (!panOrigin || !scroller) {
       return;
     }
+
     scroller.scrollLeft = panOrigin.scrollLeft - (e.clientX - panOrigin.x);
     scroller.scrollTop = panOrigin.scrollTop - (e.clientY - panOrigin.y);
   };
@@ -159,6 +177,7 @@ export default function Preview(props: Props) {
     if (scroller?.hasPointerCapture(e.pointerId)) {
       scroller.releasePointerCapture(e.pointerId);
     }
+
     panOrigin = null;
     setPanning(false);
   };

@@ -8,7 +8,7 @@ import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
-import diagnosticCopyPlugin from "./diagnostic-copy-plugin";
+import diagnosticCopyPlugin from "./DiagnosticCopyPlugin";
 import { editorTheme, fillHeight, popupTheme } from "./editor-theme";
 import { useTypstResources } from "./typst-resources";
 
@@ -77,8 +77,10 @@ export default function Editor(props: Props) {
       try {
         await project.clear();
         signal.throwIfAborted();
+
         await project.setMany({ ...props.auxFiles, [MAIN_PATH]: props.doc });
         signal.throwIfAborted();
+
         await project.compile();
         signal.throwIfAborted();
 
@@ -86,6 +88,7 @@ export default function Editor(props: Props) {
           if (!result.vector) {
             return;
           }
+
           void (async () => {
             const pages = await renderer.renderSvgPages(result.vector!);
             props.onCompile?.(pages);
@@ -141,7 +144,9 @@ export default function Editor(props: Props) {
     if (!view) {
       return;
     }
+
     const source = view.state.doc.toString();
+
     void (async () => {
       const formatted = await formatter.format(source);
       if (formatted !== source) {
@@ -154,14 +159,17 @@ export default function Editor(props: Props) {
     if (!props.solution) {
       return;
     }
+
     if (showingSolution()) {
       solutionScrollTop = swapDoc(savedCode ?? props.doc);
       savedCode = undefined;
+
       setShowingSolution(false);
       restoreScroll(userScrollTop);
     } else {
       savedCode = view?.state.doc.toString();
       userScrollTop = swapDoc(props.solution);
+
       setShowingSolution(true);
       restoreScroll(solutionScrollTop);
     }

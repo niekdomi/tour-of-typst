@@ -1,7 +1,8 @@
 import { createHighlighter, type Highlighter } from "shiki";
 
-// Initialized once, shared across the app
+export const shikiThemes = { light: "github-light", dark: "github-dark-dimmed" } as const;
+
 export const highlighterReady: Promise<Highlighter> = createHighlighter({
-  themes: ["github-light", "github-dark-dimmed"],
+  themes: Object.values(shikiThemes),
   langs: ["typst", "yaml"],
 });
