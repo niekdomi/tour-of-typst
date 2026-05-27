@@ -1,55 +1,39 @@
-import { describe, it, expect } from "bun:test";
-import { getTranslations, locales, defaultLocale } from "./i18n";
+import { describe, expect, it } from "bun:test";
 
-const localeCases = [
-  {
-    locale: "en",
-    expected: {
-      selectLanguage: "Language",
-      selectTheme: "Theme",
-      themeAuto: "Auto",
-      themeLight: "Light",
-      themeDark: "Dark",
-    },
-  },
-  {
-    locale: "de",
-    expected: {
-      selectLanguage: "Sprache",
-      selectTheme: "Design",
-      themeAuto: "Automatisch",
-      themeLight: "Hell",
-      themeDark: "Dunkel",
-    },
-  },
-] as const;
+import { defaultLocale, getTranslations, locales } from "./i18n";
 
-describe("getTranslations", () => {
-  for (const { locale, expected } of localeCases) {
-    it(`returns translations for '${locale}'`, () => {
-      const t = getTranslations(locale);
-      for (const [key, value] of Object.entries(expected)) {
-        expect(t[key as keyof typeof t]).toBe(value);
-      }
-    });
-  }
+describe("locales", () => {
+  it("is non-empty", () => {
+    expect(locales.length).toBeGreaterThan(0);
+  });
 
-  it("defaultLocale is a known locale", () => {
+  it("contains the defaultLocale", () => {
     expect(locales).toContain(defaultLocale);
   });
 });
 
-describe("i18n completeness", () => {
-  const reference = getTranslations("en");
-  const requiredKeys = Object.keys(reference) as (keyof typeof reference)[];
+describe("getTranslations", () => {
+  const referenceKeys = Object.keys(getTranslations(defaultLocale)) as (keyof ReturnType<
+    typeof getTranslations
+  >)[];
 
   for (const locale of locales) {
-    it(`${locale} has all translation keys with non-empty values`, () => {
+    it(`returns a complete, non-empty Translations object for '${locale}'`, () => {
       const t = getTranslations(locale);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      expect(Object.keys(t)).toEqual(expect.arrayContaining(requiredKeys as string[]));
-      const empty = requiredKeys.filter((k) => !t[k]);
-      expect(empty).toEqual([]);
+      for (const key of referenceKeys) {
+        expect(t).toHaveProperty(key);
+        expect(t[key]).toBeTruthy();
+      }
+    });
+  }
+
+  // Catches copy-paste bugs where another locale was left identical to the default.
+  for (const locale of locales.filter((l) => l !== defaultLocale)) {
+    it(`'${locale}' is not a verbatim copy of '${defaultLocale}'`, () => {
+      const reference = getTranslations(defaultLocale);
+      const translated = getTranslations(locale);
+      const allIdentical = referenceKeys.every((k) => reference[k] === translated[k]);
+      expect(allIdentical).toBe(false);
     });
   }
 });

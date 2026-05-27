@@ -1,47 +1,85 @@
-import type { TourModule, Chapter } from "./types";
+import type { Chapter, TourModule } from "./types";
+
+const CHAPTER_DIR_PREFIX = /^\d+-/;
 
 /**
- * Locate a chapter file's contents by locale, chapter key, and filename.
- *
- * Expected path shape (with any leading prefix allowed):
- *   /.../content/{locale}/{part}/{chapterDir}/{filename}
- *
- * The chapterDir must end with `-{key}`.
+ * The composite key that identifies a chapter across locales: `locale:key`.
  */
-export function findFile(
-  files: Record<string, string>,
-  locale: string,
-  key: string,
-  expectedFilename = "index.md"
-): string | undefined {
-  for (const [path, contents] of Object.entries(files)) {
-    const segments = path.split("/").filter(Boolean);
-    const contentIndex = segments.indexOf("content");
+export const composeKey = (locale: string, key: string) => `${locale}:${key}`;
 
-    // Require: content/{locale}/.../{chapterDir}/{filename} (at least 5 segments from "content")
-    if (contentIndex === -1 || segments.length - contentIndex < 5) {
-      continue;
-    }
+/**
+ * Parse `/.../content/{locale}/{part}/{number}-{key}/{filename}` into its components.
+ */
+function parseContentPath(
+  path: string
+): { locale: string; key: string; filename: string } | undefined {
+  const segments = path.split("/").filter(Boolean);
+  const i = segments.indexOf("content");
 
-    const localeSegment = segments[contentIndex + 1];
-    const chapterDir = segments[contentIndex + 3]!;
-    const filename = segments[contentIndex + 4]!;
-
-    if (localeSegment !== locale || filename !== expectedFilename) {
-      continue;
-    }
-
-    if (chapterDir.endsWith(`-${key}`)) {
-      return contents;
-    }
+  // 5 Parts expected: locale, part, number, key, filename
+  if (i === -1 || segments.length - i < 5) {
+    return undefined;
   }
 
-  return undefined;
+  const locale = segments[i + 1]!;
+  const chapterDir = segments[i + 3]!;
+  const filename = segments[i + 4]!;
+  const key = chapterDir.replace(CHAPTER_DIR_PREFIX, "");
+
+  return { locale, key, filename };
 }
 
 /**
- * Flatten parts into a single chapter list while preserving part order.
- * Parts with empty chapter arrays contribute nothing.
+ * Build a `locale:key -> contents` index from a Vite glob record, filtered to `expectedFilename`.
+ */
+export function buildFileIndex(
+  files: Record<string, string>,
+  expectedFilename: string
+): Map<string, string> {
+  const index = new Map<string, string>();
+
+  for (const [path, contents] of Object.entries(files)) {
+    const entry = parseContentPath(path);
+
+    if (!entry || entry.filename !== expectedFilename) {
+      continue;
+    }
+
+    index.set(composeKey(entry.locale, entry.key), contents);
+  }
+
+  return index;
+}
+
+/**
+ * Build a `locale:key -> (filename -> contents)` index from a Vite glob record.
+ */
+export function buildAuxIndex(files: Record<string, string>): Map<string, Record<string, string>> {
+  const index = new Map<string, Record<string, string>>();
+
+  for (const [path, contents] of Object.entries(files)) {
+    const entry = parseContentPath(path);
+
+    if (!entry) {
+      continue;
+    }
+
+    const composite = composeKey(entry.locale, entry.key);
+    let bucket = index.get(composite);
+
+    if (!bucket) {
+      bucket = {};
+      index.set(composite, bucket);
+    }
+
+    bucket[`/${entry.filename}`] = contents;
+  }
+
+  return index;
+}
+
+/**
+ * Flatten parts into a single chapter list while preserving part order. Parts with empty chapter arrays contribute nothing.
  */
 export function flattenChapters(tour: TourModule): Chapter[] {
   return tour.parts.flatMap((p) => p.chapters);

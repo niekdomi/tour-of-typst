@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": ["dist/**"],
+  "printWidth": 100,
+  "proseWrap": "always",
+  "sortImports": true,
+  "sortPackageJson": {
+    "sortScripts": true
+  },
+  "sortTailwindcss": true,
+  "trailingComma": "es5"
+}

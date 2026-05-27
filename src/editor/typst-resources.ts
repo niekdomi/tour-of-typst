@@ -1,10 +1,10 @@
-import { getContext, setContext } from "svelte";
 import type {
-  TypstProject,
   TypstFormatter,
-  TypstRenderer,
   TypstHighlightingController,
+  TypstProject,
+  TypstRenderer,
 } from "@vedivad/codemirror-typst";
+import { createContext, useContext } from "solid-js";
 
 export interface TypstResources {
   project: TypstProject;
@@ -13,22 +13,10 @@ export interface TypstResources {
   renderer: TypstRenderer;
 }
 
-interface Container {
-  current: TypstResources | undefined;
-}
-
-const KEY = Symbol("typst-resources");
-
-export function provideTypstResources(): Container {
-  const container: Container = { current: undefined };
-  setContext(KEY, container);
-  return container;
-}
+export const TypstResourcesContext = createContext<TypstResources>();
 
 export function useTypstResources(): TypstResources {
-  const container = getContext<Container | undefined>(KEY);
-  if (!container?.current) {
-    throw new Error("useTypstResources called outside <EditorShell> or before resources are ready");
-  }
-  return container.current;
+  const ctx = useContext(TypstResourcesContext);
+  if (!ctx) throw new Error("useTypstResources called outside <EditorShell>");
+  return ctx;
 }

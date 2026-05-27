@@ -3,20 +3,28 @@ words = [
   # English
   "apa",
   "buenard",
+  "cva",
   "deja",
+  "fsegurai",
   "hayagriva",
+  "kobalte",
   "labelled",
   "libertinus",
   "noninteractive",
+  "nums",
+  "oklch",
   "oncompile",
   "onnavigate",
   "onresetall",
+  "pointermove",
+  "pointerup",
   "recompiles",
   "reflows",
   "shiki",
+  "shiki's",
   "showybox",
   "smallcaps",
-  "srgb",
+  "solidjs",
   "tinymist",
   "vedivad",
 
@@ -70,10 +78,5 @@ words = [
   "Überschriftsebene",
   "Überschriftszeile",
 ]
-include_paths = [
-  "**/*.md",
-  "**/*.svelte",
-  "**/*.ts",
-  "**/*.typ",
-]
+include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
