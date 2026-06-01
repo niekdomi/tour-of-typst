@@ -1,0 +1,20 @@
+murphy2003:
+  type: Article
+  author: Murphy, Robert
+  title: Tumbling Toast, Murphy's Law and the Fundamental Constants
+  date: 2003
+  parent:
+    type: Periodical
+    title: Journal of Applied Butter Studies
+
+matthews1995:
+  type: Article
+  author: Matthews, Robert
+  title: Tumbling Toast and the Constant of Gravitation
+  date: 1995
+  parent:
+    type: Periodical
+    title: European Journal of Physics
+    volume: 16
+    issue: 4
+  page-range: 172-176
