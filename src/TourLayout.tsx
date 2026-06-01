@@ -12,6 +12,7 @@ interface Props {
   currentKey: string;
   contentFraction: number;
   resetGeneration: number;
+  contentBlurred?: boolean;
   onContentFractionChange: (f: number) => void;
 }
 
@@ -27,7 +28,10 @@ export default function TourLayout(props: Props) {
         class="border-border flex min-w-0 flex-col overflow-hidden border-r"
         style={{ flex: props.contentFraction }}
       >
-        <main class="flex-1 overflow-y-auto px-12 py-8">
+        <main
+          class="flex-1 overflow-y-auto px-12 py-8 transition-[filter] duration-200"
+          classList={{ "blur-sm": props.contentBlurred }}
+        >
           <Show when={currentChapter()}>
             {(chapter) => (
               <LessonContent chapter={chapter()} index={props.currentIndex} locale={props.locale} />
