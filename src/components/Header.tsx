@@ -29,6 +29,7 @@ interface Props {
   contentFraction: number;
   onNavigate?: (index: number) => void;
   onResetAll?: () => void;
+  onTocOpenChange?: (open: boolean) => void;
 }
 
 export default function Header(props: Props) {
@@ -59,6 +60,7 @@ export default function Header(props: Props) {
                 chapters={props.chapters}
                 currentIndex={props.currentIndex}
                 onNavigate={props.onNavigate}
+                onOpenChange={props.onTocOpenChange}
               />
               <nav class="ml-auto flex shrink-0 gap-1" aria-label="Chapter navigation">
                 <Tooltip openDelay={150}>
