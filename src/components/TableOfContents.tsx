@@ -10,14 +10,20 @@ interface Props {
   chapters: Chapter[];
   currentIndex: number;
   onNavigate?: (index: number) => void;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export default function TableOfContents(props: Props) {
   const [open, setOpen] = createSignal(false);
 
+  function setMenuOpen(value: boolean) {
+    setOpen(value);
+    props.onOpenChange?.(value);
+  }
+
   function select(index: number) {
     props.onNavigate?.(index);
-    setOpen(false);
+    setMenuOpen(false);
   }
 
   function flatIndex(partIndex: number, chapterIndex: number): number {
@@ -32,7 +38,9 @@ export default function TableOfContents(props: Props) {
       <button
         type="button"
         class="hover:bg-accent flex w-full items-center gap-2 rounded px-2 py-1 text-base font-semibold"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          setMenuOpen(!open());
+        }}
       >
         <span class="min-w-0 flex-1 truncate text-left">
           {props.chapters[props.currentIndex]?.title ?? ""}
@@ -56,9 +64,11 @@ export default function TableOfContents(props: Props) {
           type="button"
           class="fixed inset-0 z-40 cursor-default bg-transparent"
           aria-label="Close menu"
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setMenuOpen(false);
+          }}
         />
-        <ul class="toc-menu border-border bg-popover absolute top-full right-0 left-0 z-50 mt-2 max-h-[70vh] overflow-y-auto rounded-lg border py-1.5 shadow-lg">
+        <ul class="toc-menu animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 border-border bg-popover absolute top-full right-0 left-0 z-50 mt-2 max-h-[70vh] origin-top overflow-y-auto rounded-lg border py-1.5 shadow-lg">
           <For each={props.parts}>
             {(part, partIndex) => (
               <>

@@ -22,6 +22,7 @@ function TourApp() {
   const [contentFraction, setContentFraction] = createSignal(0.5);
   const [globalReset, setGlobalReset] = createSignal(0);
   const [resetDialogOpen, setResetDialogOpen] = createSignal(false);
+  const [tocOpen, setTocOpen] = createSignal(false);
 
   const tour = createMemo(() => getTourForLocale(locale()));
   const parts = createMemo(() => tour()?.parts ?? []);
@@ -47,6 +48,7 @@ function TourApp() {
         contentFraction={contentFraction()}
         onNavigate={navigate}
         onResetAll={() => setResetDialogOpen(true)}
+        onTocOpenChange={setTocOpen}
       />
       <TourLayout
         locale={locale()}
@@ -56,6 +58,7 @@ function TourApp() {
         contentFraction={contentFraction()}
         resetGeneration={globalReset()}
         onContentFractionChange={setContentFraction}
+        contentBlurred={tocOpen()}
       />
       <AlertDialog open={resetDialogOpen()} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
