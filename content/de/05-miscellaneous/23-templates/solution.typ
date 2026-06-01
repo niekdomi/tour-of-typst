@@ -59,9 +59,9 @@
 
 Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in
 verschiedenen Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten
-beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der Toast-Rotation
-im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht Pech* für diese
-kulinarische Tragödie verantwortlich ist.
+beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der
+Toast-Rotation im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht
+Pech* für diese kulinarische Tragödie verantwortlich ist.
 
 #set page(columns: 2)
 
@@ -106,7 +106,8 @@ Jeder Versuch verlief wie folgt:
 + Die Landung untersuchen und notieren, welche Seite den Boden berührt hat
 + Für insgesamt 50 Versuche pro Sitzung, über 3 Sitzungen wiederholen
 
-Die folgende Simulation wurde verwendet, um das physikalische Modell zu verifizieren:
+Die folgende Simulation wurde verwendet, um das physikalische Modell zu
+verifizieren:
 
 ```python
 import numpy as np
@@ -126,9 +127,9 @@ def simulate_toast_drop(height=0.75, mass=0.028):
 )
 
 == Ergebnisse
-Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt.
-Mit @gl-omega ergibt sich die Winkelgeschwindigkeit des Toasts während des
-freien Falls zu:
+Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt. Mit
+@gl-omega ergibt sich die Winkelgeschwindigkeit des Toasts während des freien
+Falls zu:
 
 $ omega = (g dot t) / r $ <gl-omega>
 
@@ -148,8 +149,8 @@ $ theta = 1 / 2 dot g dot t^2 / r $
 == Schlussfolgerung
 Die Toast-Rotation wird durch Geometrie und Drehmoment bestimmt, nicht durch
 Aberglauben. Die Daten in @tab-ergebnisse bestätigen, dass die gemessene
-Winkelbeschleunigung eine fast halbe Umdrehung vor dem Aufprall vorhersagt,
-was die Butter-unten-Tendenz in allen Versuchen erklärt.
+Winkelbeschleunigung eine fast halbe Umdrehung vor dem Aufprall vorhersagt, was
+die Butter-unten-Tendenz in allen Versuchen erklärt.
 
 #showybox(
   title: "Zukünftige Forschung",

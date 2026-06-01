@@ -54,9 +54,9 @@
 
 Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in
 verschiedenen Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten
-beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der Toast-Rotation
-im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht Pech* für diese
-kulinarische Tragödie verantwortlich ist.
+beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der
+Toast-Rotation im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht
+Pech* für diese kulinarische Tragödie verantwortlich ist.
 
 #set page(columns: 2)
 
@@ -98,7 +98,8 @@ Jeder Versuch verlief wie folgt:
 + Die Landung untersuchen und notieren, welche Seite den Boden berührt hat
 + Für insgesamt 50 Versuche pro Sitzung, über 3 Sitzungen wiederholen
 
-Die folgende Simulation wurde verwendet, um das physikalische Modell zu verifizieren:
+Die folgende Simulation wurde verwendet, um das physikalische Modell zu
+verifizieren:
 
 ```python
 import numpy as np
@@ -115,8 +116,8 @@ def simulate_toast_drop(height=0.75, mass=0.028):
   wurden nach der Datenerhebung verantwortungsvoll verzehrt.]
 
 == Ergebnisse
-Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt.
-Die Winkelgeschwindigkeit des Toasts während des freien Falls ist gegeben durch:
+Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt. Die
+Winkelgeschwindigkeit des Toasts während des freien Falls ist gegeben durch:
 
 $ omega = (g dot t) / r $
 
@@ -136,10 +137,12 @@ $ theta = 1 / 2 dot g dot t^2 / r $
 == Schlussfolgerung
 Die Toast-Rotation wird durch Geometrie und Drehmoment bestimmt, nicht durch
 Aberglauben. Die gemessene Winkelbeschleunigung sagt eine fast halbe Umdrehung
-vor dem Aufprall voraus, was die Butter-unten-Tendenz in allen Versuchen erklärt.
+vor dem Aufprall voraus, was die Butter-unten-Tendenz in allen Versuchen
+erklärt.
 
 #hinweis[Zukünftige Forschung: Verschiedene Brotsorten, Butterdichten und
-  Anti-Drehmoment-Plattendesigns untersuchen, um Frühstücksergebnisse zu verbessern.]
+  Anti-Drehmoment-Plattendesigns untersuchen, um Frühstücksergebnisse zu
+  verbessern.]
 
 == Danksagungen
 #for name in assistenten {

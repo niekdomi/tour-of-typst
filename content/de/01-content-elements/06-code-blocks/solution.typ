@@ -3,9 +3,9 @@ Dr. Eleanor Crumb
 
 Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in
 verschiedenen Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten
-beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der Toast-Rotation
-im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht Pech* für diese
-kulinarische Tragödie verantwortlich ist.
+beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der
+Toast-Rotation im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht
+Pech* für diese kulinarische Tragödie verantwortlich ist.
 
 == Einleitung
 Toast, der von einer Standardtischhöhe von etwa 0,75 m fallen gelassen wird,
@@ -38,7 +38,8 @@ Jeder Versuch verlief wie folgt:
 + Die Landung untersuchen und notieren, welche Seite den Boden berührt hat
 + Für insgesamt 50 Versuche pro Sitzung, über 3 Sitzungen wiederholen
 
-Die folgende Simulation wurde verwendet, um das physikalische Modell zu verifizieren:
+Die folgende Simulation wurde verwendet, um das physikalische Modell zu
+verifizieren:
 
 ```python
 import numpy as np
@@ -52,8 +53,8 @@ def simulate_toast_drop(height=0.75, mass=0.028):
 ```
 
 == Ergebnisse
-Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt.
-Die Winkelgeschwindigkeit des Toasts während des freien Falls ist gegeben durch:
+Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt. Die
+Winkelgeschwindigkeit des Toasts während des freien Falls ist gegeben durch:
 
 $ omega = (g dot t) / r $
 
