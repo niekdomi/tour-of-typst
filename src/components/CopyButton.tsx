@@ -14,7 +14,7 @@ export function CopyButton(props: { code: string }) {
 
   return (
     <button type="button" class="copy-btn" title="Copy" onClick={() => void copy()}>
-      {copied() ? <FaSolidCheck size={14} color="green" /> : <FaSolidCopy size={14} color="" />}
+      {copied() ? <FaSolidCheck size={14} color="green" /> : <FaSolidCopy size={14} />}
     </button>
   );
 }
