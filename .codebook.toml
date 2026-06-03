@@ -84,7 +84,7 @@ words = [
   "zitierstile",
   "Überschriftsebene",
   "Überschriftszeile",
-  "zurückzufallen"
+  "zurückzufallen",
 ]
 include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
