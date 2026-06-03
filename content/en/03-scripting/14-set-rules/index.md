@@ -28,6 +28,3 @@ Clean up the document by adding set rules at the top (after the page setup):
 
 Watch how every heading gets a number without touching a single heading line. That's the power of
 set rules, change the behavior once, apply it everywhere.
-
-> [!NOTE] Set rules only affect elements that come _after_ them. That's why they belong at the very
-> top of your document.

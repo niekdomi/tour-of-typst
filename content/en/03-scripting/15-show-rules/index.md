@@ -40,6 +40,7 @@ show rules:
 
 - Make the title (level 1 heading) render in small caps using `#smallcaps()`
 - Style the author name, try centering it or making it gray
+- Add a horizontal rule under each section heading (level 2) with `line(length: 100%, stroke: 0.5pt)`
 
 > [!TIP] You can filter by heading level with `heading.where(level: 1)`. This way your title styling
 > doesn't accidentally apply to every section.

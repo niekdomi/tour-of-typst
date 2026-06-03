@@ -5,7 +5,7 @@ need any special setup, just start typing and it becomes a document.
 
 ## Your Task
 
-Replace the placeholder text in the editor with the title and author of our toast paper:
+Replace the text in the editor with the title and author of our toast paper:
 
 ```typst
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down

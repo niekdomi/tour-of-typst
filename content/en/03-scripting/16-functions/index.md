@@ -15,7 +15,8 @@ Instead, define a function with `#let`:
 )
 ```
 
-Now you can use it anywhere:
+Now, everyhwere where you call `#note[...]`, it will create a `block` with the defined parameters
+such as `fill: luma(230)`.
 
 ```typst
 #note[No toasts were harmed unnecessarily in this study.]

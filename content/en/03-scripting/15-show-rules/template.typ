@@ -9,7 +9,6 @@
 #set par(justify: true, leading: 0.8em)
 
 #set heading(numbering: "1.1")
-#show heading: set text(font: "DejaVu Sans Mono")
 
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
 Dr. Eleanor Crumb

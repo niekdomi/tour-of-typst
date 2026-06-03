@@ -1,18 +1,28 @@
 # Variables & Conditions
 
 Dr. Crumb's paper is almost ready for submission, but the lab director wants to review it first. We
-need a way to stamp "DRAFT" across the top without manually adding and removing it every time. Enter
-variables and conditions.
+need a way to stamp "DRAFT" across all pages without manually adding and removing it every time.
+
+We have to define the following variables and can then check with the `if` expression wheter `draft`
+is set to true or not.
 
 ```typst
 #let author = "Dr. Eleanor Crumb"
 #let institution = "Institute of Breakfast Studies"
 #let draft = true
 
-#if draft {
-  align(center, text(red, size: 20pt)[*DRAFT*])
-}
+#set page(background: if draft {
+  rotate(-45deg, text(80pt, fill: luma(180, 30%))[*DRAFT*])
+})
 ```
+
+When `draft` is `true` it produces the rotated text, and with no `else` branch, it produces `none`
+when `draft` is `false`, no background at all. Because it lives on the `background` parameter, the
+watermark repeats on _every_ page.
+
+> [!WARNING] You can't write `#if draft { set page(...) }`. A `set` rule inside the block is scoped
+> to that block and never reaches the document. Set the `background` parameter to the `if`
+> expression instead.
 
 Variables can hold any type, strings, numbers, booleans, arrays:
 
@@ -36,5 +46,6 @@ Add variables at the top of the document for:
 - `date`, `"March 2026"`
 - `draft`, `true`
 
-Use `#if draft` to show a red "DRAFT" watermark at the top. Replace the hardcoded author name with
-`#author`. Then toggle `draft` to `false` and watch the watermark vanish, ready for submission.
+Set the page `background` to a diagonal "DRAFT" watermark that only appears when `draft` is `true`,
+using `if` as the background value (see the example above). Replace the hardcoded author name with
+`#author`.
