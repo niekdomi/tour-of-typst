@@ -7,9 +7,7 @@ deinem eigenen Rechner haben wollen. Hier erfährst du, wie du loslegen kannst.
 
 Typst ist eine einzelne Binärdatei ohne Abhängigkeiten. Unter Linux ist es wahrscheinlich im
 Paketmanager deiner Distribution verfügbar. Für alle Plattformen findest du es auf der offiziellen
-Downloadseite:
-
-[Typst herunterladen](https://typst.app/open-source/#download)
+Downloadseite: [Typst herunterladen](https://typst.app/open-source/#download)
 
 ### Editor einrichten
 
@@ -55,7 +53,7 @@ verwendet werden:
 typst compile --font-path fonts --ignore-system-fonts paper.typ
 ```
 
-Das stellt sicher, dass eine Kollegin (oder ein CI-Server) dein Paper mit genau den Schriften
+Das stellt sicher, dass dein Mitarbeiter (oder ein CI-Server) dein Paper mit genau den Schriften
 rendert, die du vorgesehen hast, statt stillschweigend auf irgendwelche zurückzufallen, die zufällig
 installiert sind.
 
@@ -81,4 +79,4 @@ Importiere deine Vorlage genau wie im Kapitel über Vorlagen:
 #show: paper.with(title: "...", author: "...")
 ```
 
-Das war's. Du bist bereit, Typst-Dokumente selbständig zu schreiben. Viel Spass beim Setzen!
+Das war's. Du bist bereit, Typst-Dokumente selbständig zu schreiben. Viel Spass mit Typst!

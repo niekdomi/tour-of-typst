@@ -24,7 +24,7 @@ formal caption and a number so other scientists can cite our groundbreaking toas
 ## Your Task
 
 Our team has finished three grueling sessions of 50 drops each. The kitchen floor is a disaster, but
-the data is beautiful.
+the data is groundbreaking.
 
 **Update the Results section** by converting the following field notes into a table:
 

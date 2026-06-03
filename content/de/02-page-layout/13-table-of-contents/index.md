@@ -32,6 +32,3 @@ Du kannst auch einen benutzerdefinierten Titel vergeben:
 ## Deine Aufgabe
 
 Füge `#outline()` direkt nach Titel und Autor, vor dem Abstract ein.
-
-> [!NOTE] Die Funktion heisst in Typst `outline` und nicht "Inhaltsverzeichnis", aber sie tut genau
-> das, was du von einem Inhaltsverzeichnis erwartest.

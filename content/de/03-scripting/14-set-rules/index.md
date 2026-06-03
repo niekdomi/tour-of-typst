@@ -10,8 +10,9 @@ Anstatt Überschriften manuell zu nummerieren, kannst du es zum Beispiel einmal 
 #set heading(numbering: "1.1")
 ```
 
-Jetzt werden alle Überschriften automatisch nummeriert: 1, 1.1, 1.2, 2 usw. Weitere nützliche
-Set-Regeln:
+Jetzt werden alle Überschriften automatisch nummeriert: 1, 1.1, 1.2, 2 usw.
+
+Weitere nützliche Set-Regeln:
 
 ```typst
 #set par(leading: 0.8em)   // Zeilenabstand innerhalb von Absätzen

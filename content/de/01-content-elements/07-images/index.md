@@ -1,7 +1,7 @@
 # Bilder & Abbildungen
 
 Ein Physikpaper ohne Diagramm ist nur eine Sammlung beängstigend aussehender Buchstaben. Da wir
-nicht erwarten können, dass unsere Leser die Tragödie des fallenden Toasts einfach so imaginieren,
+nicht erwarten können, dass unsere Leser die Tragödie des fallenden Toasts einfach so vorstellen,
 müssen wir es ihnen zeigen. Jedes gute Paper hat Abbildungen. In Typst werden Bilder mit der
 Funktion `#image()` eingefügt und in `#figure()` eingebettet, um eine Bildunterschrift hinzuzufügen.
 
@@ -12,7 +12,7 @@ Funktion `#image()` eingefügt und in `#figure()` eingebettet, um eine Bildunter
 )
 ```
 
-Wenn deine Hochgeschwindigkeitskamera noch in der Werkstatt ist, kannst du ein `#rect()` als
+Da unsere Hochgeschwindigkeitskamera noch nicht angekommen ist, kannst du ein `#rect()` als
 Platzhalter verwenden. Das hält dein Layout bereit, während du auf das echte Bild wartest.
 
 ```typst

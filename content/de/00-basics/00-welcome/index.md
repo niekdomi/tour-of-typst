@@ -9,7 +9,7 @@ _Hinweis: Die Mathematik in dieser Tour ist keine echte Wissenschaft._
 Jedes Kapitel vermittelt ein Typst-Konzept und fügt einen neuen Abschnitt zu dem Essay hinzu. Am
 Ende des letzten Kapitels hast du ein vollständig formatiertes wissenschaftliches Paper, inklusive
 Gleichungen, Abbildungen, Zitaten und einer eigenen Vorlage. Der Küchenboden wird sich vielleicht
-nie erholen, aber deine Satzfähigkeiten werden unaufhaltsam sein.
+nie erholen, aber deine Typst-Skills werden unaufhaltsam sein.
 
 ## Wie diese Tour funktioniert
 
@@ -20,7 +20,7 @@ nie erholen, aber deine Satzfähigkeiten werden unaufhaltsam sein.
 - **Vorlage**: Jedes Kapitel beginnt mit vorausgefülltem Code, damit du dich auf das neue Konzept
   konzentrieren kannst.
 - **Lösung**: Hängst du fest? Klicke auf **Lösung anzeigen** (_auf dieser Seite nicht verfügbar_),
-  um einen Blick auf das erwartete Ergebnis zu werfen. Keine Wertung.
+  um einen Blick auf das erwartete Ergebnis zu werfen. Kein Grund zur Scham.
 
 > [!NOTE] Jedes Kapitel baut auf dem vorherigen auf, beginnt jedoch immer mit einer funktionierenden
 > Vorlage. Wenn du ein Kapitel überspringst oder versehentlich die Hälfte deines Papers löschst,
@@ -33,5 +33,5 @@ Bereit, Toast-Geschichte zu schreiben? Weiter zum nächsten Kapitel.
 
 > [!TIP] Wenn dein Typst-Code Fehler enthält, erscheint ein roter Punkt in der Leiste (_tippe `#` in
 > den Editor, um einen Fehler zu erzeugen_). Fahre mit der Maus darüber, um zu sehen, was falsch
-> ist. Keine Sorge: Selbst die besten Setzer machen Tippfehler. Korrigiere einfach den Code und die
-> Vorschau wird wieder aktualisiert.
+> ist. Keine Sorge: Selbst Profis machen Tippfehler. Korrigiere einfach den Code und die Vorschau
+> wird wieder aktualisiert.

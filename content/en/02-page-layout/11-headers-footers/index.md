@@ -32,7 +32,7 @@ You can position the header with `align`:
 Update the `#set page(...)` rule to add:
 
 - A right-aligned italic header with the paper title (so they never forget what they're reading)
-- Page numbering using the `"1"` pattern (so we can put the pages back together when Reviewer 2
+- Page numbering using the `"1"` pattern (so we can put the pages back together when the Reviewer
   drops them)
 
 > [!TIP] You can combine multiple settings in one `#set page(...)` call, just add them as

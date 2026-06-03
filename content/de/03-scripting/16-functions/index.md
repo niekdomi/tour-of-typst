@@ -2,12 +2,13 @@
 
 Dr. Crumbs Paper braucht redaktionelle Hinweisboxen. Eine für ethische Hinweise zur
 Toast-Behandlung, eine weitere für zukünftige Forschungsideen. Wir _könnten_ jedes Mal dieselbe
-Formatierung kopieren und einfügen, aber so sehen akademische Paper wie Erpresserbriefe aus.
+Formatierung kopieren und einfügen, aber so sehen akademische Paper am Ende aus wie aus
+Zeitungsschnipseln zusammengeklebte Erpresserbriefe.
 
 Definiere stattdessen eine Funktion mit `#let`:
 
 ```typst
-#let hinweis(body) = block(
+#let note(body) = block(
   fill: luma(230),
   inset: 10pt,
   radius: 4pt,
@@ -15,31 +16,31 @@ Definiere stattdessen eine Funktion mit `#let`:
 )
 ```
 
-Jedes Mal, wenn du `#hinweis[...]` aufrufst, wird nun ein `block` mit den definierten Parametern wie
+Jedes Mal, wenn du `#note[...]` aufrufst, wird nun ein `block` mit den definierten Parametern wie
 `fill: luma(230)` erstellt.
 
 ```typst
-#hinweis[In dieser Studie wurde kein Toast unnötig beschädigt.]
+#note[In dieser Studie wurde kein Toast unnötig beschädigt.]
 ```
 
 Funktionen können mehrere Parameter haben, auch optionale mit Standardwerten:
 
 ```typst
-#let hinweis(titel: "Hinweis", body) = block(
+#let note(title: "Hinweis", body) = block(
   fill: luma(230),
   inset: 10pt,
   radius: 4pt,
 )[
-  *#titel:* #body
+  *#title:* #body
 ]
 
-#hinweis[Standardtitel.]
-#hinweis(titel: "Warnung")[Benutzerdefinierter Titel.]
+#note[Standardtitel.]
+#note(title: "Warnung")[Benutzerdefinierter Titel.]
 ```
 
 ## Deine Aufgabe
 
-Erstelle eine `#let hinweis(body)`-Funktion, die eine gestaltete Hinweisbox rendert. Verwende sie
+Erstelle eine `#let note(body)`-Funktion, die eine gestaltete Hinweisbox rendert. Verwende sie
 dann an zwei Stellen:
 
 - **Abschnitt Methoden**: Ein Hinweis zur ethischen Toast-Behandlung ("Kein Toast wurde unnötig

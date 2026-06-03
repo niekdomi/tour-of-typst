@@ -31,5 +31,9 @@ You can also give it a custom title:
 
 Add `#outline()` right after the title and author, before the abstract.
 
+<!-- Translators: leave this note out. It only clarifies the English naming
+mismatch ("table of contents" vs. the `outline` command). Other languages don't
+expect a localized command name, so the note is irrelevant there. -->
+
 > [!NOTE] The outline function is called `outline` in Typst, not "table of contents" but it does
 > exactly what you'd expect a TOC to do.

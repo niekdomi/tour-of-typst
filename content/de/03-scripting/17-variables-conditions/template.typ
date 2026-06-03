@@ -21,7 +21,7 @@
   line(length: 100%, stroke: 0.5pt)
 }
 
-#let hinweis(body) = block(
+#let note(body) = block(
   fill: luma(230),
   inset: 10pt,
   radius: 4pt,
@@ -94,7 +94,7 @@ def simulate_toast_drop(height=0.75, mass=0.028):
     return np.degrees(angle) % 360
 ```
 
-#hinweis[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben
+#note[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben
   wurden nach der Datenerhebung verantwortungsvoll verzehrt.]
 
 == Ergebnisse
@@ -124,6 +124,6 @@ Aberglauben. Die gemessene Winkelbeschleunigung sagt eine fast halbe Umdrehung
 vor dem Aufprall voraus, was die Butter-unten-Tendenz in allen Versuchen
 erklärt.
 
-#hinweis[Zukünftige Forschung: Verschiedene Brotsorten, Butterdichten und
+#note[Zukünftige Forschung: Verschiedene Brotsorten, Butterdichten und
   Anti-Drehmoment-Plattendesigns untersuchen, um Frühstücksergebnisse zu
   verbessern.]

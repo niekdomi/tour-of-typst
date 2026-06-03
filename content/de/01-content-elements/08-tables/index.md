@@ -25,7 +25,7 @@ Wissenschaftler unsere bahnbrechende Toast-Forschung zitieren können.
 ## Deine Aufgabe
 
 Unser Team hat drei anstrengende Sitzungen mit je 50 Versuchen abgeschlossen. Der Küchenboden ist
-eine Katastrophe, aber die Daten sind schön.
+eine Katastrophe, aber die Daten sind bahnbrechend.
 
 **Aktualisiere den Abschnitt Ergebnisse**, indem du die folgenden Feldnotizen in eine Tabelle
 umwandelst:
@@ -40,7 +40,7 @@ umwandelst:
 
 1. Verwende `#table()` mit 4 Spalten.
 2. Bette das Ganze in eine `#figure()` ein.
-3. Füge eine Bildunterschrift hinzu: _[Zusammenfassung der Butterdichte-Korrelationsversuche.]_
+3. Füge folgende Bildunterschrift hinzu: _[Zusammenfassung der Butterdichte-Korrelationsversuche.]_
 4. Optional: Du kannst `columns: (2fr, 1fr, 1fr, 1fr)` verwenden, um das Spaltenverhältnis
    anzupassen.
 
