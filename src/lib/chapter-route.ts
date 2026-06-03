@@ -1,49 +1,47 @@
-import { useSearchParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import { type Accessor, createEffect, createMemo } from "solid-js";
 
 import type { Chapter } from "../content/types";
 
-const STORAGE_KEY = "tour-of-typst-chapter";
-
 export function useChapterRoute(chapters: Accessor<Chapter[]>) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const params = useParams<{ chapter?: string }>();
+  const navigate = useNavigate();
 
   const currentIndex = createMemo(() => {
-    const key = searchParams["chapter"] ?? "";
+    const key = params.chapter ?? "";
     const index = chapters().findIndex((c) => c.key === key);
     return Math.max(index, 0);
   });
 
   const currentKey = createMemo(() => chapters()[currentIndex()]?.key ?? "");
 
+  // A chapter was named in the URL but matches no loaded chapter.
+  const notFound = createMemo(() => {
+    const chs = chapters();
+    const current = params.chapter;
+    return chs.length > 0 && !!current && !chs.some((c) => c.key === current);
+  });
+
+  // The bare root path (no chapter in the URL) redirects to the first chapter.
+  // A named chapter is left in place; invalid ones surface the not-found screen.
   createEffect(() => {
     const chs = chapters();
-    if (chs.length === 0) {
+    if (chs.length === 0 || params.chapter) {
       return;
     }
-    const current = searchParams["chapter"];
-    if (!current || !chs.some((c) => c.key === current)) {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const savedIsValid = saved !== null && chs.some((c) => c.key === saved);
 
-      const initial = savedIsValid ? saved : (chs[0]?.key ?? "");
-      setSearchParams({ chapter: initial }, { replace: true });
+    const first = chs[0]?.key ?? "";
+    if (first) {
+      navigate(`/${first}`, { replace: true });
     }
   });
 
-  createEffect(() => {
-    const key = currentKey();
-    if (key) {
-      localStorage.setItem(STORAGE_KEY, key);
-    }
-  });
-
-  function navigate(index: number) {
+  function goToIndex(index: number) {
     const key = chapters()[index]?.key;
     if (key) {
-      setSearchParams({ chapter: key });
+      navigate(`/${key}`);
     }
   }
 
-  return { currentIndex, currentKey, navigate };
+  return { currentIndex, currentKey, notFound, navigate: goToIndex };
 }

@@ -25,14 +25,27 @@ Loops work on arrays too, perfect for acknowledgments:
 The real power shows up inside `#table()`:
 
 ```typst
-#let data = ((1, 50, "62%"), (2, 50, "58%"), (3, 50, "64%"))
+#let data = (
+  (1, 50, "62%", "178°"),
+  (2, 50, "58%", "173°"),
+  (3, 50, "64%", "181°"),
+)
 
 #table(
-  columns: 3,
-  [*Session*], [*Drops*], [*Butter-side down*],
+  columns: 4,
+    [*Session*], [*Drops*], [*Butter-Side Down*], [*Avg. Rotation*],
   ..data.map(row => row.map(str)).flatten()
 )
 ```
+
+Two things happen here. `flatten()` turns the nested rows into one long array of cells, and the `..`
+_spread operator_ hands those cells to `#table()` one by one, just as if you had typed each out.
+
+But `#table()` only accepts content (`[...]`) or strings (`"..."`) as cells, not raw numbers, so
+`row.map(str)` first converts every value to a string (`1` becomes `"1"`). Prefer the cells as
+content instead? Map them with `[#element]`:
+`..data.map(row => row.map(element => [#element])).flatten()`. Keep in mind that `row` and `element`
+are just variables, you can name them anything you like.
 
 ## Your Task
 

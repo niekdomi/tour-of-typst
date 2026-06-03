@@ -18,13 +18,6 @@ Beschriftungen werden mit `<spitzen-klammern>` direkt nach einem Element hinzuge
 $ omega = (g dot t) / r $ <gl-omega>
 ```
 
-Gleichungen müssen nummeriert werden, bevor sie beschriftet werden können. Füge eine Set-Regel
-hinzu, um das zu aktivieren:
-
-```typst
-#set math.equation(numbering: "(1)")
-```
-
 Beschriftungen sind unsichtbar. Sie erscheinen nicht in der Ausgabe. Sie markieren das Element nur
 stillschweigend, damit du es später referenzieren kannst. Du kannst auch Überschriften beschriften:
 
@@ -40,6 +33,11 @@ Gehe durch das Dokument und gib den wichtigsten Elementen Namensschilder:
 - Die Ergebnistabelle: `<tab-ergebnisse>`
 - Die Winkelgeschwindigkeitsgleichung: `<gl-omega>`
 - Die Überschrift Methoden: `<methoden>`
+- Gleichungen müssen nummeriert werden, bevor sie beschriftet werden können. Füge eine Set-Regel
+  hinzu, um das zu aktivieren:
+  ```typst
+  #set math.equation(numbering: "(1)")
+  ```
 
 In der Ausgabe wird sich noch nichts ändern, aber im nächsten Kapitel werden diese Beschriftungen
 zum Leben erweckt.

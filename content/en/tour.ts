@@ -1,9 +1,11 @@
+import type { Part } from "../../src/content/types";
+
 export const meta = {
   locale: "en",
   label: "English",
 };
 
-export const parts = [
+export const parts: readonly Part[] = [
   {
     title: "Basics",
     chapters: [

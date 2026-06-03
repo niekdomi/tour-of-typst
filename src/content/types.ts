@@ -4,16 +4,16 @@ export interface LocaleMeta {
 }
 
 export interface Chapter {
-  key: string;
-  title: string;
+  readonly key: string;
+  readonly title: string;
 }
 
 export interface Part {
-  title: string;
-  chapters: Chapter[];
+  readonly title: string;
+  readonly chapters: readonly Chapter[];
 }
 
 export interface TourModule {
   meta: LocaleMeta;
-  parts: Part[];
+  readonly parts: readonly Part[];
 }

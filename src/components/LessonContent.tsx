@@ -1,12 +1,11 @@
-import { Marked, Renderer } from "marked";
-import markedAlert from "marked-alert";
 import type { Highlighter } from "shiki";
 import { createEffect, createMemo, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { render } from "solid-js/web";
 
 import { getChapterMarkdown } from "../content";
+import { renderLessonHtml } from "../content/render-lesson";
 import type { Chapter } from "../content/types";
-import { highlighterReady, shikiThemes } from "../lib/highlighter";
+import { highlighterReady } from "../lib/highlighter";
 import { CopyButton } from "./CopyButton";
 
 interface Props {
@@ -28,21 +27,7 @@ export default function LessonContent(props: Props) {
     if (!raw) {
       return null;
     }
-
-    const hl = highlighter();
-    const renderer = new Renderer();
-    renderer.code = ({ text, lang }) => {
-      const highlighted = hl
-        ? hl.codeToHtml(text, {
-            lang: lang && hl.getLoadedLanguages().includes(lang) ? lang : "text",
-            themes: shikiThemes,
-            defaultColor: false,
-          })
-        : `<pre><code>${text}</code></pre>`;
-      return `<div class="code-block" data-code="${encodeURIComponent(text)}">${highlighted}</div>`;
-    };
-
-    return new Marked({ renderer }).use(markedAlert()).parse(raw) as string;
+    return renderLessonHtml(raw, highlighter());
   });
 
   let contentRef: HTMLDivElement | undefined;

@@ -1,8 +1,10 @@
-import { createHighlighter, type Highlighter } from "shiki";
+import type { Highlighter } from "shiki";
 
-export const shikiThemes = { light: "github-light", dark: "github-dark-dimmed" } as const;
+import { createLessonHighlighter, shikiThemes } from "../content/render-lesson";
 
-export const highlighterReady: Promise<Highlighter> = createHighlighter({
-  themes: Object.values(shikiThemes),
-  langs: ["typst", "yaml"],
-});
+export { shikiThemes };
+
+/**
+ * Shared highlighter singleton for the running app.
+ */
+export const highlighterReady: Promise<Highlighter> = createLessonHighlighter();

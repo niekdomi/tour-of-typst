@@ -16,6 +16,9 @@
   margin: 2cm,
   header: align(right)[_Die Aerodynamik von Toast_],
   numbering: "1",
+  background: if entwurf {
+    rotate(-45deg, text(80pt, fill: luma(180, 30%))[*ENTWURF*])
+  },
 )
 
 #set text(font: "New Computer Modern", size: 11pt)
@@ -23,7 +26,6 @@
 
 #set heading(numbering: "1.1")
 #set math.equation(numbering: "(1)")
-#show heading: set text(font: "DejaVu Sans Mono")
 
 #show heading.where(level: 1): it => {
   set text(size: 18pt)
@@ -42,10 +44,6 @@
   radius: 4pt,
   body,
 )
-
-#if entwurf {
-  align(center, text(red, size: 20pt)[*ENTWURF*])
-}
 
 = Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet
 

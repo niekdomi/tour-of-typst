@@ -9,7 +9,6 @@
 #set par(justify: true, leading: 0.8em)
 
 #set heading(numbering: "1.1")
-#show heading: set text(font: "DejaVu Sans Mono")
 
 = Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet
 Dr. Eleanor Crumb

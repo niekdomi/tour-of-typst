@@ -28,7 +28,9 @@ const translations = {
 
 export type Locale = keyof typeof translations;
 
-/** Returns the translations for the given locale */
+/**
+ * Returns the translations for the given locale
+ */
 export function getTranslations(locale: Locale): Translations {
   return translations[locale];
 }

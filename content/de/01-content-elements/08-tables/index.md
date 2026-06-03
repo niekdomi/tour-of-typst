@@ -10,10 +10,9 @@ nächste Zeile um, basierend auf der von dir angegebenen Spaltenanzahl.
 
 ```typst
 #table(
-  columns: 3,
-  [*Versuch*], [*Status*],  [*Ergebnis*],
-  [1],         [Erfolg],    [Butterseite unten],
-  [2],         [Erfolg],    [Boden ruiniert],
+  columns: 4,
+  [*Sitzung*], [*Versuche*], [*Butterseite unten*], [*Mittl. Rotation*],
+  [1],         [50],         [62%],                 [178°],
 )
 ```
 
@@ -40,9 +39,10 @@ umwandelst:
 **Anforderungen:**
 
 1. Verwende `#table()` mit 4 Spalten.
-2. Verwende `columns: (1fr, 1fr, 1fr, 1fr)`, um jeder Spalte gleich viel Platz zu geben.
-3. Bette das Ganze in eine `#figure()` ein.
-4. Füge eine Bildunterschrift hinzu: _[Zusammenfassung der Butterdichte-Korrelationsversuche.]_
+2. Bette das Ganze in eine `#figure()` ein.
+3. Füge eine Bildunterschrift hinzu: _[Zusammenfassung der Butterdichte-Korrelationsversuche.]_
+4. Optional: Du kannst `columns: (2fr, 1fr, 1fr, 1fr)` verwenden, um das Spaltenverhältnis
+   anzupassen.
 
 > [!TIP] Um deine Kopfzeilen wie ein Senior-Forscher aussehen zu lassen, verwende `*Fetter Text*`
 > für die ersten vier Einträge in deiner Tabellenliste!

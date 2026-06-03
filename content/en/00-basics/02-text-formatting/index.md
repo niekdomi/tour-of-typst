@@ -17,10 +17,9 @@ peer reviewer will notice them:
 - _toast landing butter-side down_ should be italic, it's the observed phenomenon
 - **gravitational torque, not bad luck** should be bold, it's the dramatic reveal
 
-```typst
-The phenomenon of *toast landing butter-side down* has been observed across
-cultures, kitchen surfaces, and socioeconomic backgrounds. This paper presents
-a physical model of toast rotation during free fall and demonstrates that
-**gravitational torque, not bad luck** is responsible for this culinary
-tragedy.
-```
+This is how the abstract should look like:
+
+> The phenomenon of _toast landing butter-side down_ has been observed across cultures, kitchen
+> surfaces, and socioeconomic backgrounds. This paper presents a physical model of toast rotation
+> during free fall and demonstrates that **gravitational torque, not bad luck** is responsible for
+> this culinary tragedy.

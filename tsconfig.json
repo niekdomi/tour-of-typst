@@ -27,5 +27,5 @@
       "@codemirror/state": ["./node_modules/@codemirror/state"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "content/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "content/**/*.ts", "vite.config.ts"]
 }

@@ -36,7 +36,7 @@ Für gezieltere Kontrolle kannst du bestimmten Inhalt in `#columns()` einbetten:
 Mache den Hauptteil des Papers zweispaltig, während Titel und Abstract über die volle Breite gehen.
 Füge `#set page(columns: 2)` direkt nach dem Abstract-Absatz, aber vor der Einleitung ein.
 
-> [!WARNING] `#set page(columns: 2)` ändert das Seitenlayout, was einen **Seitenumbruch** erzwingt.
+> [!NOTE] `#set page(columns: 2)` ändert das Seitenlayout, was einen **Seitenumbruch** erzwingt.
 > Alles danach beginnt auf einer neuen Seite. Scrolle in der Vorschau nach unten, um es zu sehen.
 > Das ist erwartetes Verhalten. Typst kann die Spaltenanzahl nicht mitten auf der Seite ändern.
 

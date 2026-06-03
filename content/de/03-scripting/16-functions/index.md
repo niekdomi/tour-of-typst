@@ -15,7 +15,8 @@ Definiere stattdessen eine Funktion mit `#let`:
 )
 ```
 
-Jetzt kannst du sie überall verwenden:
+Jedes Mal, wenn du `#hinweis[...]` aufrufst, wird nun ein `block` mit den definierten Parametern wie
+`fill: luma(230)` erstellt.
 
 ```typst
 #hinweis[In dieser Studie wurde kein Toast unnötig beschädigt.]

@@ -13,14 +13,16 @@ Installation, kein Paketmanager, kein `node_modules`-Ordner in der Grösse eines
 #import "@preview/cetz:0.4.2": canvas, draw
 ```
 
+Im [Typst Universe](https://typst.app/universe/) findest du, was es sonst noch alles gibt.
+
 Einige beliebte Pakete:
 
-| Paket      | Zweck                               |
-| ---------- | ----------------------------------- |
-| `cetz`     | Zeichnungen und Diagramme           |
-| `tablex`   | Erweiterte Tabellen                 |
-| `codelst`  | Code-Auflistungen mit Zeilennummern |
-| `showybox` | Farbige Hinweisboxen                |
+| Paket       | Zweck                          |
+| ----------- | ------------------------------ |
+| `cetz`      | Zeichnungen und Diagramme      |
+| `touying`   | Präsentationsfolien erstellen  |
+| `fletcher`  | Diagramme mit Pfeilen zeichnen |
+| `alchemist` | Strukturformeln zeichnen       |
 
 Du kannst auch aus deinen eigenen Dateien importieren:
 

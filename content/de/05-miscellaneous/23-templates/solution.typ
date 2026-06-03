@@ -6,6 +6,9 @@
     margin: 2cm,
     header: align(right)[_Die Aerodynamik von Toast_],
     numbering: "1",
+    background: if entwurf {
+      rotate(-45deg, text(80pt, fill: luma(180, 30%))[*ENTWURF*])
+    },
   )
 
   set text(font: "New Computer Modern", size: 11pt)
@@ -13,7 +16,6 @@
 
   set heading(numbering: "1.1")
   set math.equation(numbering: "(1)")
-  show heading: set text(font: "DejaVu Sans Mono")
 
   show heading.where(level: 1): it => {
     counter(heading).step(level: 1)
@@ -25,10 +27,6 @@
   show heading.where(level: 2): it => {
     it
     line(length: 100%, stroke: 0.5pt)
-  }
-
-  if entwurf {
-    align(center, text(red, size: 20pt)[*ENTWURF*])
   }
 
   align(center)[

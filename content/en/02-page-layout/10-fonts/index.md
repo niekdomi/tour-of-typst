@@ -31,7 +31,7 @@ serif font but switch code blocks to monospace:
 #show raw: set text(font: "DejaVu Sans Mono")
 ```
 
-If you have a sans-serif font installed on your system, you could also use it for headings:
+If you have a the Arial font installed on your system, you could also use it for headings:
 
 ```typst
 #show heading: set text(font: "Arial")

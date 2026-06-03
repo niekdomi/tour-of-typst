@@ -42,6 +42,8 @@ kann. Füge einige Show-Regeln hinzu:
 
 - Lass den Titel (Überschrift Ebene 1) in Kapitälchen mit `#smallcaps()` rendern
 - Gestalte den Autorennamen. Versuche ihn zu zentrieren oder grau zu machen
+- Füge unter jeder Abschnittsüberschrift (Ebene 2) eine horizontale Linie mit
+  `line(length: 100%, stroke: 0.5pt)` hinzu
 
 > [!TIP] Du kannst nach Überschriftsebene filtern mit `heading.where(level: 1)`. So wird deine
 > Titelgestaltung nicht versehentlich auf jeden Abschnitt angewendet.
