@@ -7,26 +7,13 @@ on your own machine. Here's how to get started.
 
 Typst is a single binary with no dependencies. On Linux, it's likely available in your
 distribution's package manager. For all platforms, check the official download page:
-
 [Download Typst](https://typst.app/open-source/#download)
 
 ### Editor Setup
 
 For the best experience, install the
-[Tinymist](https://marketplace.visualstudio.com/items?itemName=myriad-dreamin.tinymist) extension
-for your editor. It provides syntax highlighting, autocomplete, live preview, and error diagnostics.
-
-Tinymist supports the following editors:
-
-- VS Code
-- NeoVim
-- Helix
-- Zed
-- Sublime Text
-- Emacs
-
-See the [Tinymist documentation](https://myriad-dreamin.github.io/tinymist/frontend/main.html) for
-setup instructions for each editor.
+[Tinymist](https://myriad-dreamin.github.io/tinymist/frontend/main.html) extension for your editor.
+It provides syntax highlighting, autocomplete, live preview, and error diagnostics.
 
 ### Compile Your Document
 
