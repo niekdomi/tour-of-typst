@@ -5,7 +5,7 @@ In Typst brauchst du kein spezielles Setup, fang einfach an zu tippen und es wir
 
 ## Deine Aufgabe
 
-Ersetze den Platzhaltertext im Editor durch den Titel und den Autor unseres Toast-Papers:
+Ersetze den Text im Editor durch den Titel und den Autor unseres Toast-Papers:
 
 ```typst
 = Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet

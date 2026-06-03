@@ -33,8 +33,8 @@ den Fliesstext in einer Serifenschrift belassen, aber Code-Blöcke auf nichtprop
 #show raw: set text(font: "DejaVu Sans Mono")
 ```
 
-Falls du eine serifenlose Schrift auf deinem System hast, könntest du sie auch für Überschriften
-verwenden:
+Falls du die Schriftart Arial auf deinem System installiert hast, könntest du sie auch für
+Überschriften verwenden:
 
 ```typst
 #show heading: set text(font: "Arial")

@@ -26,14 +26,28 @@ Schleifen funktionieren auch mit Arrays, perfekt für Danksagungen:
 Die wahre Stärke zeigt sich innerhalb von `#table()`:
 
 ```typst
-#let daten = ((1, 50, "62%"), (2, 50, "58%"), (3, 50, "64%"))
+#let daten = (
+  (1, 50, "62%", "178°"),
+  (2, 50, "58%", "173°"),
+  (3, 50, "64%", "181°"),
+)
 
 #table(
-  columns: 3,
-  [*Sitzung*], [*Versuche*], [*Butterseite unten*],
+  columns: 4,
+    [*Sitzung*], [*Versuche*], [*Butterseite unten*], [*Mittl. Rotation*],
   ..daten.map(zeile => zeile.map(str)).flatten()
 )
 ```
+
+Hier passieren zwei Dinge. `flatten()` macht aus den verschachtelten Zeilen ein einziges langes
+Array von Zellen, und der `..`-_Spread-Operator_ übergibt diese Zellen einzeln an `#table()`, ganz
+so, als hättest du jede selbst getippt.
+
+`#table()` akzeptiert als Zellen aber nur Inhalt (`[...]`) oder Zeichenketten (`"..."`), keine
+reinen Zahlen. Deshalb wandelt `zeile.map(str)` zuerst jeden Wert in eine Zeichenkette um (aus `1`
+wird `"1"`). Lieber Inhalt statt Zeichenketten? Dann bilde die Werte mit `[#element]` ab:
+`..daten.map(zeile => zeile.map(element => [#element])).flatten()`. Denk daran, dass `zeile` und
+`element` nur Variablen sind, du kannst sie beliebig benennen.
 
 ## Deine Aufgabe
 
