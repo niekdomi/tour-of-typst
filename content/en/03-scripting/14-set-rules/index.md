@@ -10,7 +10,9 @@ For example, instead of manually numbering headings, you can set it once:
 #set heading(numbering: "1.1")
 ```
 
-Now all headings get numbered automatically: 1, 1.1, 1.2, 2, etc. Other useful set rules:
+Now all headings get numbered automatically: 1, 1.1, 1.2, 2, etc.
+
+Other useful set rules:
 
 ```typst
 #set par(leading: 0.8em)   // line spacing within paragraphs

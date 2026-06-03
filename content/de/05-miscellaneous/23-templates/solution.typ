@@ -1,12 +1,12 @@
 #import "@preview/showybox:2.0.4": showybox
 
-#let paper(titel: "", autor: "", entwurf: false, inhalt) = {
+#let paper(title: "", author: "", draft: false, body) = {
   set page(
     paper: "a4",
     margin: 2cm,
     header: align(right)[_Die Aerodynamik von Toast_],
     numbering: "1",
-    background: if entwurf {
+    background: if draft {
       rotate(-45deg, text(80pt, fill: luma(180, 30%))[*ENTWURF*])
     },
   )
@@ -30,27 +30,27 @@
   }
 
   align(center)[
-    #text(size: 18pt)[*#titel*]
+    #text(size: 18pt)[*#title*]
     #v(1em)
-    #text(gray)[#autor]
+    #text(gray)[#author]
     #v(2em)
   ]
 
-  inhalt
+  body
 }
 
-#let daten = (
+#let data = (
   (1, 50, "62%", "178°"),
   (2, 50, "58%", "173°"),
   (3, 50, "64%", "181°"),
 )
 
-#let assistenten = ("Alice", "Bob", "Charlie")
+#let assistants = ("Alice", "Bob", "Charlie")
 
 #show: paper.with(
-  titel: "Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet",
-  autor: "Dr. Eleanor Crumb",
-  entwurf: true,
+  title: "Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet",
+  author: "Dr. Eleanor Crumb",
+  draft: true,
 )
 
 #outline(indent: auto)
@@ -139,7 +139,7 @@ $ theta = 1 / 2 dot g dot t^2 / r $
   table(
     columns: (1fr, 1fr, 1fr, 1fr),
     [*Sitzung*], [*Versuche*], [*Butterseite unten*], [*Mittl. Rotation*],
-    ..daten.map(zeile => zeile.map(v => [#v])).flatten(),
+    ..data.map(zeile => zeile.map(v => [#v])).flatten(),
   ),
   caption: [Zusammenfassung der Butterdichte-Korrelationsversuche.],
 ) <tab-ergebnisse>
@@ -157,7 +157,7 @@ die Butter-unten-Tendenz in allen Versuchen erklärt.
 )
 
 == Danksagungen
-#for name in assistenten {
+#for name in assistants {
   [- Danke an #name für die Unterstützung bei der Datenerhebung.]
 }
 

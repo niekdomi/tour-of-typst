@@ -55,5 +55,5 @@ Set-/Show-Regeln.
 > folgen demselben Muster.
 
 Herzlichen Glückwunsch! Du hast ein vollständiges akademisches Paper von Grund auf erstellt. Es hat
-Gleichungen, Abbildungen, Tabellen, Zitate, eine eigene Vorlage und eine Butter-unten-Rate von 61,3
-%. Dr. Crumb wäre stolz.
+Gleichungen, Abbildungen, Tabellen, Zitate, eine eigene Vorlage und eine Butter-unten-Rate von
+61,3%. Dr. Crumb wäre stolz.

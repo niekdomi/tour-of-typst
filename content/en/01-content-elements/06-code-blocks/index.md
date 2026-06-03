@@ -31,8 +31,8 @@ your code.
 
 ### The `raw` Function
 
-For advanced users, Typst provides the `#raw()` function. This is useful when you need more granular
-control over the styling without using backticks.
+For advanced users, Typst provides the `#raw()` function. This is useful when you need more control
+over the styling.
 
 ```typst
 #raw("print('Simulation Complete')", lang: "python")

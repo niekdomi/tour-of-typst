@@ -10,15 +10,15 @@ Hand zu tippen ist keine Wissenschaft, das ist Quälerei. Lass Typst den langwei
 }
 ```
 
-Das gibt aus: "Versuch 1 ist abgeschlossen. Versuch 2 ist abgeschlossen. Versuch 3 ist
+Das erzeugt folgenden Text: "Versuch 1 ist abgeschlossen. Versuch 2 ist abgeschlossen. Versuch 3 ist
 abgeschlossen."
 
 Schleifen funktionieren auch mit Arrays, perfekt für Danksagungen:
 
 ```typst
-#let namen = ("Alice", "Bob", "Charlie")
+#let names = ("Alice", "Bob", "Charlie")
 
-#for name in namen {
+#for name in names {
   [- Danke an #name für die Unterstützung. ]
 }
 ```
@@ -26,7 +26,7 @@ Schleifen funktionieren auch mit Arrays, perfekt für Danksagungen:
 Die wahre Stärke zeigt sich innerhalb von `#table()`:
 
 ```typst
-#let daten = (
+#let data = (
   (1, 50, "62%", "178°"),
   (2, 50, "58%", "173°"),
   (3, 50, "64%", "181°"),
@@ -35,7 +35,7 @@ Die wahre Stärke zeigt sich innerhalb von `#table()`:
 #table(
   columns: 4,
     [*Sitzung*], [*Versuche*], [*Butterseite unten*], [*Mittl. Rotation*],
-  ..daten.map(zeile => zeile.map(str)).flatten()
+  ..data.map(zeile => zeile.map(str)).flatten()
 )
 ```
 
@@ -46,7 +46,7 @@ so, als hättest du jede selbst getippt.
 `#table()` akzeptiert als Zellen aber nur Inhalt (`[...]`) oder Zeichenketten (`"..."`), keine
 reinen Zahlen. Deshalb wandelt `zeile.map(str)` zuerst jeden Wert in eine Zeichenkette um (aus `1`
 wird `"1"`). Lieber Inhalt statt Zeichenketten? Dann bilde die Werte mit `[#element]` ab:
-`..daten.map(zeile => zeile.map(element => [#element])).flatten()`. Denk daran, dass `zeile` und
+`..data.map(zeile => zeile.map(element => [#element])).flatten()`. Denk daran, dass `zeile` und
 `element` nur Variablen sind, du kannst sie beliebig benennen.
 
 ## Deine Aufgabe

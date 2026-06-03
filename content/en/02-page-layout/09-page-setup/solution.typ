@@ -1,5 +1,6 @@
 #set page(paper: "a4", margin: 2cm)
 #set par(justify: true)
+
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
 Dr. Eleanor Crumb
 

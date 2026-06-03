@@ -1,14 +1,14 @@
-#let autor = "Dr. Eleanor Crumb"
+#let author = "Dr. Eleanor Crumb"
 #let institution = "Institut für Frühstückswissenschaften"
-#let datum = "März 2026"
-#let entwurf = true
+#let date = "März 2026"
+#let draft = true
 
 #set page(
   paper: "a4",
   margin: 2cm,
   header: align(right)[_Die Aerodynamik von Toast_],
   numbering: "1",
-  background: if entwurf {
+  background: if draft {
     rotate(-45deg, text(80pt, fill: luma(180, 30%))[*ENTWURF*])
   },
 )
@@ -29,7 +29,7 @@
   line(length: 100%, stroke: 0.5pt)
 }
 
-#let hinweis(body) = block(
+#let note(body) = block(
   fill: luma(230),
   inset: 10pt,
   radius: 4pt,
@@ -38,7 +38,7 @@
 
 = Die Aerodynamik von Toast: Warum er immer mit der gebutterten Seite nach unten landet
 
-#align(center, text(gray)[#autor])
+#align(center, text(gray)[#author])
 
 #outline(indent: auto)
 
@@ -102,8 +102,8 @@ def simulate_toast_drop(height=0.75, mass=0.028):
     return np.degrees(angle) % 360
 ```
 
-#hinweis[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben
-  wurden nach der Datenerhebung verantwortungsvoll verzehrt.]
+#note[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben wurden
+  nach der Datenerhebung verantwortungsvoll verzehrt.]
 
 == Ergebnisse
 Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt. Die
@@ -132,6 +132,6 @@ Aberglauben. Die gemessene Winkelbeschleunigung sagt eine fast halbe Umdrehung
 vor dem Aufprall voraus, was die Butter-unten-Tendenz in allen Versuchen
 erklärt.
 
-#hinweis[Zukünftige Forschung: Verschiedene Brotsorten, Butterdichten und
+#note[Zukünftige Forschung: Verschiedene Brotsorten, Butterdichten und
   Anti-Drehmoment-Plattendesigns untersuchen, um Frühstücksergebnisse zu
   verbessern.]

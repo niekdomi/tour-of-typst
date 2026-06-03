@@ -33,8 +33,8 @@ eingerückten Container für deinen Code.
 
 ### Die `raw`-Funktion
 
-Für fortgeschrittene Nutzer bietet Typst die Funktion `#raw()`. Diese ist nützlich, wenn du genauere
-Kontrolle über die Gestaltung benötigst, ohne Backticks zu verwenden.
+Für fortgeschrittene Nutzer bietet Typst die Funktion `#raw()`. Diese ist nützlich, wenn du mehr
+Kontrolle über die Gestaltung benötigst.
 
 ```typst
 #raw("print('Simulation abgeschlossen')", lang: "python")
