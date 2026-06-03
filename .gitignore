@@ -8,6 +8,9 @@ node_modules
 # Build output
 /dist
 
+# Prerender
+/.prerender-profile
+
 # OS
 .DS_Store
 Thumbs.db
