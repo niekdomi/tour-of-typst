@@ -18,7 +18,9 @@ interface ChapterPage {
   title: string;
 }
 
-/** Discover chapters from the default-locale content tree, ordered by their numeric directory prefix. */
+/**
+ * Discover chapters from the default-locale content tree, ordered by their numeric directory prefix.
+ */
 function discoverChapters(root: string): ChapterPage[] {
   const localeDir = join(root, "content", DEFAULT_LOCALE);
   const pages: ChapterPage[] = [];

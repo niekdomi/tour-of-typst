@@ -1,6 +1,7 @@
-import { createMemo, createSignal } from "solid-js";
+import { createMemo, createSignal, Show } from "solid-js";
 
 import Header from "./components/Header";
+import { NotFound } from "./components/NotFound";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,9 +32,11 @@ function TourApp() {
     return t ? flattenChapters(t) : [];
   });
 
-  const { currentIndex, currentKey, navigate } = useChapterRoute(chapters);
+  const { currentIndex, currentKey, notFound, navigate } = useChapterRoute(chapters);
 
-  /** Will set all chapters to their initial state */
+  /**
+   * Will set all chapters to their initial state
+   */
   function confirmResetAll() {
     clearAllEdits();
     setGlobalReset((g) => g + 1);
@@ -41,25 +44,36 @@ function TourApp() {
 
   return (
     <div class="flex h-screen flex-col overflow-hidden" style={{ "font-family": "var(--sans)" }}>
-      <Header
-        parts={parts()}
-        chapters={chapters()}
-        currentIndex={currentIndex()}
-        contentFraction={contentFraction()}
-        onNavigate={navigate}
-        onResetAll={() => setResetDialogOpen(true)}
-        onTocOpenChange={setTocOpen}
-      />
-      <TourLayout
-        locale={locale()}
-        chapters={chapters()}
-        currentIndex={currentIndex()}
-        currentKey={currentKey()}
-        contentFraction={contentFraction()}
-        resetGeneration={globalReset()}
-        onContentFractionChange={setContentFraction}
-        contentBlurred={tocOpen()}
-      />
+      <Show
+        when={!notFound()}
+        fallback={
+          <NotFound
+            onGoHome={() => {
+              navigate(0);
+            }}
+          />
+        }
+      >
+        <Header
+          parts={parts()}
+          chapters={chapters()}
+          currentIndex={currentIndex()}
+          contentFraction={contentFraction()}
+          onNavigate={navigate}
+          onResetAll={() => setResetDialogOpen(true)}
+          onTocOpenChange={setTocOpen}
+        />
+        <TourLayout
+          locale={locale()}
+          chapters={chapters()}
+          currentIndex={currentIndex()}
+          currentKey={currentKey()}
+          contentFraction={contentFraction()}
+          resetGeneration={globalReset()}
+          onContentFractionChange={setContentFraction}
+          contentBlurred={tocOpen()}
+        />
+      </Show>
       <AlertDialog open={resetDialogOpen()} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

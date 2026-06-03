@@ -3,8 +3,6 @@ import { type Accessor, createEffect, createMemo } from "solid-js";
 
 import type { Chapter } from "../content/types";
 
-const STORAGE_KEY = "tour-of-typst-chapter";
-
 export function useChapterRoute(chapters: Accessor<Chapter[]>) {
   const params = useParams<{ chapter?: string }>();
   const navigate = useNavigate();
@@ -17,27 +15,24 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
 
   const currentKey = createMemo(() => chapters()[currentIndex()]?.key ?? "");
 
-  createEffect(() => {
+  // A chapter was named in the URL but matches no loaded chapter.
+  const notFound = createMemo(() => {
     const chs = chapters();
-    if (chs.length === 0) {
-      return;
-    }
     const current = params.chapter;
-    if (!current || !chs.some((c) => c.key === current)) {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const savedIsValid = saved !== null && chs.some((c) => c.key === saved);
-
-      const initial = savedIsValid ? saved : (chs[0]?.key ?? "");
-      if (initial) {
-        navigate(`/${initial}`, { replace: true });
-      }
-    }
+    return chs.length > 0 && !!current && !chs.some((c) => c.key === current);
   });
 
+  // The bare root path (no chapter in the URL) redirects to the first chapter.
+  // A named chapter is left in place; invalid ones surface the not-found screen.
   createEffect(() => {
-    const key = currentKey();
-    if (key) {
-      localStorage.setItem(STORAGE_KEY, key);
+    const chs = chapters();
+    if (chs.length === 0 || params.chapter) {
+      return;
+    }
+
+    const first = chs[0]?.key ?? "";
+    if (first) {
+      navigate(`/${first}`, { replace: true });
     }
   });
 
@@ -48,5 +43,5 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
     }
   }
 
-  return { currentIndex, currentKey, navigate: goToIndex };
+  return { currentIndex, currentKey, notFound, navigate: goToIndex };
 }
