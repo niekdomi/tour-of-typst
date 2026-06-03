@@ -15,7 +15,7 @@ Instead, define a function with `#let`:
 )
 ```
 
-Now, everyhwere where you call `#note[...]`, it will create a `block` with the defined parameters
+Now, everywhere where you call `#note[...]`, it will create a `block` with the defined parameters
 such as `fill: luma(230)`.
 
 ```typst

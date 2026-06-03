@@ -4,6 +4,7 @@ words = [
   "apa",
   "buenard",
   "cli",
+  "crawlable",
   "cva",
   "deja",
   "fsegurai",
@@ -11,14 +12,17 @@ words = [
   "kobalte",
   "labelled",
   "libertinus",
+  "luma",
   "noninteractive",
   "nums",
   "oklch",
   "oncompile",
   "onnavigate",
   "onresetall",
+  "Oopsie",
   "pointermove",
   "pointerup",
+  "prerendered",
   "recompiles",
   "reflows",
   "shiki",
@@ -28,6 +32,7 @@ words = [
   "solidjs",
   "tinymist",
   "vedivad",
+  "Vite's",
 
   # German
   "Kapiteltitel",
@@ -70,6 +75,7 @@ words = [
   "streichfähig",
   "stündigen",
   "syntaxhervorhebung",
+  "systemweit",
   "usw",
   "verschachtelung",
   "weissbrot",
@@ -78,6 +84,7 @@ words = [
   "zitierstile",
   "Überschriftsebene",
   "Überschriftszeile",
+  "zurückzufallen"
 ]
 include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false

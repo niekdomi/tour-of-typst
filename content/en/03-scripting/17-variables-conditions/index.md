@@ -3,8 +3,8 @@
 Dr. Crumb's paper is almost ready for submission, but the lab director wants to review it first. We
 need a way to stamp "DRAFT" across all pages without manually adding and removing it every time.
 
-We have to define the following variables and can then check with the `if` expression wheter `draft`
-is set to true or not.
+We have to define the following variables and can then check with the `if` expression whether
+`draft` is set to true or not.
 
 ```typst
 #let author = "Dr. Eleanor Crumb"
