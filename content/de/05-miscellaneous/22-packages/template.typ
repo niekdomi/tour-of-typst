@@ -114,8 +114,8 @@ def simulate_toast_drop(height=0.75, mass=0.028):
     return np.degrees(angle) % 360
 ```
 
-#note[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben
-  wurden nach der Datenerhebung verantwortungsvoll verzehrt.]
+#note[Kein Toast wurde in dieser Studie unnötig beschädigt. Alle Scheiben wurden
+  nach der Datenerhebung verantwortungsvoll verzehrt.]
 
 == Ergebnisse
 Die Versuche wurden von einer Tischhöhe von $h approx 0.75$ m durchgeführt. Mit
