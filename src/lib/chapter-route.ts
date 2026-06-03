@@ -1,4 +1,4 @@
-import { useSearchParams } from "@solidjs/router";
+import { useNavigate, useParams } from "@solidjs/router";
 import { type Accessor, createEffect, createMemo } from "solid-js";
 
 import type { Chapter } from "../content/types";
@@ -6,10 +6,11 @@ import type { Chapter } from "../content/types";
 const STORAGE_KEY = "tour-of-typst-chapter";
 
 export function useChapterRoute(chapters: Accessor<Chapter[]>) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const params = useParams<{ chapter?: string }>();
+  const navigate = useNavigate();
 
   const currentIndex = createMemo(() => {
-    const key = searchParams["chapter"] ?? "";
+    const key = params.chapter ?? "";
     const index = chapters().findIndex((c) => c.key === key);
     return Math.max(index, 0);
   });
@@ -21,13 +22,15 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
     if (chs.length === 0) {
       return;
     }
-    const current = searchParams["chapter"];
+    const current = params.chapter;
     if (!current || !chs.some((c) => c.key === current)) {
       const saved = localStorage.getItem(STORAGE_KEY);
       const savedIsValid = saved !== null && chs.some((c) => c.key === saved);
 
       const initial = savedIsValid ? saved : (chs[0]?.key ?? "");
-      setSearchParams({ chapter: initial }, { replace: true });
+      if (initial) {
+        navigate(`/${initial}`, { replace: true });
+      }
     }
   });
 
@@ -38,12 +41,12 @@ export function useChapterRoute(chapters: Accessor<Chapter[]>) {
     }
   });
 
-  function navigate(index: number) {
+  function goToIndex(index: number) {
     const key = chapters()[index]?.key;
     if (key) {
-      setSearchParams({ chapter: key });
+      navigate(`/${key}`);
     }
   }
 
-  return { currentIndex, currentKey, navigate };
+  return { currentIndex, currentKey, navigate: goToIndex };
 }
