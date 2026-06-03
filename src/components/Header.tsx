@@ -23,8 +23,8 @@ const localeOptions: LocaleOption[] = availableLocales.map(({ locale: l, label }
 }));
 
 interface Props {
-  parts: Part[];
-  chapters: Chapter[];
+  parts: readonly Part[];
+  chapters: readonly Chapter[];
   currentIndex: number;
   contentFraction: number;
   onNavigate?: (index: number) => void;
