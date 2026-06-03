@@ -4,6 +4,7 @@
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
 )
+
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true)
 
