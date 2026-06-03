@@ -40,8 +40,8 @@ Funktionen können mehrere Parameter haben, auch optionale mit Standardwerten:
 
 ## Deine Aufgabe
 
-Erstelle eine `#let note(body)`-Funktion, die eine gestaltete Hinweisbox rendert. Verwende sie
-dann an zwei Stellen:
+Erstelle eine `#let note(body)`-Funktion, die eine gestaltete Hinweisbox rendert. Verwende sie dann
+an zwei Stellen:
 
 - **Abschnitt Methoden**: Ein Hinweis zur ethischen Toast-Behandlung ("Kein Toast wurde unnötig
   beschädigt...")

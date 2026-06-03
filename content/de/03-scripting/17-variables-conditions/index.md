@@ -21,9 +21,9 @@ Ist `draft` `true`, erzeugt der Ausdruck den gedrehten Text; ohne `else`-Zweig l
 wenn `draft` `false` ist, also gar keinen Hintergrund. Da er am Parameter `background` hängt,
 wiederholt sich das Wasserzeichen auf _jeder_ Seite.
 
-> [!WARNING] Du kannst nicht `#if draft { set page(...) }` schreiben. Eine `set`-Regel innerhalb
-> des Blocks gilt nur für diesen Block und erreicht das Dokument nie. Setze stattdessen den
-> Parameter `background` auf den `if`-Ausdruck.
+> [!WARNING] Du kannst nicht `#if draft { set page(...) }` schreiben. Eine `set`-Regel innerhalb des
+> Blocks gilt nur für diesen Block und erreicht das Dokument nie. Setze stattdessen den Parameter
+> `background` auf den `if`-Ausdruck.
 
 Variablen können jeden Typ enthalten; Zeichenketten, Zahlen, Wahrheitswerte, Arrays:
 

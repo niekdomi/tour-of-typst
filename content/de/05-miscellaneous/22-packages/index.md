@@ -1,10 +1,9 @@
 # Pakete & Importe
 
-Erinnerst du dich an die `#let note()`-Funktion, die wir von Hand gebaut haben, um unsere
-ethischen Hinweise zu verwalten? Es stellt sich heraus, dass jemand in der Typst-Community bereits
-eine viel schönere Version erstellt hat, mit Farben, Titeln und Schlagschatten. Das ist die
-Schönheit von Paketen: Du musst nicht jedes Rad neu erfinden (oder in unserem Fall jede gebutterte
-Hinweisbox).
+Erinnerst du dich an die `#let note()`-Funktion, die wir von Hand gebaut haben, um unsere ethischen
+Hinweise zu verwalten? Es stellt sich heraus, dass jemand in der Typst-Community bereits eine viel
+schönere Version erstellt hat, mit Farben, Titeln und Schlagschatten. Das ist die Schönheit von
+Paketen: Du musst nicht jedes Rad neu erfinden (oder in unserem Fall jede gebutterte Hinweisbox).
 
 Typst hat ein wachsendes Ökosystem von Community-Paketen. Du kannst sie direkt importieren. Keine
 Installation, kein Paketmanager, kein `node_modules`-Ordner in der Grösse eines kleinen Landes:

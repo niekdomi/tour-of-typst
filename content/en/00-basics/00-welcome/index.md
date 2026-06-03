@@ -8,8 +8,7 @@ _Disclaimer: The math provided in this tour is not real science._
 
 Each chapter teaches one Typst concept and adds a new piece to the essay. By the final chapter,
 you'll have a fully formatted academic paper, complete with equations, figures, citations, and a
-custom template. The kitchen floor may never recover, but your Typst skills will be
-unstoppable.
+custom template. The kitchen floor may never recover, but your Typst skills will be unstoppable.
 
 ## How this tour works
 
