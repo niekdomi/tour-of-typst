@@ -100,6 +100,7 @@ export default function Editor(props: Props) {
           })();
         });
         view = new EditorView({ parent: container!, state: buildState(props.doc) });
+        highlighting.setTheme(view, theme());
       } catch (error) {
         if (!signal.aborted) {
           throw error;
