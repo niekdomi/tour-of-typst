@@ -98,29 +98,42 @@ export default function Preview(props: Props) {
     zoomAt(clampZoom((scroller.clientHeight - SCROLLER_PADDING_PX) / pageHeightPx));
   };
 
-  // The rendered SVG calls this as a global onclick handler for source links.
-  // The rendered output emits `onclick="handleTypstLocation(...)"` inline,
-  // so a delegated listener wouldn't see it.
-  function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
+  /**
+   * Smoothly scrolls the preview so the given document location sits near the
+   * top of the viewport. `y` is in the page's SVG user units (typographic
+   * points) and is scaled to pixels via the rendered page height.
+   */
+  function jumpToLocation(page: number, y: number) {
     if (!scroller) {
       return;
     }
 
-    const pageElements = scroller.querySelectorAll<HTMLElement>(".typst-page");
-    const target = pageElements[page - 1];
-    if (!target) {
+    const group = scroller.querySelectorAll<SVGGElement>(".typst-page")[page - 1];
+    const svg = group?.ownerSVGElement;
+    if (!svg) {
       return;
     }
 
-    const svgElement = target.querySelector("svg");
-    const targetRect = target.getBoundingClientRect();
+    const viewBoxHeight = svg.viewBox.baseVal.height;
+    const svgRect = svg.getBoundingClientRect();
     const scrollerRect = scroller.getBoundingClientRect();
-    const scale = svgElement ? targetRect.height / svgElement.viewBox.baseVal.height : 1;
+    const scale = viewBoxHeight > 0 ? svgRect.height / viewBoxHeight : 1;
 
     scroller.scrollTo({
-      top: scroller.scrollTop + (targetRect.top - scrollerRect.top) + y * scale - 40,
+      top: scroller.scrollTop + (svgRect.top - scrollerRect.top) + y * scale - 40,
       behavior: "smooth",
     });
+  }
+
+  /**
+   * Jumps to an internal link target inside the rendered document. The Typst
+   * renderer wires every internal link (outline entries, references, ...) to an
+   * inline `onclick="handleTypstLocation(this, page, x, y); return false"`, so
+   * this is published on `globalThis` while mounted; the `return false` stops
+   * the click from reaching the router's anchor navigation.
+   */
+  function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
+    jumpToLocation(page, y);
   }
 
   onMount(() => {
@@ -147,6 +160,11 @@ export default function Preview(props: Props) {
 
   const onPointerDown = (e: PointerEvent) => {
     if (e.button !== 0 || !scroller) {
+      return;
+    }
+
+    // Don't start a pan on internal links, so the click can trigger a jump.
+    if ((e.target as Element | null)?.closest("a")) {
       return;
     }
 
