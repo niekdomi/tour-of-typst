@@ -32,7 +32,7 @@ hast gerade ein neues Forschungsgebiet der Frühstückswissenschaft ins Leben ge
 >
 > einen einzigen Absatz:
 >
-> Toast landet mit der Butterseite nach unten.
+> **Toast landet mit der Butterseite nach unten.**
 >
 > Fügst du aber eine Leerzeile dazwischen ein:
 >
@@ -44,6 +44,6 @@ hast gerade ein neues Forschungsgebiet der Frühstückswissenschaft ins Leben ge
 >
 > erhältst du zwei getrennte Absätze:
 >
-> Toast landet
+> **Toast landet**
 >
-> mit der Butterseite nach unten.
+> **mit der Butterseite nach unten.**

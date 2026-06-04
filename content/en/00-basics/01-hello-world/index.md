@@ -30,7 +30,7 @@ new field of breakfast science.
 >
 > renders as a single paragraph:
 >
-> Toast lands butter-side down.
+> **Toast lands butter-side down.**
 >
 > But add a blank line in between:
 >
@@ -42,6 +42,6 @@ new field of breakfast science.
 >
 > and you get two separate paragraphs:
 >
-> Toast lands
+> **Toast lands**
 >
-> butter-side down.
+> **butter-side down.**
