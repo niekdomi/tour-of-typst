@@ -20,3 +20,28 @@ new field of breakfast science.
 
 > [!NOTE] A line break inside a paragraph doesn't start a new paragraph in Typst. You need a blank
 > line for that.
+>
+> For example, this source:
+>
+> ```typst
+> Toast lands
+> butter-side down.
+> ```
+>
+> renders as a single paragraph:
+>
+> **Toast lands butter-side down.**
+>
+> But add a blank line in between:
+>
+> ```typst
+> Toast lands
+>
+> butter-side down.
+> ```
+>
+> and you get two separate paragraphs:
+>
+> **Toast lands**
+>
+> **butter-side down.**

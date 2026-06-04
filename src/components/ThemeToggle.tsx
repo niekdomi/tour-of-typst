@@ -14,6 +14,7 @@ export default function ThemeToggle() {
         variant="outline"
         size="icon"
         class="border-border/60"
+        aria-label={theme() === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         onClick={toggle}
       >
         <Show when={theme() === "dark"} fallback={<TbOutlineMoon size={14} />}>
