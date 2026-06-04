@@ -6,11 +6,16 @@ import type { RenderedSvgPage } from "@vedivad/typst-web-service";
 import { basicSetup } from "codemirror";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
+import { getTranslations } from "../../content/i18n";
 import { Button } from "../components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
+import { locale } from "../lib/locale";
 import { useTheme } from "../lib/ThemeContext";
 import diagnosticCopyPlugin from "./DiagnosticCopyPlugin";
 import { editorTheme, fillHeight, popupTheme } from "./editor-theme";
 import { useTypstResources } from "./typst-resources";
+
+const tr = () => getTranslations(locale());
 
 interface Props {
   doc: string;
@@ -178,17 +183,29 @@ export default function Editor(props: Props) {
   return (
     <div class="flex h-full flex-col overflow-hidden">
       <div class="border-border/60 bg-background flex shrink-0 items-center gap-1 border-b px-2 py-1">
-        <Button variant="outline" size="sm" onClick={reset}>
-          Reset
-        </Button>
+        <Tooltip openDelay={150}>
+          <TooltipTrigger as={Button<"button">} variant="outline" size="sm" onClick={reset}>
+            {tr().reset}
+          </TooltipTrigger>
+          <TooltipContent>{tr().resetTooltip}</TooltipContent>
+        </Tooltip>
         {props.solution && (
           <Button variant="outline" size="sm" onClick={toggleSolution}>
-            {showingSolution() ? "Hide Solution" : "Show Solution"}
+            {showingSolution() ? tr().hideSolution : tr().showSolution}
           </Button>
         )}
-        <Button variant="outline" size="sm" class="ml-auto" onClick={format}>
-          Format
-        </Button>
+        <Tooltip openDelay={150}>
+          <TooltipTrigger
+            as={Button<"button">}
+            variant="outline"
+            size="sm"
+            class="ml-auto"
+            onClick={format}
+          >
+            {tr().format}
+          </TooltipTrigger>
+          <TooltipContent>{tr().formatTooltip}</TooltipContent>
+        </Tooltip>
       </div>
       <div
         ref={(el) => {

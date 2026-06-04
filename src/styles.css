@@ -143,6 +143,17 @@
     color: inherit;
     text-decoration: none;
   }
+
+  /* Typst renders internal-link hotspots as transparent <rect class="pseudo-link">
+     wrapped in <a>. Transparent fills aren't hit-tested by default, so force
+     pointer events on and show a pointer cursor to make links clickable. */
+  .typst-page a {
+    cursor: pointer;
+  }
+
+  .typst-page .pseudo-link {
+    pointer-events: all;
+  }
 }
 
 /* Table of contents gutter */

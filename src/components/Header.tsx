@@ -100,9 +100,17 @@ export default function Header(props: Props) {
           class="flex items-center justify-end gap-3 pr-8"
           style={{ flex: 1 - props.contentFraction }}
         >
-          <Button variant="outline" size="sm" onClick={props.onResetAll}>
-            Reset All
-          </Button>
+          <Tooltip openDelay={150}>
+            <TooltipTrigger
+              as={Button<"button">}
+              variant="outline"
+              size="sm"
+              onClick={props.onResetAll}
+            >
+              {t().resetAll}
+            </TooltipTrigger>
+            <TooltipContent>{t().resetAllTooltip}</TooltipContent>
+          </Tooltip>
 
           <Select<LocaleOption>
             value={localeOptions.find((o) => o.value === locale())}

@@ -13,7 +13,13 @@ export function CopyButton(props: { code: string }) {
   }
 
   return (
-    <button type="button" class="copy-btn" title="Copy" onClick={() => void copy()}>
+    <button
+      type="button"
+      class="copy-btn"
+      title="Copy"
+      aria-label="Copy"
+      onClick={() => void copy()}
+    >
       {copied() ? <FaSolidCheck size={14} color="green" /> : <FaSolidCopy size={14} />}
     </button>
   );

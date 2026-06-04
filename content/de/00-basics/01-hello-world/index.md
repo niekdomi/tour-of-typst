@@ -22,3 +22,28 @@ hast gerade ein neues Forschungsgebiet der Frühstückswissenschaft ins Leben ge
 
 > [!NOTE] Ein Zeilenumbruch innerhalb eines Absatzes beginnt in Typst keinen neuen Absatz. Dafür
 > brauchst du eine Leerzeile.
+>
+> Zum Beispiel ergibt dieser Quelltext:
+>
+> ```typst
+> Toast landet
+> mit der Butterseite nach unten.
+> ```
+>
+> einen einzigen Absatz:
+>
+> Toast landet mit der Butterseite nach unten.
+>
+> Fügst du aber eine Leerzeile dazwischen ein:
+>
+> ```typst
+> Toast landet
+>
+> mit der Butterseite nach unten.
+> ```
+>
+> erhältst du zwei getrennte Absätze:
+>
+> Toast landet
+>
+> mit der Butterseite nach unten.
