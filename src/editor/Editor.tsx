@@ -122,11 +122,26 @@ export default function Editor(props: Props) {
     }
   });
 
-  // Swap the editor's document and return the scroll position from before the swap,
-  // so callers can stash it for later restoration.
+  /**
+   * Replace the editor state with a fresh one for `nextDoc`. A new EditorState
+   * resets the highlighting compartment to its creation-time theme, so re-apply
+   * the current theme to keep syntax colors in sync (e.g. when toggling solution).
+   */
+  function setDoc(nextDoc: string) {
+    if (!view) {
+      return;
+    }
+    view.setState(buildState(nextDoc));
+    highlighting.setTheme(view, theme());
+  }
+
+  /**
+   * Swap the editor's document and return the scroll position from before the
+   * swap, so callers can stash it for later restoration.
+   */
   function swapDoc(nextDoc: string): number {
     const previousScroll = view?.scrollDOM.scrollTop ?? 0;
-    view?.setState(buildState(nextDoc));
+    setDoc(nextDoc);
     return previousScroll;
   }
 
@@ -141,7 +156,7 @@ export default function Editor(props: Props) {
   function reset() {
     setShowingSolution(false);
     savedCode = undefined;
-    view?.setState(buildState(props.template));
+    setDoc(props.template);
     props.onChange?.(props.template);
   }
 
