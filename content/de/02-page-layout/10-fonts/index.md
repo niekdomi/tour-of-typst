@@ -26,15 +26,14 @@ deinem System installierte Schriftarten verwenden. Mehr dazu im Kapitel **Lokale
 ### Verschiedene Schriftarten für verschiedene Elemente
 
 Du kannst verschiedene Schriftarten für verschiedene Teile deines Dokuments verwenden. Zum Beispiel
-den Fliesstext in einer Serifenschrift belassen, aber Code-Blöcke auf nichtproportional umstellen:
+den Fliesstext in einer Serifenschrift belassen, aber Code-Blöcke auf Monospace umstellen:
 
 ```typst
 #set text(font: "New Computer Modern", size: 11pt)
 #show raw: set text(font: "DejaVu Sans Mono")
 ```
 
-Falls du eine serifenlose Schrift auf deinem System hast, könntest du sie auch für Überschriften
-verwenden:
+Falls du die Schriftart Arial auf deinem System installiert hast, könntest du sie auch verwenden:
 
 ```typst
 #show heading: set text(font: "Arial")

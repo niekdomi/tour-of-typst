@@ -6,8 +6,8 @@ import type { Chapter, Part } from "../content/types";
 import { locale } from "../lib/locale";
 
 interface Props {
-  parts: Part[];
-  chapters: Chapter[];
+  parts: readonly Part[];
+  chapters: readonly Chapter[];
   currentIndex: number;
   onNavigate?: (index: number) => void;
   onOpenChange?: (open: boolean) => void;

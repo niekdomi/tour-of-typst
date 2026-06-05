@@ -10,7 +10,9 @@ For example, instead of manually numbering headings, you can set it once:
 #set heading(numbering: "1.1")
 ```
 
-Now all headings get numbered automatically: 1, 1.1, 1.2, 2, etc. Other useful set rules:
+Now all headings get numbered automatically: 1, 1.1, 1.2, 2, etc.
+
+Other useful set rules:
 
 ```typst
 #set par(leading: 0.8em)   // line spacing within paragraphs
@@ -28,6 +30,3 @@ Clean up the document by adding set rules at the top (after the page setup):
 
 Watch how every heading gets a number without touching a single heading line. That's the power of
 set rules, change the behavior once, apply it everywhere.
-
-> [!NOTE] Set rules only affect elements that come _after_ them. That's why they belong at the very
-> top of your document.

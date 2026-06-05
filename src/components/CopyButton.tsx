@@ -1,5 +1,4 @@
-import { BsCopy } from "solid-icons/bs";
-import { FaSolidCheck } from "solid-icons/fa";
+import { FaSolidCheck, FaSolidCopy } from "solid-icons/fa";
 import { createSignal } from "solid-js";
 
 const RESET_DELAY_MS = 1500;
@@ -14,8 +13,14 @@ export function CopyButton(props: { code: string }) {
   }
 
   return (
-    <button type="button" class="copy-btn" title="Copy" onClick={() => void copy()}>
-      {copied() ? <FaSolidCheck size={14} color="green" /> : <BsCopy size={14} />}
+    <button
+      type="button"
+      class="copy-btn"
+      title="Copy"
+      aria-label="Copy"
+      onClick={() => void copy()}
+    >
+      {copied() ? <FaSolidCheck size={14} color="green" /> : <FaSolidCopy size={14} />}
     </button>
   );
 }

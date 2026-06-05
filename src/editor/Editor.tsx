@@ -6,12 +6,17 @@ import type { RenderedSvgPage } from "@vedivad/typst-web-service";
 import { basicSetup } from "codemirror";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
+import { getTranslations } from "../../content/i18n";
 import { Button } from "../components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
+import { locale } from "../lib/locale";
 import { useTheme } from "../lib/ThemeContext";
 import diagnosticCopyPlugin from "./DiagnosticCopyPlugin";
 import { dimTheme, editorTheme, fillHeight, popupTheme } from "./editor-theme";
 import { changedSolutionLines, dimUnchangedLines } from "./solution-focus";
 import { useTypstResources } from "./typst-resources";
+
+const tr = () => getTranslations(locale());
 
 interface Props {
   doc: string;
@@ -98,6 +103,7 @@ export default function Editor(props: Props) {
           })();
         });
         view = new EditorView({ parent: container!, state: buildState(props.doc) });
+        highlighting.setTheme(view, theme());
       } catch (error) {
         if (!signal.aborted) {
           throw error;
@@ -120,11 +126,27 @@ export default function Editor(props: Props) {
     }
   });
 
-  // Swap the editor's document and return the scroll position from before the swap,
-  // so callers can stash it for later restoration.
+  /**
+   * Replace the editor state with a fresh one for `nextDoc`. A new EditorState
+   * resets the highlighting compartment to its creation-time theme, so re-apply
+   * the current theme to keep syntax colors in sync (e.g. when toggling solution).
+   */
+  function setDoc(nextDoc: string) {
+    if (!view) {
+      return;
+    }
+    view.setState(buildState(nextDoc));
+    highlighting.setTheme(view, theme());
+  }
+
+  /**
+   * Swap the editor's document and return the scroll position from before the
+   * swap, so callers can stash it for later restoration.
+   */
   function swapDoc(nextDoc: string, extra: Extension[] = []): number {
     const previousScroll = view?.scrollDOM.scrollTop ?? 0;
     view?.setState(buildState(nextDoc, extra));
+    setDoc(nextDoc);
     return previousScroll;
   }
 
@@ -139,7 +161,7 @@ export default function Editor(props: Props) {
   function reset() {
     setShowingSolution(false);
     savedCode = undefined;
-    view?.setState(buildState(props.template));
+    setDoc(props.template);
     props.onChange?.(props.template);
   }
 
@@ -182,17 +204,29 @@ export default function Editor(props: Props) {
   return (
     <div class="flex h-full flex-col overflow-hidden">
       <div class="border-border/60 bg-background flex shrink-0 items-center gap-1 border-b px-2 py-1">
-        <Button variant="outline" size="sm" onClick={reset}>
-          Reset
-        </Button>
+        <Tooltip openDelay={150}>
+          <TooltipTrigger as={Button<"button">} variant="outline" size="sm" onClick={reset}>
+            {tr().reset}
+          </TooltipTrigger>
+          <TooltipContent>{tr().resetTooltip}</TooltipContent>
+        </Tooltip>
         {props.solution && (
           <Button variant="outline" size="sm" onClick={toggleSolution}>
-            {showingSolution() ? "Hide Solution" : "Show Solution"}
+            {showingSolution() ? tr().hideSolution : tr().showSolution}
           </Button>
         )}
-        <Button variant="outline" size="sm" class="ml-auto" onClick={format}>
-          Format
-        </Button>
+        <Tooltip openDelay={150}>
+          <TooltipTrigger
+            as={Button<"button">}
+            variant="outline"
+            size="sm"
+            class="ml-auto"
+            onClick={format}
+          >
+            {tr().format}
+          </TooltipTrigger>
+          <TooltipContent>{tr().formatTooltip}</TooltipContent>
+        </Tooltip>
       </div>
       <div
         ref={(el) => {

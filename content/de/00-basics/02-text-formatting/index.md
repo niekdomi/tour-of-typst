@@ -11,16 +11,15 @@ am Ziel vorbei. Typst verwendet einfache Marker, um Text fett oder kursiv zu mac
 
 ## Deine Aufgabe
 
-Schreibe das Abstract für unser Paper. Die wichtigsten Erkenntnisse müssen hervorstechen, damit auch
-ein übermüdeter Gutachter sie bemerkt:
+Schreibe den Abstract für unser Paper. Die wichtigsten Erkenntnisse müssen hervorstechen, damit auch
+ein übermüdeter Experte sie bemerkt:
 
 - _Toast mit der gebutterten Seite nach unten_ soll kursiv sein. Das ist das beobachtete Phänomen
 - **Gravitationsdrehmoment, nicht Pech** soll fett sein. Das ist die dramatische Enthüllung
 
-```typst
-Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in
-verschiedenen Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten
-beobachtet. Diese Arbeit präsentiert ein physikalisches Modell der Toast-Rotation
-im freien Fall und zeigt, dass *Gravitationsdrehmoment, nicht Pech* für diese
-kulinarische Tragödie verantwortlich ist.
-```
+So sollte das Abstract aussehen:
+
+> Das Phänomen, dass _Toast mit der gebutterten Seite nach unten landet_, wurde in verschiedenen
+> Kulturen, auf Küchenböden und in allen sozioökonomischen Schichten beobachtet. Diese Arbeit
+> präsentiert ein physikalisches Modell der Toast-Rotation im freien Fall und zeigt, dass
+> **Gravitationsdrehmoment, nicht Pech** für diese kulinarische Tragödie verantwortlich ist.

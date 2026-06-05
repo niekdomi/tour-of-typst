@@ -8,6 +8,9 @@
   margin: 2cm,
   header: align(right)[_The Aerodynamics of Toast_],
   numbering: "1",
+  background: if draft {
+    rotate(-45deg, text(80pt, fill: luma(180, 30%))[*DRAFT*])
+  },
 )
 
 #set text(font: "New Computer Modern", size: 11pt)
@@ -15,7 +18,6 @@
 
 #set heading(numbering: "1.1")
 #set math.equation(numbering: "(1)")
-#show heading: set text(font: "DejaVu Sans Mono")
 
 #show heading.where(level: 1): it => {
   set text(size: 18pt)
@@ -42,10 +44,6 @@
 )
 
 #let assistants = ("Alice", "Bob", "Charlie")
-
-#if draft {
-  align(center, text(red, size: 20pt)[*DRAFT*])
-}
 
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
 

@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build
+      - name: Build & prerender
         run: bun run build
         env:
           VITE_BASE_URL: /tour-of-typst/

@@ -10,10 +10,9 @@ column count you provided.
 
 ```typst
 #table(
-  columns: 3,
-  [*Trial*], [*Status*], [*Outcome*],
-  [1],       [Success],  [Butter-down],
-  [2],       [Success],  [Floor ruined],
+  columns: 4,
+  [*Session*], [*Drops*], [*Butter-Side Down*], [*Avg. Rotation*],
+  [1],         [50],      [62%],                [178°],
 )
 ```
 
@@ -25,7 +24,7 @@ formal caption and a number so other scientists can cite our groundbreaking toas
 ## Your Task
 
 Our team has finished three grueling sessions of 50 drops each. The kitchen floor is a disaster, but
-the data is beautiful.
+the data is groundbreaking.
 
 **Update the Results section** by converting the following field notes into a table:
 
@@ -38,9 +37,9 @@ the data is beautiful.
 **Requirements:**
 
 1. Use `#table()` with 4 columns.
-2. Use `columns: (1fr, 1fr, 1fr, 1fr)` to give every column equal breathing room.
-3. Wrap the whole thing in a `#figure()`.
-4. Add a caption: _[Summary of the butter-density correlation trials.]_
+2. Wrap the whole thing in a `#figure()`.
+3. Add a caption: _[Summary of the butter-density correlation trials.]_
+4. Optional: You can use `columns: (2fr, 1fr, 1fr, 1fr)` to adjust the column ratio.
 
 > [!TIP] To make your headers pop like a Senior Researcher, use `*Bold Text*` for the first four
 > items in your table list!

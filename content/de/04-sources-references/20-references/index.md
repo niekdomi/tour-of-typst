@@ -26,7 +26,7 @@ Wie in @abb-rotation[Abbildung] gezeigt
 ## Deine Aufgabe
 
 Unser Paper sagt im Moment vage Dinge wie "wie oben" und "wie beim Kaffee besprochen". Die Gutachter
-werden das schneller ablehnen, als Toast den Boden trifft. Korrigieren wir das mit richtigen
+werden das schneller ablehnen, als Toast den dem Boden aufkommt. Korrigieren wir das mit richtigen
 Querverweisen:
 
 - In der Einleitung: "Wie in @abb-rotation gezeigt..."

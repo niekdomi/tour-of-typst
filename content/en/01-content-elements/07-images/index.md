@@ -12,7 +12,7 @@ add a caption.
 )
 ```
 
-If your high-speed camera is still in the shop, you can use a `#rect()` as a placeholder. This keeps
+Since our high-speed camera hasn't arrived yet, you can use a `#rect()` as a placeholder. This keeps
 your layout ready while you wait for the real image.
 
 ```typst

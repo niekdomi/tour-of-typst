@@ -1,7 +1,6 @@
 #set page(paper: "a4", margin: 2cm)
 #set text(font: "New Computer Modern", size: 11pt)
 #set par(justify: true)
-#show heading: set text(font: "DejaVu Sans Mono")
 
 = The Aerodynamics of Toast: Why It Always Lands Butter-Side Down
 Dr. Eleanor Crumb

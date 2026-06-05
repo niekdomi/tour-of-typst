@@ -12,14 +12,16 @@ no package manager, no `node_modules` folder the size of a small country:
 #import "@preview/cetz:0.4.2": canvas, draw
 ```
 
+You can checkout the [Typst Universe](https://typst.app/universe/) to see what's out there.
+
 Some popular packages:
 
-| Package    | Purpose                         |
-| ---------- | ------------------------------- |
-| `cetz`     | Drawing and charts              |
-| `tablex`   | Advanced tables                 |
-| `codelst`  | Code listings with line numbers |
-| `showybox` | Colorful callout boxes          |
+| Package     | Purpose                      |
+| ----------- | ---------------------------- |
+| `cetz`      | Drawing and charts           |
+| `touying`   | Creating presentation slides |
+| `fletcher`  | Draw diagrams with arrows    |
+| `alchemist` | Draw skeletal formulae       |
 
 You can also import from your own files:
 
