@@ -37,8 +37,6 @@ words = [
   "vite's",
 
   # German
-  "kapiteltitel",
-  "vorausgefülltem",
   "abbildungs",
   "aufzuwerten",
   "auseinanderfällt",
@@ -55,6 +53,7 @@ words = [
   "grösse",
   "hinzuzeigen",
   "imaginieren",
+  "kapiteltitel",
   "klaustrophobisch",
   "klickbare",
   "klickbaren",
@@ -80,13 +79,14 @@ words = [
   "systemweit",
   "usw",
   "verschachtelung",
+  "vorausgefülltem",
   "weissbrot",
   "zeitschriftenartikel",
   "zeitschriftenvorlagen",
   "zitierstile",
+  "zurückzufallen",
   "Überschriftsebene",
   "Überschriftszeile",
-  "zurückzufallen",
 ]
 include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
