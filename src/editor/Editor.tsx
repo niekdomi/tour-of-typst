@@ -131,11 +131,11 @@ export default function Editor(props: Props) {
    * resets the highlighting compartment to its creation-time theme, so re-apply
    * the current theme to keep syntax colors in sync (e.g. when toggling solution).
    */
-  function setDoc(nextDoc: string) {
+  function setDoc(nextDoc: string, extra: Extension[] = []) {
     if (!view) {
       return;
     }
-    view.setState(buildState(nextDoc));
+    view.setState(buildState(nextDoc, extra));
     highlighting.setTheme(view, theme());
   }
 
@@ -145,8 +145,7 @@ export default function Editor(props: Props) {
    */
   function swapDoc(nextDoc: string, extra: Extension[] = []): number {
     const previousScroll = view?.scrollDOM.scrollTop ?? 0;
-    view?.setState(buildState(nextDoc, extra));
-    setDoc(nextDoc);
+    setDoc(nextDoc, extra);
     return previousScroll;
   }
 
