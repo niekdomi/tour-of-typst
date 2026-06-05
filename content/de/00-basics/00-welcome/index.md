@@ -20,7 +20,9 @@ nie erholen, aber deine Typst-Skills werden unaufhaltsam sein.
 - **Vorlage**: Jedes Kapitel beginnt mit vorausgefülltem Code, damit du dich auf das neue Konzept
   konzentrieren kannst.
 - **Lösung**: Hängst du fest? Klicke auf **Lösung anzeigen** (_auf dieser Seite nicht verfügbar_),
-  um einen Blick auf das erwartete Ergebnis zu werfen. Kein Grund zur Scham.
+  um einen Blick auf das erwartete Ergebnis zu werfen. Nur die für das aktuelle Kapitel relevanten
+  Zeilen bleiben hervorgehoben. Alles, was aus der Vorlage übernommen wurde, wird abgedunkelt, damit
+  du die neuen Teile auf einen Blick erkennst.
 
 > [!NOTE] Jedes Kapitel baut auf dem vorherigen auf, beginnt jedoch immer mit einer funktionierenden
 > Vorlage. Wenn du ein Kapitel überspringst oder versehentlich die Hälfte deines Papers löschst,
