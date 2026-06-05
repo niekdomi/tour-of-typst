@@ -1,5 +1,5 @@
 import { indentWithTab } from "@codemirror/commands";
-import { Compartment, EditorState } from "@codemirror/state";
+import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
 import type { RenderedSvgPage } from "@vedivad/typst-web-service";
@@ -9,7 +9,8 @@ import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
 import diagnosticCopyPlugin from "./DiagnosticCopyPlugin";
-import { editorTheme, fillHeight, popupTheme } from "./editor-theme";
+import { dimTheme, editorTheme, fillHeight, popupTheme } from "./editor-theme";
+import { changedSolutionLines, dimUnchangedLines } from "./solution-focus";
 import { useTypstResources } from "./typst-resources";
 
 interface Props {
@@ -45,7 +46,7 @@ export default function Editor(props: Props) {
 
   const themeCompartment = new Compartment();
 
-  function buildState(doc: string) {
+  function buildState(doc: string, extra: Extension[] = []) {
     return EditorState.create({
       doc,
       extensions: [
@@ -56,6 +57,7 @@ export default function Editor(props: Props) {
         basicSetup,
         fillHeight,
         popupTheme,
+        dimTheme,
         themeCompartment.of(editorTheme(theme())),
         EditorView.updateListener.of((u) => {
           if (u.docChanged) {
@@ -65,6 +67,7 @@ export default function Editor(props: Props) {
         ...typstExtensions,
         typstFilePath.of(MAIN_PATH),
         diagnosticCopyPlugin,
+        ...extra,
       ],
     });
   }
@@ -119,9 +122,9 @@ export default function Editor(props: Props) {
 
   // Swap the editor's document and return the scroll position from before the swap,
   // so callers can stash it for later restoration.
-  function swapDoc(nextDoc: string): number {
+  function swapDoc(nextDoc: string, extra: Extension[] = []): number {
     const previousScroll = view?.scrollDOM.scrollTop ?? 0;
-    view?.setState(buildState(nextDoc));
+    view?.setState(buildState(nextDoc, extra));
     return previousScroll;
   }
 
@@ -168,7 +171,8 @@ export default function Editor(props: Props) {
       restoreScroll(userScrollTop);
     } else {
       savedCode = view?.state.doc.toString();
-      userScrollTop = swapDoc(props.solution);
+      const changed = changedSolutionLines(props.template, props.solution);
+      userScrollTop = swapDoc(props.solution, [dimUnchangedLines(changed)]);
 
       setShowingSolution(true);
       restoreScroll(solutionScrollTop);

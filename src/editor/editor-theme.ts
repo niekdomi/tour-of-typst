@@ -13,6 +13,12 @@ export const fillHeight = EditorView.theme({
   ".cm-scroller": { overflow: "auto" },
 });
 
+export const dimTheme = EditorView.theme({
+  ".cm-line.cm-dimmed": {
+    opacity: "0.5",
+  },
+});
+
 // Unify autocomplete / hover / lint popups with the app's popover styling.
 export const popupTheme = EditorView.theme({
   ".cm-tooltip": {
