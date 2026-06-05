@@ -17,7 +17,8 @@ custom template. The kitchen floor may never recover, but your Typst skills will
 - **Right panel**: A live editor. Type Typst code and watch the preview update instantly.
 - **Template**: Each chapter starts with pre-filled code so you can focus on the new concept.
 - **Solution**: Stuck? Click **Show Solution** (_not available on this page_) to peek at the
-  expected result. No judgment.
+  expected result. Only the lines relevant to the current chapter stay highlighted. Everything
+  carried over from the template is darkened, so you can spot the new pieces at a glance.
 
 > [!NOTE] Every chapter builds on the previous one, but always starts from a working template. If
 > you skip ahead or accidentally delete half your paper, the next chapter picks up cleanly.

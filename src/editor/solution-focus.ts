@@ -1,10 +1,12 @@
 import { type Extension, RangeSetBuilder, StateField, type Text } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView } from "@codemirror/view";
 
-// Compute the 1-based line numbers in `solution` that are new or changed
-// relative to `template`, via a longest-common-subsequence line diff. Lines
-// that belong to the LCS are considered unchanged; everything else is what the
-// chapter's solution actually introduces.
+/**
+ * Compute the 1-based line numbers in `solution` that are new or changed
+ * relative to `template`, via a longest-common-subsequence (LCS) line diff.
+ * Lines that belong to the LCS are considered unchanged; everything else is
+ * what the chapter's solution actually introduces.
+ */
 export function changedSolutionLines(template: string, solution: string): Set<number> {
   const a = template.split("\n");
   const b = solution.split("\n");
@@ -12,12 +14,18 @@ export function changedSolutionLines(template: string, solution: string): Set<nu
   const m = b.length;
 
   // dp[i][j] = LCS length of a[i:] and b[j:].
-  const dp: Uint32Array[] = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+  const dp = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
   for (let i = n - 1; i >= 0; i--) {
     const row = dp[i]!;
     const nextRow = dp[i + 1]!;
+
     for (let j = m - 1; j >= 0; j--) {
-      row[j] = a[i] === b[j] ? nextRow[j + 1]! + 1 : Math.max(nextRow[j]!, row[j + 1]!);
+      // oxlint-disable-next-line unicorn/prefer-ternary
+      if (a[i] === b[j]) {
+        row[j] = nextRow[j + 1]! + 1;
+      } else {
+        row[j] = Math.max(nextRow[j]!, row[j + 1]!);
+      }
     }
   }
 
@@ -25,6 +33,7 @@ export function changedSolutionLines(template: string, solution: string): Set<nu
   const matched = new Set<number>();
   let i = 0;
   let j = 0;
+
   while (i < n && j < m) {
     if (a[i] === b[j]) {
       matched.add(j);
@@ -50,17 +59,21 @@ const dimmedLine = Decoration.line({ class: "cm-dimmed" });
 
 function buildDecorations(doc: Text, changed: Set<number>): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>();
+
   for (let n = 1; n <= doc.lines; n++) {
     if (!changed.has(n)) {
       builder.add(doc.line(n).from, doc.line(n).from, dimmedLine);
     }
   }
+
   return builder.finish();
 }
 
-// An editor extension that dims every line *not* in `changed`, so the
-// solution's new lines stand out. The decoration set is rebuilt on edits so it
-// degrades gracefully if the solution doc is modified.
+/**
+ * An editor extension that dims every line *not* in `changed`, so the
+ * solution's new lines stand out. The decoration set is rebuilt on edits so it
+ * degrades gracefully if the solution doc is modified.
+ */
 export function dimUnchangedLines(changed: Set<number>): Extension {
   return StateField.define<DecorationSet>({
     create(state) {
