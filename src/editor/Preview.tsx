@@ -5,10 +5,11 @@ import {
   TbOutlineZoomIn,
   TbOutlineZoomOut,
 } from "solid-icons/tb";
-import { createMemo, createSignal, Index, onCleanup, onMount } from "solid-js";
+import { createMemo, createSignal, Index, onMount } from "solid-js";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
+import { useTypstResources } from "./typst-resources";
 
 interface Props {
   pages: RenderedSvgPage[];
@@ -24,8 +25,13 @@ const clampZoom = (z: number) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
 
 export default function Preview(props: Props) {
   const { theme } = useTheme();
+  const { project } = useTypstResources();
   const [zoom, setZoom] = createSignal(1);
   const [panning, setPanning] = createSignal(false);
+
+  // Page wrappers by index, for hit-testing a click to a page + point.
+  const pageEls: (HTMLElement | undefined)[] = [];
+  let dragMoved = false;
 
   // Hold the last non-empty pages so the preview keeps showing the previous output
   // (faded) while a recompile is in flight.
@@ -126,19 +132,33 @@ export default function Preview(props: Props) {
   }
 
   /**
-   * Jumps to an internal link target inside the rendered document. The Typst
-   * renderer wires every internal link (outline entries, references, ...) to an
-   * inline `onclick="handleTypstLocation(this, page, x, y); return false"`, so
-   * this is published on `globalThis` while mounted; the `return false` stops
-   * the click from reaching the router's anchor navigation.
+   * Resolve a plain click via the engine (the SVG carries no link destinations):
+   * an internal link (e.g. an `#outline()` entry) scrolls the preview to its
+   * target; a URL opens. Other clicks (plain text) do nothing here.
    */
-  function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
-    jumpToLocation(page, y);
+  function handleClick(clientX: number, clientY: number) {
+    const pages = displayPages();
+    for (let i = 0; i < pageEls.length; i++) {
+      const el = pageEls[i];
+      const page = pages[i];
+      if (!el || !page) continue;
+      const r = el.getBoundingClientRect();
+      if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom) continue;
+      const scale = (zoom() * BASE_WIDTH_PX) / page.width;
+      void (async () => {
+        const jump = await project.clickJump(
+          i,
+          (clientX - r.left) / scale,
+          (clientY - r.top) / scale
+        );
+        if (jump?.kind === "position") jumpToLocation(jump.page + 1, jump.y);
+        else if (jump?.kind === "url") globalThis.open(jump.url, "_blank", "noopener,noreferrer");
+      })();
+      return;
+    }
   }
 
   onMount(() => {
-    (globalThis as Record<string, unknown>)["handleTypstLocation"] = handleTypstLocation;
-
     requestAnimationFrame(() => {
       if (!scroller) {
         return;
@@ -151,26 +171,15 @@ export default function Preview(props: Props) {
     });
   });
 
-  onCleanup(() => {
-    const slot = globalThis as Record<string, unknown>;
-    if (slot["handleTypstLocation"] === handleTypstLocation) {
-      delete slot["handleTypstLocation"];
-    }
-  });
-
   const onPointerDown = (e: PointerEvent) => {
     if (e.button !== 0 || !scroller) {
-      return;
-    }
-
-    // Don't start a pan on internal links, so the click can trigger a jump.
-    if ((e.target as Element | null)?.closest("a")) {
       return;
     }
 
     e.preventDefault();
     scroller.setPointerCapture(e.pointerId);
     scroller.focus({ preventScroll: true });
+    dragMoved = false;
 
     panOrigin = {
       x: e.clientX,
@@ -178,8 +187,6 @@ export default function Preview(props: Props) {
       scrollLeft: scroller.scrollLeft,
       scrollTop: scroller.scrollTop,
     };
-
-    setPanning(true);
   };
 
   const onPointerMove = (e: PointerEvent) => {
@@ -187,8 +194,15 @@ export default function Preview(props: Props) {
       return;
     }
 
-    scroller.scrollLeft = panOrigin.scrollLeft - (e.clientX - panOrigin.x);
-    scroller.scrollTop = panOrigin.scrollTop - (e.clientY - panOrigin.y);
+    const dx = e.clientX - panOrigin.x;
+    const dy = e.clientY - panOrigin.y;
+    // Only a real drag is a pan; below the threshold the release is a click.
+    if (!dragMoved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+      dragMoved = true;
+      setPanning(true);
+    }
+    scroller.scrollLeft = panOrigin.scrollLeft - dx;
+    scroller.scrollTop = panOrigin.scrollTop - dy;
   };
 
   const onPointerUp = (e: PointerEvent) => {
@@ -196,8 +210,10 @@ export default function Preview(props: Props) {
       scroller.releasePointerCapture(e.pointerId);
     }
 
+    const wasClick = panOrigin !== null && !dragMoved;
     panOrigin = null;
     setPanning(false);
+    if (wasClick) handleClick(e.clientX, e.clientY);
   };
 
   return (
@@ -282,8 +298,11 @@ export default function Preview(props: Props) {
           }}
         >
           <Index each={displayPages()}>
-            {(page) => (
+            {(page, index) => (
               <div
+                ref={(el) => {
+                  pageEls[index] = el;
+                }}
                 class="w-full bg-white shadow-md ring-1 ring-black/10 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full"
                 classList={{ "opacity-50": props.pages.length === 0 }}
                 innerHTML={page().svg}

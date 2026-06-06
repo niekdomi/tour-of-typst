@@ -1,11 +1,24 @@
-import { type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { githubDark } from "@fsegurai/codemirror-theme-github-dark";
 import { githubLight } from "@fsegurai/codemirror-theme-github-light";
+import { defaultDarkTheme, defaultLightTheme, typstThemes } from "@vedivad/codemirror-typst";
 
 import { type Theme } from "../lib/ThemeContext";
 
-export const editorTheme = (t: Theme): Extension => (t === "dark" ? githubDark : githubLight);
+/**
+ * Editor chrome (GitHub light/dark) paired with the engine's default Typst token
+ * palette, behind one compartment. The engine highlights via `typ-*` decorations
+ * (from `createTypstSetup`); these descriptors supply the colors. Create one per
+ * editor and switch live with `themes.set(view, "light" | "dark")`.
+ */
+export const makeTypstThemes = (initial: Theme) =>
+  typstThemes(
+    {
+      light: { editor: githubLight, tokens: defaultLightTheme },
+      dark: { editor: githubDark, tokens: defaultDarkTheme },
+    },
+    initial
+  );
 
 export const fillHeight = EditorView.theme({
   "&": { height: "100%" },

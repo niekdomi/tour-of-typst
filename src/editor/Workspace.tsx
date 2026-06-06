@@ -37,8 +37,10 @@ export default function Workspace(props: Props) {
 
   return (
     <div class="flex h-full flex-col overflow-hidden">
-      <div class="min-h-0 overflow-hidden" style={{ flex: editorFraction() }}>
-        <EditorShell>
+      {/* One shell wraps both panes so the editor and preview share the same
+          TypstProject (the preview resolves link clicks through it). */}
+      <EditorShell>
+        <div class="min-h-0 overflow-hidden" style={{ flex: editorFraction() }}>
           <Show when={editorKey()} keyed>
             <Editor
               doc={doc()}
@@ -49,14 +51,18 @@ export default function Workspace(props: Props) {
               onCompile={setPages}
             />
           </Show>
-        </EditorShell>
-      </div>
+        </div>
 
-      <ResizeHandle direction="vertical" fraction={editorFraction()} onChange={setEditorFraction} />
+        <ResizeHandle
+          direction="vertical"
+          fraction={editorFraction()}
+          onChange={setEditorFraction}
+        />
 
-      <div class="min-h-0 overflow-hidden" style={{ flex: 1 - editorFraction() }}>
-        <Preview pages={pages()} />
-      </div>
+        <div class="min-h-0 overflow-hidden" style={{ flex: 1 - editorFraction() }}>
+          <Preview pages={pages()} />
+        </div>
+      </EditorShell>
     </div>
   );
 }
