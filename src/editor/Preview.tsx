@@ -105,28 +105,21 @@ export default function Preview(props: Props) {
   };
 
   /**
-   * Smoothly scrolls the preview so the given document location sits near the
-   * top of the viewport. `y` is in the page's SVG user units (typographic
-   * points) and is scaled to pixels via the rendered page height.
+   * Smoothly scrolls the preview so a document location sits near the top of the
+   * viewport. `page` is 0-based; `y` is in page points, scaled to pixels via the
+   * page's rendered width.
    */
   function jumpToLocation(page: number, y: number) {
-    if (!scroller) {
+    const el = pageEls[page];
+    const dims = displayPages()[page];
+    if (!scroller || !el || !dims) {
       return;
     }
 
-    const group = scroller.querySelectorAll<SVGGElement>(".typst-page")[page - 1];
-    const svg = group?.ownerSVGElement;
-    if (!svg) {
-      return;
-    }
-
-    const viewBoxHeight = svg.viewBox.baseVal.height;
-    const svgRect = svg.getBoundingClientRect();
-    const scrollerRect = scroller.getBoundingClientRect();
-    const scale = viewBoxHeight > 0 ? svgRect.height / viewBoxHeight : 1;
-
+    const scale = (zoom() * BASE_WIDTH_PX) / dims.width;
+    const pageTop = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
     scroller.scrollTo({
-      top: scroller.scrollTop + (svgRect.top - scrollerRect.top) + y * scale - 40,
+      top: scroller.scrollTop + pageTop + y * scale - 40,
       behavior: "smooth",
     });
   }
@@ -159,7 +152,7 @@ export default function Preview(props: Props) {
         );
 
         if (jump?.kind === "position") {
-          jumpToLocation(jump.page + 1, jump.y);
+          jumpToLocation(jump.page, jump.y);
         } else if (jump?.kind === "url") {
           globalThis.open(jump.url, "_blank", "noopener,noreferrer");
         }
