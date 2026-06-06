@@ -6,10 +6,8 @@ import { defaultDarkTheme, defaultLightTheme, typstThemes } from "@vedivad/codem
 import { type Theme } from "../lib/ThemeContext";
 
 /**
- * Editor chrome (GitHub light/dark) paired with the engine's default Typst token
- * palette, behind one compartment. The engine highlights via `typ-*` decorations
- * (from `createTypstSetup`); these descriptors supply the colors. Create one per
- * editor and switch live with `themes.set(view, "light" | "dark")`.
+ * GitHub editor theme + the engine's default Typst syntax colors, for light
+ * and dark. Make one per editor and flip it live with `themes.set(view, "light" | "dark")`.
  */
 export const makeTypstThemes = (initial: Theme) =>
   typstThemes(

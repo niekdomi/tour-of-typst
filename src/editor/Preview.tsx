@@ -141,9 +141,15 @@ export default function Preview(props: Props) {
     for (let i = 0; i < pageEls.length; i++) {
       const el = pageEls[i];
       const page = pages[i];
-      if (!el || !page) continue;
+      if (!el || !page) {
+        continue;
+      }
+
       const r = el.getBoundingClientRect();
-      if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom) continue;
+      if (clientX < r.left || clientX > r.right || clientY < r.top || clientY > r.bottom) {
+        continue;
+      }
+
       const scale = (zoom() * BASE_WIDTH_PX) / page.width;
       void (async () => {
         const jump = await project.clickJump(
@@ -151,9 +157,14 @@ export default function Preview(props: Props) {
           (clientX - r.left) / scale,
           (clientY - r.top) / scale
         );
-        if (jump?.kind === "position") jumpToLocation(jump.page + 1, jump.y);
-        else if (jump?.kind === "url") globalThis.open(jump.url, "_blank", "noopener,noreferrer");
+
+        if (jump?.kind === "position") {
+          jumpToLocation(jump.page + 1, jump.y);
+        } else if (jump?.kind === "url") {
+          globalThis.open(jump.url, "_blank", "noopener,noreferrer");
+        }
       })();
+
       return;
     }
   }
@@ -196,11 +207,13 @@ export default function Preview(props: Props) {
 
     const dx = e.clientX - panOrigin.x;
     const dy = e.clientY - panOrigin.y;
-    // Only a real drag is a pan; below the threshold the release is a click.
+
+    // Only a real drag is a pan; below the threshold, the release is a click.
     if (!dragMoved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
       dragMoved = true;
       setPanning(true);
     }
+
     scroller.scrollLeft = panOrigin.scrollLeft - dx;
     scroller.scrollTop = panOrigin.scrollTop - dy;
   };
@@ -213,7 +226,10 @@ export default function Preview(props: Props) {
     const wasClick = panOrigin !== null && !dragMoved;
     panOrigin = null;
     setPanning(false);
-    if (wasClick) handleClick(e.clientX, e.clientY);
+
+    if (wasClick) {
+      handleClick(e.clientX, e.clientY);
+    }
   };
 
   return (

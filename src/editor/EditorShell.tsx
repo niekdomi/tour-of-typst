@@ -9,8 +9,8 @@ export default function EditorShell(props: { children: JSX.Element }) {
 
   onMount(() => {
     void (async () => {
-      // One project owns the wasm worker, VFS, and compile/render/format/
-      // highlighting; editors share it through context.
+      // One project owns the wasm worker and VFS, and runs every compile,
+      // render, format, and highlight pass. Editors share it through context.
       const project = await TypstProject.create({
         autoCompile: { debounceMs: 50, maxWaitMs: 300 },
       });
