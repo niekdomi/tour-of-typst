@@ -1,4 +1,4 @@
-import type { RenderedSvgPage } from "@vedivad/typst-web-service";
+import { PreviewNavigator, type RenderedSvgPage } from "@vedivad/typst-web-service";
 import {
   TbOutlineArrowAutofitHeight,
   TbOutlineArrowAutofitWidth,
@@ -9,6 +9,8 @@ import { createMemo, createSignal, Index, onCleanup, onMount } from "solid-js";
 
 import { Button } from "../components/ui/button";
 import { useTheme } from "../lib/ThemeContext";
+import { attachPan } from "./preview-pan";
+import { useTypstResources } from "./typst-resources";
 
 interface Props {
   pages: RenderedSvgPage[];
@@ -19,13 +21,18 @@ const ZOOM_STEP = 1.1;
 const ZOOM_MIN = 0.25;
 const ZOOM_MAX = 4;
 const SCROLLER_PADDING_PX = 24;
+const OUTLINE_SCROLL_MARGIN_PX = 80; // space above heading when navigating via outline/link
 
 const clampZoom = (z: number) => Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z));
 
 export default function Preview(props: Props) {
   const { theme } = useTheme();
+  const { project } = useTypstResources();
   const [zoom, setZoom] = createSignal(1);
-  const [panning, setPanning] = createSignal(false);
+
+  // Page wrappers by index; the navigator reads these to resolve clicks and scroll.
+  const pageEls: (HTMLElement | undefined)[] = [];
+  let nav: PreviewNavigator | undefined;
 
   // Hold the last non-empty pages so the preview keeps showing the previous output
   // (faded) while a recompile is in flight.
@@ -35,7 +42,6 @@ export default function Preview(props: Props) {
   );
 
   let scroller: HTMLDivElement | undefined;
-  let panOrigin: { x: number; y: number; scrollLeft: number; scrollTop: number } | null = null;
 
   const zoomAt = (newZoom: number, anchorClientX?: number, anchorClientY?: number) => {
     if (!scroller) {
@@ -98,47 +104,7 @@ export default function Preview(props: Props) {
     zoomAt(clampZoom((scroller.clientHeight - SCROLLER_PADDING_PX) / pageHeightPx));
   };
 
-  /**
-   * Smoothly scrolls the preview so the given document location sits near the
-   * top of the viewport. `y` is in the page's SVG user units (typographic
-   * points) and is scaled to pixels via the rendered page height.
-   */
-  function jumpToLocation(page: number, y: number) {
-    if (!scroller) {
-      return;
-    }
-
-    const group = scroller.querySelectorAll<SVGGElement>(".typst-page")[page - 1];
-    const svg = group?.ownerSVGElement;
-    if (!svg) {
-      return;
-    }
-
-    const viewBoxHeight = svg.viewBox.baseVal.height;
-    const svgRect = svg.getBoundingClientRect();
-    const scrollerRect = scroller.getBoundingClientRect();
-    const scale = viewBoxHeight > 0 ? svgRect.height / viewBoxHeight : 1;
-
-    scroller.scrollTo({
-      top: scroller.scrollTop + (svgRect.top - scrollerRect.top) + y * scale - 40,
-      behavior: "smooth",
-    });
-  }
-
-  /**
-   * Jumps to an internal link target inside the rendered document. The Typst
-   * renderer wires every internal link (outline entries, references, ...) to an
-   * inline `onclick="handleTypstLocation(this, page, x, y); return false"`, so
-   * this is published on `globalThis` while mounted; the `return false` stops
-   * the click from reaching the router's anchor navigation.
-   */
-  function handleTypstLocation(_el: unknown, page: number, _x: number, y: number) {
-    jumpToLocation(page, y);
-  }
-
   onMount(() => {
-    (globalThis as Record<string, unknown>)["handleTypstLocation"] = handleTypstLocation;
-
     requestAnimationFrame(() => {
       if (!scroller) {
         return;
@@ -151,54 +117,23 @@ export default function Preview(props: Props) {
     });
   });
 
-  onCleanup(() => {
-    const slot = globalThis as Record<string, unknown>;
-    if (slot["handleTypstLocation"] === handleTypstLocation) {
-      delete slot["handleTypstLocation"];
+  // Click navigation through the engine: an internal link (e.g. an `#outline()`
+  // entry) scrolls the preview to its target, a URL opens. The host owns pointer
+  // handling (pan), so `listen` is off and clicks call `jumpAt` directly.
+  onMount(() => {
+    if (!scroller) {
+      return;
     }
+    nav = PreviewNavigator.create({
+      project,
+      scroller,
+      pages: () => pageEls,
+      listen: false,
+      margin: OUTLINE_SCROLL_MARGIN_PX,
+    });
   });
 
-  const onPointerDown = (e: PointerEvent) => {
-    if (e.button !== 0 || !scroller) {
-      return;
-    }
-
-    // Don't start a pan on internal links, so the click can trigger a jump.
-    if ((e.target as Element | null)?.closest("a")) {
-      return;
-    }
-
-    e.preventDefault();
-    scroller.setPointerCapture(e.pointerId);
-    scroller.focus({ preventScroll: true });
-
-    panOrigin = {
-      x: e.clientX,
-      y: e.clientY,
-      scrollLeft: scroller.scrollLeft,
-      scrollTop: scroller.scrollTop,
-    };
-
-    setPanning(true);
-  };
-
-  const onPointerMove = (e: PointerEvent) => {
-    if (!panOrigin || !scroller) {
-      return;
-    }
-
-    scroller.scrollLeft = panOrigin.scrollLeft - (e.clientX - panOrigin.x);
-    scroller.scrollTop = panOrigin.scrollTop - (e.clientY - panOrigin.y);
-  };
-
-  const onPointerUp = (e: PointerEvent) => {
-    if (scroller?.hasPointerCapture(e.pointerId)) {
-      scroller.releasePointerCapture(e.pointerId);
-    }
-
-    panOrigin = null;
-    setPanning(false);
-  };
+  onCleanup(() => nav?.dispose());
 
   return (
     <div class="flex h-full w-full flex-col overflow-hidden">
@@ -264,15 +199,15 @@ export default function Preview(props: Props) {
       <div
         ref={(el) => {
           scroller = el;
+          attachPan(el);
         }}
         tabindex={-1}
-        class="bg-muted/40 min-h-0 flex-1 cursor-grab overflow-auto p-3 outline-none"
-        classList={{ "!cursor-grabbing select-none": panning() }}
+        class="bg-muted/40 min-h-0 flex-1 overflow-auto p-3 outline-none select-none"
         onWheel={onWheel}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
+        onClick={(e) => {
+          e.preventDefault(); // stop SVG native href
+          void nav?.jumpAt(e.clientX, e.clientY);
+        }}
       >
         <div
           class="mx-auto flex flex-col items-center gap-6"
@@ -282,9 +217,14 @@ export default function Preview(props: Props) {
           }}
         >
           <Index each={displayPages()}>
-            {(page) => (
+            {(page, index) => (
+              // Typst draws each link as a transparent <rect> over the glyphs:
+              // tint it on hover to mark the link and show a pointer.
               <div
-                class="w-full bg-white shadow-md ring-1 ring-black/10 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full"
+                ref={(el) => {
+                  pageEls[index] = el;
+                }}
+                class="w-full bg-white shadow-md ring-1 ring-black/10 [&_svg]:block [&_svg]:h-auto [&_svg]:w-full [&_svg_a]:cursor-pointer [&_svg_a_rect]:[transition:fill_100ms] [&_svg_a:hover_rect]:fill-yellow-300/50"
                 classList={{ "opacity-50": props.pages.length === 0 }}
                 innerHTML={page().svg}
               />

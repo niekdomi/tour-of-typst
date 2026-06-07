@@ -1,16 +1,8 @@
-import type {
-  TypstFormatter,
-  TypstHighlightingController,
-  TypstProject,
-  TypstRenderer,
-} from "@vedivad/codemirror-typst";
+import type { TypstProject } from "@vedivad/codemirror-typst";
 import { createContext, useContext } from "solid-js";
 
 export interface TypstResources {
   project: TypstProject;
-  highlighting: TypstHighlightingController;
-  formatter: TypstFormatter;
-  renderer: TypstRenderer;
 }
 
 export const TypstResourcesContext = createContext<TypstResources>();

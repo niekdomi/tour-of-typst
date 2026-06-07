@@ -2,6 +2,7 @@ dictionaries = ["en_us", "de_ch"]
 words = [
   # English
   "apa",
+  "auxclick",
   "buenard",
   "cli",
   "crawlable",
@@ -14,6 +15,7 @@ words = [
   "lcs",
   "libertinus",
   "luma",
+  "mousedown",
   "noninteractive",
   "nums",
   "oklch",
@@ -33,6 +35,7 @@ words = [
   "smallcaps",
   "solidjs",
   "tinymist",
+  "vfs",
   "vedivad",
   "vite's",
 

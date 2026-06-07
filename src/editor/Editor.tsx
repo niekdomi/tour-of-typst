@@ -1,5 +1,5 @@
 import { indentWithTab } from "@codemirror/commands";
-import { Compartment, EditorState, type Extension } from "@codemirror/state";
+import { EditorState, type Extension } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { createTypstSetup, typstFilePath } from "@vedivad/codemirror-typst";
 import type { RenderedSvgPage } from "@vedivad/typst-web-service";
@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/toolti
 import { locale } from "../lib/locale";
 import { useTheme } from "../lib/ThemeContext";
 import diagnosticCopyPlugin from "./DiagnosticCopyPlugin";
-import { dimTheme, editorTheme, fillHeight, popupTheme } from "./editor-theme";
+import { dimTheme, fillHeight, makeTypstThemes, popupTheme } from "./editor-theme";
 import { changedSolutionLines, dimUnchangedLines } from "./solution-focus";
 import { useTypstResources } from "./typst-resources";
 
@@ -30,14 +30,18 @@ interface Props {
 const MAIN_PATH = "/main.typ";
 
 export default function Editor(props: Props) {
-  const { project, highlighting, formatter, renderer } = useTypstResources();
+  const { project } = useTypstResources();
   const { theme } = useTheme();
+
+  // Editor chrome + Typst token colors behind one compartment; switch with
+  // `themes.set(view, key)`. Passed to the setup as its `theme`.
+  const themes = makeTypstThemes(theme());
 
   const typstExtensions = createTypstSetup({
     project,
     sync: "editor-driven",
-    highlighting,
-    formatter: { instance: formatter },
+    theme: themes.extension,
+    formatter: {},
   });
 
   let container: HTMLDivElement | undefined;
@@ -48,8 +52,6 @@ export default function Editor(props: Props) {
   let savedCode: string | undefined;
   let userScrollTop = 0;
   let solutionScrollTop = 0;
-
-  const themeCompartment = new Compartment();
 
   function buildState(doc: string, extra: Extension[] = []) {
     return EditorState.create({
@@ -63,7 +65,6 @@ export default function Editor(props: Props) {
         fillHeight,
         popupTheme,
         dimTheme,
-        themeCompartment.of(editorTheme(theme())),
         EditorView.updateListener.of((u) => {
           if (u.docChanged) {
             props.onChange?.(u.state.doc.toString());
@@ -93,17 +94,17 @@ export default function Editor(props: Props) {
         signal.throwIfAborted();
 
         unsubscribe = project.onCompile((result) => {
-          if (!result.vector) {
+          if (result.pages.length === 0) {
             return;
           }
 
           void (async () => {
-            const pages = await renderer.renderSvgPages(result.vector!);
+            const pages = await project.renderedPages(0, result.pages.length);
             props.onCompile?.(pages);
           })();
         });
         view = new EditorView({ parent: container!, state: buildState(props.doc) });
-        highlighting.setTheme(view, theme());
+        themes.set(view, theme());
       } catch (error) {
         if (!signal.aborted) {
           throw error;
@@ -121,22 +122,21 @@ export default function Editor(props: Props) {
   createEffect(() => {
     const t = theme();
     if (view) {
-      view.dispatch({ effects: themeCompartment.reconfigure(editorTheme(t)) });
-      highlighting.setTheme(view, t);
+      themes.set(view, t);
     }
   });
 
   /**
    * Replace the editor state with a fresh one for `nextDoc`. A new EditorState
-   * resets the highlighting compartment to its creation-time theme, so re-apply
-   * the current theme to keep syntax colors in sync (e.g. when toggling solution).
+   * resets the theme compartment to its creation-time value, so re-apply the
+   * current theme to keep chrome/syntax colors in sync (e.g. toggling solution).
    */
   function setDoc(nextDoc: string, extra: Extension[] = []) {
     if (!view) {
       return;
     }
     view.setState(buildState(nextDoc, extra));
-    highlighting.setTheme(view, theme());
+    themes.set(view, theme());
   }
 
   /**
@@ -172,8 +172,8 @@ export default function Editor(props: Props) {
     const source = view.state.doc.toString();
 
     void (async () => {
-      const formatted = await formatter.format(source);
-      if (formatted !== source) {
+      const formatted = await project.format(MAIN_PATH, source);
+      if (formatted !== undefined && formatted !== source) {
         view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: formatted } });
       }
     })();
