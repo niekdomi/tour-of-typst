@@ -14,7 +14,7 @@ words = [
   "lcs",
   "libertinus",
   "luma",
-  "mousedown".
+  "mousedown",
   "noninteractive",
   "nums",
   "oklch",
@@ -89,6 +89,7 @@ words = [
   "zurückzufallen",
   "Überschriftsebene",
   "Überschriftszeile",
-]dictionaries = ["en_us","de_ch"]
+]
+dictionaries = ["en_us", "de_ch"]
 include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
