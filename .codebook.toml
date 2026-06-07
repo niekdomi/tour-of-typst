@@ -1,3 +1,4 @@
+dictionaries = ["en_us", "de_ch"]
 words = [
   # English
   "apa",
@@ -90,6 +91,5 @@ words = [
   "Überschriftsebene",
   "Überschriftszeile",
 ]
-dictionaries = ["en_us", "de_ch"]
 include_paths = ["**/*.md", "**/*.typ", "**/*.ts", "**/*.tsx"]
 use_global = false
