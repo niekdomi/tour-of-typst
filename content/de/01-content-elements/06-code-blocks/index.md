@@ -1,4 +1,4 @@
-## Code-Blöcke
+# Code-Blöcke
 
 Unsere Forscher, des Butterabschabens vom Boden überdrüssig, schrieben eine Python-Simulation, um
 das Toast-Modell virtuell zu verifizieren. Lasst uns diese ins Paper aufnehmen, um zu beweisen, dass
