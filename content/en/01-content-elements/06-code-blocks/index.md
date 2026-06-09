@@ -1,4 +1,4 @@
-## Code Blocks
+# Code Blocks
 
 Our researchers, tired of scraping butter off the floor, wrote a Python simulation to verify the
 toast model virtually. Let's include it in the paper to prove we understand computers too. In Typst,
